@@ -16,7 +16,7 @@
         <div class="container mt-4">
             <div class="card">
                 <div class="card-header">
-                   <a class="btn btn-light" href="altaPersona.htm">
+                   <a class="btn btn-light" href="altaVeMec.htm">
                         <i class="fas fa-plus"></i>
                         Agregar nuevo VeMec
                     </a>
