@@ -16,7 +16,7 @@ public class Connection {
 
         DriverManagerDataSource bds = new DriverManagerDataSource();
         bds.setDriverClassName("com.mysql.jdbc.Driver");
-        bds.setUrl("jdbc:mysql://localhost:3306/vemecs");
+        bds.setUrl("jdbc:mysql://localhost:3306/vemecsdb");
 	bds.setUsername("Admin");
 	bds.setPassword("1234");
 
