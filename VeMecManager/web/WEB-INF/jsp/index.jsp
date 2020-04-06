@@ -36,16 +36,20 @@
                         <tbody>
                             <c:forEach var="vemec" items="${lista}">
                                 <tr>
-                                    <td>${vemec.ID}</td>
+                                    <td>${vemec.Id}</td>
                                     <td>${vemec.Marca}</td>
                                     <td>${vemec.Modelo}</td>
                                     <td>${vemec.Ubicacion}</td>
                                     <td>
-                                        <a href="modificarVeMec.htm?id=${vemec.ID}" class="btn btn-light">
+                                        <a href="datosVerMec.htm?id=${vemec.Id}" class="btn btn-secondary">
+                                            <i class="fas fa-trash"></i> 
+                                            Datos
+                                        </a>
+                                        <a href="modificarVeMec.htm?id=${vemec.Id}" class="btn btn-light">
                                             <i class="fas fa-edit"></i>
                                             Modificar
                                         </a>
-                                        <a href="bajaVeMec.htm?id=${vemec.ID}" class="btn btn-danger">
+                                        <a href="bajaVeMec.htm?id=${vemec.Id}" class="btn btn-danger">
                                             <i class="fas fa-trash"></i> 
                                             Eliminar
                                         </a>

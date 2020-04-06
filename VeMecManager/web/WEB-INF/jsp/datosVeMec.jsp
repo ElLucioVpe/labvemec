@@ -14,5 +14,10 @@
     </head>
     <body>
         
+        
+        <a href="registrosVerMec.htm?id=${vemec.Id}" class="btn btn-secondary">
+            <i class="fas fa-trash"></i> 
+            Todos los registros
+        </a>
     </body>
 </html>
