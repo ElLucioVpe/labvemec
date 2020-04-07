@@ -20,16 +20,13 @@
             </div>
             <div class="card-body">
                 <form method="POST">
-                    <input type="text" name="marca" class="form-control" placeholder="Marca">
-                    <input type="text" name="modelo" class="form-control" placeholder="Modelo">
-                    <input type="text" name="ubicacion" class="form-control" placeholder="Ubicacion">
                     
                     <label>Marca</label>
                     <input type="text" name="marca" class="form-control" value="${lista[0].Marca}">
                     <label>Modelo</label>
                     <input type="text" name="modelo" class="form-control" value="${lista[0].Modelo}">
                     <label>Ubicacion</label>
-                    <input type="text" name="modelo" class="form-control" value="${lista[0].Ubicacion}">
+                    <input type="text" name="ubicacion" class="form-control" value="${lista[0].Ubicacion}">
                     <input type="submit" value="Modificar" class="btn btn-primary">
                 </form>
             </div>

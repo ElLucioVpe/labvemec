@@ -10,6 +10,7 @@ package controller;
  */
 import conf.Connection;
 import entities.VeMec;
+//import entities.VeMec_data;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -71,7 +72,9 @@ public class SpringController {
     @RequestMapping("bajaVeMec.htm")
     public ModelAndView BajaVeMec(HttpServletRequest request) {
         id = Integer.parseInt(request.getParameter("id"));
-        String consulta = "delete from vemecs where Id="+id;
+        String consulta = "delete from vemecs_data where Id_VeMec="+id;
+        this.template.update(consulta);
+        consulta = "delete from vemecs where Id="+id;
         this.template.update(consulta);
         return new ModelAndView("redirect:/index.htm");
     }
@@ -81,9 +84,10 @@ public class SpringController {
         //en ultima timestamp
         //con graficas presión de entrada y presión de salida
         id = Integer.parseInt(request.getParameter("id"));
-        String consulta = "select * from vemecs_data where Id_Vemec="+id;
+        String consulta = "select * from vemecs_data where Id_Vemec="+id+" order by Timestamp_Data";
         datos = this.template.queryForList(consulta);
         mav.addObject("datos", datos);
+        mav.addObject("ultimo_dato", datos.get(datos.size()-1));
         mav.setViewName("datosVeMec");
         return mav;
     }
