@@ -1,9 +1,3 @@
-<%-- 
-    Document   : altaPersona
-    Created on : 18/03/2020, 01:30:31 AM
-    Author     : esteban
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 

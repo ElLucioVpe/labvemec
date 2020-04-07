@@ -41,8 +41,8 @@
                                     <td>${vemec.Modelo}</td>
                                     <td>${vemec.Ubicacion}</td>
                                     <td>
-                                        <a href="datosVerMec.htm?id=${vemec.Id}" class="btn btn-secondary">
-                                            <i class="fas fa-trash"></i> 
+                                        <a href="datosVeMec.htm?id=${vemec.Id}" class="btn btn-light">
+                                            <i class="fas fa-database"></i>
                                             Datos
                                         </a>
                                         <a href="modificarVeMec.htm?id=${vemec.Id}" class="btn btn-light">

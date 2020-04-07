@@ -3,7 +3,7 @@
     Created on : 05/04/2020, 11:29:12 PM
     Author     : esteban
 --%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -15,7 +15,7 @@
     <body>
         
         
-        <a href="registrosVerMec.htm?id=${vemec.Id}" class="btn btn-secondary">
+        <a href="registrosVeMec.htm?id=${vemec.Id}" class="btn btn-secondary">
             <i class="fas fa-trash"></i> 
             Todos los registros
         </a>
