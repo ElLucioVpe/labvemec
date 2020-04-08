@@ -11,9 +11,9 @@
         <title>Laboratorio 1 JavaEE - VeMec</title>
     </head>
 
-    <body>
+    <body >
         
-        <div class="container mt-4">
+        <div class="container mt-4" style="background-color: #15bef1">
             <div class="card">
                 <div class="card-header">
                    <a class="btn btn-light" href="altaVeMec.htm">
@@ -22,10 +22,10 @@
                     </a>
                 </div>
                 
-                <div class="card-header text-center">
+                <div class="card-header text-center" style="background-color: #15bef1">
                     Lista de VeMecs
                 </div>
-                <div class="card-body bg-secondary">
+                <div class="card-body bg-light">
                     <table class="table table-hover">
                         <thead>
                             <th>ID</th>
@@ -41,11 +41,11 @@
                                     <td>${vemec.Modelo}</td>
                                     <td>${vemec.Ubicacion}</td>
                                     <td>
-                                        <a href="datosVeMec.htm?id=${vemec.Id}" class="btn btn-light">
+                                        <a href="datosVeMec.htm?id=${vemec.Id}" class="btn btn-light" style="background-color: #15bef1">
                                             <i class="fas fa-database"></i>
                                             Datos
                                         </a>
-                                        <a href="modificarVeMec.htm?id=${vemec.Id}" class="btn btn-light">
+                                        <a href="modificarVeMec.htm?id=${vemec.Id}" class="btn btn-light" style="background-color: #15bef1">
                                             <i class="fas fa-edit"></i>
                                             Modificar
                                         </a>

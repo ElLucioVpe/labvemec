@@ -44,52 +44,123 @@
             }
     </script>
     </head>
+    
+    <style>
+        body {
+            background-color: whitesmoke;
+        }
+        
+        h1 {
+            font-size: 50px;
+            color: white;
+        }
+        
+        label {
+            font-weight: 600;
+            
+        }
+        
+        form {
+            align-content: center;
+        }
+        
+        .card {
+            background-color: #15bef1;
+        }
+    </style>
     <body>
         <div class="container mt-4">
             
             <div class="row">
                 <div id="div_datos1" class="col-sm">
-                    <label>Presión máxima</label>
-                    <h1>${ultimo_dato.Presion_Maxima}</h1>
+                    <div class="card">
+                        <form class="form-inline">
+                            <label>Presión máxima &nbsp</label>
+                            <h1>${ultimo_dato.Presion_Maxima}</h1>
+                        </form>
+                    </div>
                     
-                    <label>Presión mínima</label>
-                    <h1>${ultimo_dato.Presion_Minima}</h1>
+                    <div class="card">
+                        <form class="form-inline">
+                            <label>Presión mínima &nbsp</label>
+                            <h1>${ultimo_dato.Presion_Minima}</h1>
+                        </form>
+                    </div>
                     
-                    <label>Volumen de Gás</label>
-                    <h1>${ultimo_dato.Gas}</h1>
+                    <div class="card">
+                        <form class="form-inline">
+                            <label>Volumen de Gás &nbsp</label>
+                            <h1>${ultimo_dato.Gas}</h1>
+                        </form>
+                    </div>
                     
-                    <label>Frecuencia de aporte</label>
-                    <h1>${ultimo_dato.Frecuencia}</h1>
-                    
-                    <label>%O2 en mezcla</label>
-                    <h1>${ultimo_dato.Mezcla}</h1>
+                    <div class="card">
+                        <form class="form-inline">
+                            <label>Frecuencia de aporte &nbsp</label>
+                            <h1>${ultimo_dato.Frecuencia}</h1>
+                        </form>
+                    </div>
+                        
+                    <div class="card">
+                        <form class="form-inline">
+                            <label>%O2 en mezcla &nbsp</label>
+                            <h1>${ultimo_dato.Mezcla}</h1>
+                        </form>
+                    </div>
                 </div>
                 <div id="div_datos2" class="col-sm">
-                    <label>Humedad de aire</label>
-                    <h1>${ultimo_dato.Humedad}</h1>
-                    
-                    <label>Temperatura de entrada</label>
-                    <h1>${ultimo_dato.Temperatura_Entrada}</h1>
-                    
-                    <label>Temperatura de salida</label>
-                    <h1>${ultimo_dato.Temperatura_Salida}</h1>
-                    
-                    <label>Presión de entrada</label>
-                    <h1>${ultimo_dato.Presion_Entrada}</h1>
-                    
-                    <label>Presión de salida</label>
-                    <h1>${ultimo_dato.Presion_Salida}</h1>
-
+                    <div class="card">
+                        <form class="form-inline">
+                            <label>Humedad de aire &nbsp</label>
+                            <h1>${ultimo_dato.Humedad}</h1>
+                        </form>
+                    </div>
+                        
+                    <div class="card">
+                        <form class="form-inline">
+                            <label>Temperatura de entrada &nbsp</label>
+                            <h1>${ultimo_dato.Temperatura_Entrada}</h1>
+                        </form>
+                    </div>
+                        
+                    <div class="card">
+                        <form class="form-inline">
+                            <label>Temperatura de salida &nbsp</label>
+                            <h1>${ultimo_dato.Temperatura_Salida}</h1>
+                        </form>
+                    </div>
+                        
+                    <div class="card">   
+                        <form class="form-inline">
+                            <label>Presión de entrada &nbsp</label>
+                            <h1>${ultimo_dato.Presion_Entrada}</h1>
+                        </form>
+                    </div>
+                        
+                    <div class="card">
+                        <form class="form-inline">
+                            <label>Presión de salida &nbsp</label>
+                            <h1>${ultimo_dato.Presion_Salida}</h1>
+                        </form>
+                    </div>
+                   
                 </div>
                 <div class="col-sm">
-                    <a href="registrosVeMec.htm?id=${ultimo_dato.Id_Vemec}" class="btn btn-secondary">
+                    <a href="registrosVeMec.htm?id=${ultimo_dato.Id_Vemec}" class="btn btn-light" style="background-color: #15bef1">
                         <i class="fas fa-database"></i> 
                         Todos los registros
                     </a>
                 </div>
             </div>
-            <div id="curve_chart" style="width: 900px;"></div>
-            
+                        <br>
+            <div class="row">
+                <div class="col-sm">
+                    <div class="card">
+                        <div id="curve_chart" style="width: 900px;"></div>
+                    </div>
+                </div>
+                <div class="col-sm"></div>
+            </div>
         </div>
     </body>
 </html>

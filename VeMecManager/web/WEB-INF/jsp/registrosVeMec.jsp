@@ -19,6 +19,18 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Registros del VeMec</title>
     </head>
+    
+    <style>
+        body, thead, tfoot {
+            background-color: #15bef1;
+        }
+        
+        .card-header {
+            background-color: #15bef1;
+            font-weight: 600;
+        }
+    </style>
+    
     <body>
         
         <div class="container mt-4">
