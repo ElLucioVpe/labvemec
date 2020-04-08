@@ -1,19 +1,21 @@
 <?php
 namespace DataHandlerApp;
-use Ratchet\MessageComponentInterface;
-use Ratchet\ConnectionInterface;
 
-class DataHandler implements MessageComponentInterface 
+use Ratchet\ConnectionInterface;
+use Ratchet\MessageComponentInterface;
+
+class DataHandler implements MessageComponentInterface
 {
-    protected $url = 'http://www.someurl.com';
     protected $protocol = "websocket";
     protected $clients;
 
-    public function __constructor() {
-            $this->clients = new \SplObjectStorage;
+    public function __construct()
+    {
+        $this->clients = new \SplObjectStorage;
     }
 
-    public function sendData($data) {
+    public function sendData($data)
+    {
         $this->protocol ? sendDataPOST($data) : sendDataWebSocket($data);
     }
 
@@ -21,46 +23,38 @@ class DataHandler implements MessageComponentInterface
     {
         $options = array(
             'http' => array(
-                'header'  => "Access-Control-Allow-Origin: *\r\nContent-type: application/json; charset=UTF-8\r\n",
-                'method'  => 'POST',
-                'content' => http_build_query(json_encode($data))
-            )
+                'header' => "Access-Control-Allow-Origin: *\r\nContent-type: application/json; charset=UTF-8\r\n",
+                'method' => 'POST',
+                'content' => http_build_query(json_encode($data)),
+            ),
         );
-        $context  = stream_context_create($options);
+        $context = stream_context_create($options);
         $result = file_get_contents($this->url, false, $context);
-        if ($result === FALSE) {
+        if ($result === false) {
             /* Handle error */
         }
 
         var_dump($result);
     }
-    
+
     public function sendDataWebSocket($data)
     {
-        $options = array(
-            'http' => array(
-                'header'  => "Access-Control-Allow-Origin: *\r\nContent-type: application/json; charset=UTF-8\r\n",
-                'method'  => 'POST',
-                'content' => http_build_query(json_encode($data))
-            )
-        );
-        $context  = stream_context_create($options);
-        $result = file_get_contents($this->url, false, $context);
-        if ($result === FALSE) {
-            /* Handle error */
+        $json_data = json_encode($data);
+        foreach ($this->clients as $client) {
+            $client->send($json_data);
         }
-
-        var_dump($result);
     }
 
-    public function onOpen(ConnectionInterface $conn) {
+    public function onOpen(ConnectionInterface $conn)
+    {
         // Store the new connection to send messages to later
         $this->clients->attach($conn);
 
         echo "New connection! ({$conn->resourceId})\n";
     }
 
-    public function onMessage(ConnectionInterface $from, $msg) {
+    public function onMessage(ConnectionInterface $from, $msg)
+    {
         $numRecv = count($this->clients) - 1;
         echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
             , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
@@ -73,14 +67,16 @@ class DataHandler implements MessageComponentInterface
         }
     }
 
-    public function onClose(ConnectionInterface $conn) {
+    public function onClose(ConnectionInterface $conn)
+    {
         // The connection is closed, remove it, as we can no longer send it messages
         $this->clients->detach($conn);
 
         echo "Connection {$conn->resourceId} has disconnected\n";
     }
 
-    public function onError(ConnectionInterface $conn, \Exception $e) {
+    public function onError(ConnectionInterface $conn, \Exception $e)
+    {
         echo "An error has occurred: {$e->getMessage()}\n";
 
         $conn->close();
