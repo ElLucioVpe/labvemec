@@ -10,38 +10,74 @@
     <head>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-        
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Ultimos datos del VeMec</title>
         
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script type="text/javascript">
-            google.charts.load('current', {'packages':['corechart']});
-            google.charts.setOnLoadCallback(drawChart);
+            //Grafica de presión
+            var arrayDatos = [];
             var segundos = 0;
-            function drawChart() {
-              let arrayDatos = [];
-              
-              arrayDatos.push(['Segundos', 'Presión de Entrada', 'Presión de Salida']);
-              <c:forEach var="registro" items="${datos}">
+            
+            arrayDatos.push(['Segundos', 'Presión de Entrada', 'Presión de Salida']);   
+            <c:forEach var="registro" items="${datos}">
                 arrayDatos.push(['${segundos}' , ${registro.Presion_Entrada}, ${registro.Presion_Salida}]);
                 segundos = segundos + 60;
-              </c:forEach>
-                  
-              if(arrayDatos.length === 1) {
-                  arrayDatos.push(['0', 0, 0]);
-              }
-              var data = google.visualization.arrayToDataTable(arrayDatos);
-              var options = {
-                title: 'Datos de Presión',
-                curveType: 'function',
-                legend: { position: 'bottom' }
-              };
-
-              var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
-              chart.draw(data, options);
+            </c:forEach>
+                
+            if(arrayDatos.length === 1) {
+                arrayDatos.push(['0', 0, 0]);
             }
+            
+            google.charts.load('current', {
+                callback: function () {
+
+                  drawChart();
+                  setInterval(drawChart, 1000);
+                  
+                  function drawChart() {
+                    $.ajax({
+                      url: 'ws://localhost:4000',
+                      type: 'get',
+                      dataType: 'jsonp',
+                      cache: false,
+                      success: function (json) {
+                        ultimo_dato = json; //tal vez
+                        
+                        arrayDatos.push(['${segundos}' , json.Presion_Entrada, json.Presion_Salida]);
+                        
+                        var data = google.visualization.arrayToDataTable(arrayDatos);
+                        var options = {
+                          title: 'Datos de Presión',
+                          curveType: 'function',
+                          legend: { position: 'bottom' }
+                        };
+
+                        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+                        chart.draw(data, options);
+
+                      }, 
+                      error: function(){ 
+                        console.log("Error en la grafica");
+                        var data = google.visualization.arrayToDataTable(arrayDatos);
+                        var options = {
+                          title: 'Datos de Presión',
+                          curveType: 'function',
+                          legend: { position: 'bottom' }
+                        };
+                        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+                        chart.draw(data, options);
+
+                      }
+                    });
+                  }
+
+                },
+                packages: ['corechart']
+              });
+              
     </script>
     </head>
     
