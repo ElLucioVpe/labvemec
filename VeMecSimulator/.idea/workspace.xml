@@ -59,7 +59,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/VeMecSimulator.php" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Servidor/servidor.php" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -67,10 +67,10 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="php.override.implement.member.chooser.php.doc" value="NONE" />
-    <property name="settings.editor.selected.configurable" value="Errors" />
+    <property name="settings.editor.selected.configurable" value="reference.webide.settings.project.settings.php" />
   </component>
   <component name="RunManager">
-    <configuration name="Unnamed" type="PhpLocalRunConfigurationType" factoryName="PHP Console" nameIsGenerated="true" path="$PROJECT_DIR$/VeMecSimulator.php">
+    <configuration name="VeMecSimulator" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/Servidor/servidor.php">
       <CommandLine>
         <PhpTestInterpreterSettings>
           <option name="interpreterName" value="PHP" />
@@ -93,6 +93,7 @@
       <workItem from="1586394415790" duration="5803000" />
       <workItem from="1586400317035" duration="1848000" />
       <workItem from="1586406456317" duration="3292000" />
+      <workItem from="1586478601836" duration="2082000" />
     </task>
     <servers />
   </component>
@@ -100,53 +101,88 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="657" y="134" width="824" height="691" key="#CLI_Interpreters" timestamp="1586393621439">
+    <state x="657" y="134" width="824" height="691" key="#CLI_Interpreters" timestamp="1586479773895">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
-    <state x="657" y="134" width="824" height="691" key="#CLI_Interpreters/72.27.1848.1053@72.27.1848.1053" timestamp="1586393621439" />
+    <state x="657" y="134" width="824" height="691" key="#CLI_Interpreters/72.27.1848.1053@72.27.1848.1053" timestamp="1586479773895" />
     <state x="514" y="396" width="800" height="684" key="#Inspections" timestamp="1586395348891">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
     <state x="514" y="396" width="800" height="684" key="#Inspections/72.27.1848.1053@72.27.1848.1053" timestamp="1586395348891" />
-    <state x="265" y="199" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1586393663671">
+    <state x="670" y="241" width="642" height="632" key="#Unnamed" timestamp="1586479792969">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
-    <state x="265" y="199" key="#com.intellij.execution.impl.EditConfigurationsDialog/72.27.1848.1053@72.27.1848.1053" timestamp="1586393663671" />
+    <state x="670" y="241" width="642" height="632" key="#Unnamed/72.27.1848.1053@72.27.1848.1053" timestamp="1586479792969" />
+    <state x="670" y="241" width="642" height="632" key="#VeMecSimulator" timestamp="1586479827169">
+      <screen x="72" y="27" width="1848" height="1053" />
+    </state>
+    <state x="670" y="241" width="642" height="632" key="#VeMecSimulator/72.27.1848.1053@72.27.1848.1053" timestamp="1586479827169" />
+    <state x="559" y="197" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1586479745332">
+      <screen x="72" y="27" width="1848" height="1053" />
+    </state>
+    <state x="559" y="197" key="#com.intellij.execution.impl.EditConfigurationsDialog/72.27.1848.1053@72.27.1848.1053" timestamp="1586479745332" />
     <state x="606" y="256" width="412" height="638" key="#com.intellij.ide.util.MemberChooser" timestamp="1586396679126">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
     <state x="606" y="256" width="412" height="638" key="#com.intellij.ide.util.MemberChooser/72.27.1848.1053@72.27.1848.1053" timestamp="1586396679126" />
-    <state x="334" y="341" width="424" height="491" key="FileChooserDialogImpl" timestamp="1586393658736">
+    <state x="334" y="341" width="424" height="491" key="FileChooserDialogImpl" timestamp="1586479824470">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
-    <state x="334" y="341" width="424" height="491" key="FileChooserDialogImpl/72.27.1848.1053@72.27.1848.1053" timestamp="1586393658736" />
-    <state width="1037" height="304" key="GridCell.Tab.0.bottom" timestamp="1586402410361">
+    <state x="334" y="341" width="424" height="491" key="FileChooserDialogImpl/72.27.1848.1053@72.27.1848.1053" timestamp="1586479824470" />
+    <state width="1802" height="340" key="GridCell.Tab.0.bottom" timestamp="1586481583036">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
-    <state width="1037" height="304" key="GridCell.Tab.0.bottom/72.27.1848.1053@72.27.1848.1053" timestamp="1586402410361" />
-    <state width="1037" height="304" key="GridCell.Tab.0.center" timestamp="1586402410353">
+    <state width="1802" height="340" key="GridCell.Tab.0.bottom/72.27.1848.1053@72.27.1848.1053" timestamp="1586481583036" />
+    <state width="1802" height="340" key="GridCell.Tab.0.center" timestamp="1586481583035">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
-    <state width="1037" height="304" key="GridCell.Tab.0.center/72.27.1848.1053@72.27.1848.1053" timestamp="1586402410353" />
-    <state width="1037" height="304" key="GridCell.Tab.0.left" timestamp="1586402410351">
+    <state width="1802" height="340" key="GridCell.Tab.0.center/72.27.1848.1053@72.27.1848.1053" timestamp="1586481583035" />
+    <state width="1802" height="340" key="GridCell.Tab.0.left" timestamp="1586481583034">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
-    <state width="1037" height="304" key="GridCell.Tab.0.left/72.27.1848.1053@72.27.1848.1053" timestamp="1586402410351" />
-    <state width="1037" height="304" key="GridCell.Tab.0.right" timestamp="1586402410358">
+    <state width="1802" height="340" key="GridCell.Tab.0.left/72.27.1848.1053@72.27.1848.1053" timestamp="1586481583034" />
+    <state width="1802" height="340" key="GridCell.Tab.0.right" timestamp="1586481583036">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
-    <state width="1037" height="304" key="GridCell.Tab.0.right/72.27.1848.1053@72.27.1848.1053" timestamp="1586402410358" />
-    <state x="451" y="126" width="1022" height="737" key="SettingsEditor" timestamp="1586395129388">
+    <state width="1802" height="340" key="GridCell.Tab.0.right/72.27.1848.1053@72.27.1848.1053" timestamp="1586481583036" />
+    <state width="1802" height="340" key="GridCell.Tab.1.bottom" timestamp="1586481583038">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
-    <state x="451" y="126" width="1022" height="737" key="SettingsEditor/72.27.1848.1053@72.27.1848.1053" timestamp="1586395129388" />
-    <state x="652" y="380" key="com.intellij.ide.util.TipDialog" timestamp="1586406467370">
+    <state width="1802" height="340" key="GridCell.Tab.1.bottom/72.27.1848.1053@72.27.1848.1053" timestamp="1586481583038" />
+    <state width="1802" height="340" key="GridCell.Tab.1.center" timestamp="1586481583037">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
-    <state x="652" y="380" key="com.intellij.ide.util.TipDialog/72.27.1848.1053@72.27.1848.1053" timestamp="1586406467370" />
+    <state width="1802" height="340" key="GridCell.Tab.1.center/72.27.1848.1053@72.27.1848.1053" timestamp="1586481583037" />
+    <state width="1802" height="340" key="GridCell.Tab.1.left" timestamp="1586481583037">
+      <screen x="72" y="27" width="1848" height="1053" />
+    </state>
+    <state width="1802" height="340" key="GridCell.Tab.1.left/72.27.1848.1053@72.27.1848.1053" timestamp="1586481583037" />
+    <state width="1802" height="340" key="GridCell.Tab.1.right" timestamp="1586481583037">
+      <screen x="72" y="27" width="1848" height="1053" />
+    </state>
+    <state width="1802" height="340" key="GridCell.Tab.1.right/72.27.1848.1053@72.27.1848.1053" timestamp="1586481583037" />
+    <state x="451" y="126" width="1022" height="737" key="SettingsEditor" timestamp="1586479774326">
+      <screen x="72" y="27" width="1848" height="1053" />
+    </state>
+    <state x="451" y="126" width="1022" height="737" key="SettingsEditor/72.27.1848.1053@72.27.1848.1053" timestamp="1586479774326" />
+    <state x="652" y="380" key="com.intellij.ide.util.TipDialog" timestamp="1586478601573">
+      <screen x="72" y="27" width="1848" height="1053" />
+    </state>
+    <state x="652" y="380" key="com.intellij.ide.util.TipDialog/72.27.1848.1053@72.27.1848.1053" timestamp="1586478601573" />
     <state x="526" y="216" width="501" height="738" key="refactoring.ChangeSignatureDialog" timestamp="1586394889511">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
     <state x="526" y="216" width="501" height="738" key="refactoring.ChangeSignatureDialog/72.27.1848.1053@72.27.1848.1053" timestamp="1586394889511" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/Servidor/include/DataHandler_class.php</url>
+          <line>17</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

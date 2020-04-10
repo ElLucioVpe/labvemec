@@ -8,7 +8,7 @@ use WebSocket\Client;
 use AsyncPHP\Doorman\Manager\ProcessManager;
 use AsyncPHP\Doorman\Task\ProcessCallbackTask;
 
-$client = new Client("ws://localhost:8080/");
+$client = new Client("ws://localhost:4000/");
 $vemec1 = new VeMec(1, "Marca", "adas", "adasd", $client);
 $vemec2 = new VeMec(2, "Marca", "adas", "adasd", $client);
 

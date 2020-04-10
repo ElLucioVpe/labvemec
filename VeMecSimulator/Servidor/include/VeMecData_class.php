@@ -11,6 +11,9 @@ class VeMec_Data
     protected $humedad;
     protected $temperatura_in;
     protected $temperatura_out;
+    protected $presion_in;
+    protected $presion_out;
+    protected $time_Stamp;
 
     /**
      * @return mixed
@@ -107,9 +110,6 @@ class VeMec_Data
     {
         return $this->time_Stamp;
     }
-    protected $presion_in;
-    protected $presion_out;
-    protected $time_Stamp;
 
     public function __construct($id_Vemec, $presion_max, $presion_min, $gas, $frecuencia, $mezcla, $humedad, $temperatura_in, $temperatura_out, $presion_in, $presion_out, $time_Stamp)
     {

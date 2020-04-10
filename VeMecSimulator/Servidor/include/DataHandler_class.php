@@ -7,6 +7,7 @@ use Ratchet\MessageComponentInterface;
 class DataHandler implements MessageComponentInterface
 {
     protected $clients;
+    protected $servidor;
 
     public function __construct() {
         $this->clients = array();
