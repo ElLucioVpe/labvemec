@@ -15,7 +15,7 @@
         <title>Ultimos datos del VeMec</title>
         
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        <script type="text/javascript">
+        <script language = "javascript" type = "text/javascript">
             //Grafica de presión
             var arrayDatos = [];
             var segundos = 0;
@@ -30,6 +30,28 @@
                 arrayDatos.push(['0', 0, 0]);
             }
             
+            const socket = new WebSocket('ws://localhost:4000');
+            
+            socket.addEventListener('open', function(event) {
+                console.log("en conexion");
+                  
+            });
+
+            socket.addEventListener('error', function(event) {
+                console.log("error");
+            });
+            
+            socket.addEventListener('message', function(event) {
+                console.log("en mensaje");
+                var json = JSON.parse(event.data);
+                        
+                if(true) {
+                    console.log("en push");
+                    segundos++;
+                    arrayDatos.push(['${segundos}' , json.Presion_Entrada, json.Presion_Salida]);
+                }
+            });
+            
             google.charts.load('current', {
                 callback: function () {
 
@@ -37,6 +59,20 @@
                   setInterval(drawChart, 1000);
                   
                   function drawChart() {
+                    console.log("en draw");
+
+                    var data = google.visualization.arrayToDataTable(arrayDatos);
+                    var options = {
+                        title: 'Datos de Presión',
+                        curveType: 'function',
+                        legend: { position: 'bottom' }
+                    };
+
+                    var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+                    chart.draw(data, options);
+                      
+                    
+                      /*
                     $.ajax({
                       url: 'ws://localhost:4000',
                       type: 'get',
@@ -45,7 +81,8 @@
                       success: function (json) {
                         ultimo_dato = json; //tal vez
                         
-                        arrayDatos.push(['${segundos}' , json.Presion_Entrada, json.Presion_Salida]);
+                        segundos++;
+                        arrayDatos.push(['segundos' , json.Presion_Entrada, json.Presion_Salida]);
                         
                         var data = google.visualization.arrayToDataTable(arrayDatos);
                         var options = {
@@ -71,7 +108,7 @@
                         chart.draw(data, options);
 
                       }
-                    });
+                    });*/
                   }
 
                 },

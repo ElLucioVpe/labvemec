@@ -70,25 +70,25 @@ class VeMecData {
   
   getData() {
     let data = {};
-    data["id"] = this.id_Vemec;
-    data["presion_max"] = this.presion_max;
-    data["presion_min"] = this.presion_min;
-    data["gas"] = this.gas;
-    data["frecuencia"] = this.frecuencia;
-    data["mezcla"] = this.mezcla;
-    data["humedad"] = this.humedad;
-    data["temperatura_in"] = this.temperatura_in;
-    data["temperatura_out"] = this.temperatura_out;
-    data["presion_in"] = this.presion_in;
-    data["presion_out"] = this.presion_out;
-    data["time_Stamp"] = this.time_Stamp;
+    data["Id"] = this.id_Vemec;
+    data["Presion_Maxima"] = this.presion_max;
+    data["Presion_Minima"] = this.presion_min;
+    data["Gas"] = this.gas;
+    data["Frecuencia"] = this.frecuencia;
+    data["Mezcla"] = this.mezcla;
+    data["Humedad"] = this.humedad;
+    data["Temperatura_Entrada"] = this.temperatura_in;
+    data["Temperatura_Salida"] = this.temperatura_out;
+    data["Presion_Entrada"] = this.presion_in;
+    data["Presion_Salida"] = this.presion_out;
+    data["Timestamp_Data"] = this.time_Stamp;
     
     return data;
   }
 }
 
 let veMec1 = new VeMec(1,"Marca","Modelo","ubicacion",true,socket);
-let veMec2 = new VeMec(2,"asdasd","adsasd","ubicacion",true,socket);
+let veMec2 = new VeMec(4,"asdasd","adsasd","ubicacion",true,socket);
 
 async function run_veMec1() {
     await veMec1.checking();
@@ -97,5 +97,5 @@ async function run_veMec2() {
     await veMec2.checking();
 }
 
-run_veMec1();
+//run_veMec1();
 run_veMec2();
