@@ -87,6 +87,7 @@ public class SpringController {
         String consulta = "select * from vemecs_data where Id_Vemec="+id+" order by Timestamp_Data";
         datos = this.template.queryForList(consulta);
         mav.addObject("datos", datos);
+        mav.addObject("id", id);
         mav.addObject("ultimo_dato", datos.get(datos.size()-1));
         mav.setViewName("datosVeMec");
         return mav;

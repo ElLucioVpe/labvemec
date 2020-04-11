@@ -15,7 +15,9 @@
         <title>Ultimos datos del VeMec</title>
         
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
         <script language = "javascript" type = "text/javascript">
+    
             //Grafica de presión
             var arrayDatos = [];
             var segundos = 0;
@@ -30,26 +32,15 @@
                 arrayDatos.push(['0', 0, 0]);
             }
             
-            const socket = new WebSocket('ws://localhost:4000');
-            
-            socket.addEventListener('open', function(event) {
-                console.log("en conexion");
-                  
-            });
+            const socket = io('http://localhost:4000');
 
-            socket.addEventListener('error', function(event) {
-                console.log("error");
-            });
-            
-            socket.addEventListener('message', function(event) {
-                console.log("en mensaje");
-                var json = JSON.parse(event.data);
-                        
-                if(true) {
-                    console.log("en push");
-                    segundos++;
-                    arrayDatos.push(['${segundos}' , json.Presion_Entrada, json.Presion_Salida]);
-                }
+            socket.on('datosVeMec'+${id}, (res) => {
+                console.log("recibiendo datos de vemec...");
+                var json = res;
+                
+                console.log("agregando datos a la grafica...");
+                segundos++;
+                arrayDatos.push(['${segundos}' , json.Presion_Entrada, json.Presion_Salida]);
             });
             
             google.charts.load('current', {
@@ -70,45 +61,6 @@
 
                     var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
                     chart.draw(data, options);
-                      
-                    
-                      /*
-                    $.ajax({
-                      url: 'ws://localhost:4000',
-                      type: 'get',
-                      dataType: 'jsonp',
-                      cache: false,
-                      success: function (json) {
-                        ultimo_dato = json; //tal vez
-                        
-                        segundos++;
-                        arrayDatos.push(['segundos' , json.Presion_Entrada, json.Presion_Salida]);
-                        
-                        var data = google.visualization.arrayToDataTable(arrayDatos);
-                        var options = {
-                          title: 'Datos de Presión',
-                          curveType: 'function',
-                          legend: { position: 'bottom' }
-                        };
-
-                        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
-                        chart.draw(data, options);
-
-                      }, 
-                      error: function(){ 
-                        console.log("Error en la grafica");
-                        var data = google.visualization.arrayToDataTable(arrayDatos);
-                        var options = {
-                          title: 'Datos de Presión',
-                          curveType: 'function',
-                          legend: { position: 'bottom' }
-                        };
-                        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-                        chart.draw(data, options);
-
-                      }
-                    });*/
                   }
 
                 },
