@@ -1,9 +1,5 @@
-const WebSocket = require('ws');
-const socket = new WebSocket('ws://localhost:4000');
-
-socket.addEventListener('open', function (event) {
-    console.log('Hello Server!');
-});
+const io = require('socket.io-client');
+const socket = io('http://localhost:4000');
 
 class VeMec {
   constructor(_id, _marca, _modelo, _ubicacion, _running, _socket) {
@@ -18,7 +14,6 @@ class VeMec {
   async checking() {
     let data;
     return new Promise(async (resolve, reject) => {
-        console.log("Prueba xd" + this.id);
         let _this = this;
         let sendTimer = setInterval(function() {
             let RandomPresMax = _this.randomIntFromInterval(15,35);
@@ -35,16 +30,15 @@ class VeMec {
             let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
             let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
-            let data = new VeMecData(this.id, RandomPresMax, RandomPresMin, RandomGas, RandomFrecuencia, RandomMezcla, RandomHumedad, RandomTemperatura_in, RandomTemperatura_out, RandomPresion_in, RandomPresion_out, date+' '+time);
-            
-            socket.send(JSON.stringify(data.getData()));
+            let data = new VeMecData(_this.id, RandomPresMax, RandomPresMin, RandomGas, RandomFrecuencia, RandomMezcla, RandomHumedad, RandomTemperatura_in, RandomTemperatura_out, RandomPresion_in, RandomPresion_out, date+' '+time);
+            socket.emit('envio_datosVeMec', JSON.stringify(data.getData()));
             console.log("> Esto es el ventialdor " + _this.id);
         }, 1000);
     });
   }
 
   send(data) {
-    socket.send(JSON.stringify(data));
+    socket.emit('envio_datosVeMec', JSON.stringify(data));
   }
   
     randomIntFromInterval(min, max) {
