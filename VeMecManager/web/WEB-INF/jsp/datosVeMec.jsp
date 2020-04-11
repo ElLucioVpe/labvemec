@@ -38,6 +38,17 @@
                 console.log("recibiendo datos de vemec...");
                 var json = res;
                 
+                document.getElementById('p_mx').innerHTML = json.Presion_Maxima;
+                document.getElementById('p_mn').innerHTML = json.Presion_Minima;
+                document.getElementById('gas').innerHTML = json.Gas;
+                document.getElementById('frec').innerHTML = json.Frecuencia;
+                document.getElementById('mez').innerHTML = json.Mezcla;
+                document.getElementById('hum').innerHTML = json.Humedad;
+                document.getElementById('t_in').innerHTML = json.Temperatura_Entrada;
+                document.getElementById('t_out').innerHTML = json.Temperatura_Salida;
+                document.getElementById('p_in').innerHTML = json.Presion_Entrada;
+                document.getElementById('p_out').innerHTML = json.Presion_Salida;
+                
                 console.log("agregando datos a la grafica...");
                 segundos++;
                 arrayDatos.push(['${segundos}' , json.Presion_Entrada, json.Presion_Salida]);
@@ -101,35 +112,35 @@
                     <div class="card">
                         <form class="form-inline">
                             <label>Presión máxima &nbsp</label>
-                            <h1>${ultimo_dato.Presion_Maxima}</h1>
+                            <h1 id="p_mx">${ultimo_dato.Presion_Maxima}</h1>
                         </form>
                     </div>
                     
                     <div class="card">
                         <form class="form-inline">
                             <label>Presión mínima &nbsp</label>
-                            <h1>${ultimo_dato.Presion_Minima}</h1>
+                            <h1 id="p_mn">${ultimo_dato.Presion_Minima}</h1>
                         </form>
                     </div>
                     
                     <div class="card">
                         <form class="form-inline">
                             <label>Volumen de Gás &nbsp</label>
-                            <h1>${ultimo_dato.Gas}</h1>
+                            <h1 id="gas">${ultimo_dato.Gas}</h1>
                         </form>
                     </div>
                     
                     <div class="card">
                         <form class="form-inline">
                             <label>Frecuencia de aporte &nbsp</label>
-                            <h1>${ultimo_dato.Frecuencia}</h1>
+                            <h1 id="frec">${ultimo_dato.Frecuencia}</h1>
                         </form>
                     </div>
                         
                     <div class="card">
                         <form class="form-inline">
                             <label>%O2 en mezcla &nbsp</label>
-                            <h1>${ultimo_dato.Mezcla}</h1>
+                            <h1 id="mez">${ultimo_dato.Mezcla}</h1>
                         </form>
                     </div>
                 </div>
@@ -137,35 +148,35 @@
                     <div class="card">
                         <form class="form-inline">
                             <label>Humedad de aire &nbsp</label>
-                            <h1>${ultimo_dato.Humedad}</h1>
+                            <h1 id="hum">${ultimo_dato.Humedad}</h1>
                         </form>
                     </div>
                         
                     <div class="card">
                         <form class="form-inline">
                             <label>Temperatura de entrada &nbsp</label>
-                            <h1>${ultimo_dato.Temperatura_Entrada}</h1>
+                            <h1 id="t_in">${ultimo_dato.Temperatura_Entrada}</h1>
                         </form>
                     </div>
                         
                     <div class="card">
                         <form class="form-inline">
                             <label>Temperatura de salida &nbsp</label>
-                            <h1>${ultimo_dato.Temperatura_Salida}</h1>
+                            <h1 id="t_out">${ultimo_dato.Temperatura_Salida}</h1>
                         </form>
                     </div>
                         
                     <div class="card">   
                         <form class="form-inline">
                             <label>Presión de entrada &nbsp</label>
-                            <h1>${ultimo_dato.Presion_Entrada}</h1>
+                            <h1 id="p_in">${ultimo_dato.Presion_Entrada}</h1>
                         </form>
                     </div>
                         
                     <div class="card">
                         <form class="form-inline">
                             <label>Presión de salida &nbsp</label>
-                            <h1>${ultimo_dato.Presion_Salida}</h1>
+                            <h1 id="p_out">${ultimo_dato.Presion_Salida}</h1>
                         </form>
                     </div>
                    
