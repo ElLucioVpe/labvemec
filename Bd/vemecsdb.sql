@@ -88,7 +88,7 @@ ALTER TABLE `vemecs`
 -- AUTO_INCREMENT for table `vemecs_data`
 --
 ALTER TABLE `vemecs_data`
-  MODIFY `Id_Vemec` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id_Data` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
