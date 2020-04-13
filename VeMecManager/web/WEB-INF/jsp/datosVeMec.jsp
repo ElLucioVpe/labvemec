@@ -30,7 +30,7 @@
             if(arrayDatos.length === 1) {
                 arrayDatos.push(['0', 0, 0]);
             }
-            
+            var segundosAUX = segundos;
             const socket = io('http://localhost:4000');
             
             socket.on('datosVeMec'+${id}, (res) => {
@@ -50,6 +50,11 @@
                 
                 console.log("agregando datos a la grafica...");
                 segundos++;
+                if((segundosAUX+30) == segundos){
+                    segundosAUX = segundos;
+                    arrayDatos = [];
+                    arrayDatos.push(['Segundos', 'Presión de Entrada', 'Presión de Salida']);
+                }
                 arrayDatos.push(['${segundos}' , json.Presion_Entrada, json.Presion_Salida]);
             });
             

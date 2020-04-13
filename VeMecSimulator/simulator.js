@@ -162,7 +162,7 @@ class VeMecData {
   }
 }
 
-let veMec1 = new VeMec(2, "Marca", "Modelo", "ubicacion", true, socket);
+let veMec1 = new VeMec(1, "Marca", "Modelo", "ubicacion", true, socket);
 let veMec2 = new VeMec(2, "asdasd", "adsasd", "ubicacion", true, socket);
 
 async function run_veMec1() {
