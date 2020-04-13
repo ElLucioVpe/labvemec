@@ -9,6 +9,7 @@
 <html>
      <head>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Modificar datos de VeMec</title>
     </head>
@@ -45,6 +46,10 @@
                         <label>Ubicacion</label>
                         <input type="text" name="ubicacion" class="form-control" value="${lista[0].Ubicacion}">
                         <input type="submit" value="Modificar" class="btn btn-light">
+                        <a href="index.htm" class="btn btn-secondary" style="color: #15bef1">
+                            <i class="fas fa-chevron-left"></i> 
+                            Regresar
+                        </a>
                     </form>
                 </div>
             </div>

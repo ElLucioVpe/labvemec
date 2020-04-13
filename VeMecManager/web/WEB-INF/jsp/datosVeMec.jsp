@@ -17,7 +17,6 @@
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
         <script language = "javascript" type = "text/javascript">
-    
             //Grafica de presión
             var arrayDatos = [];
             var segundos = 0;
@@ -33,7 +32,7 @@
             }
             
             const socket = io('http://localhost:4000');
-
+            
             socket.on('datosVeMec'+${id}, (res) => {
                 console.log("recibiendo datos de vemec...");
                 var json = res;
@@ -182,9 +181,13 @@
                    
                 </div>
                 <div class="col-sm">
-                    <a href="registrosVeMec.htm?id=${ultimo_dato.Id_Vemec}" class="btn btn-light" style="background-color: #15bef1">
+                    <a href="registrosVeMec.htm?id=${id}" class="btn btn-light" style="background-color: #15bef1">
                         <i class="fas fa-database"></i> 
                         Todos los registros
+                    </a>
+                    <a href="index.htm" class="btn btn-secondary" style="color: #15bef1">
+                        <i class="fas fa-chevron-left"></i> 
+                        Regresar
                     </a>
                 </div>
             </div>
