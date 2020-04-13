@@ -13,10 +13,9 @@ package conf;
 import javax.ws.rs.ApplicationPath;
 import org.glassfish.jersey.server.ResourceConfig;
 
-@ApplicationPath("/VerMecManager/")
+@ApplicationPath("/VeMecManager/")
 public class VeMecApplication extends ResourceConfig {
     public VeMecApplication(){
         register(CORSFilter.class);
-        //other registrations omitted for brevity
     }
 }
