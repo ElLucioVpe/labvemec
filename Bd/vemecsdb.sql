@@ -11,6 +11,8 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
+CREATE DATABASE vemecsdb;
+USE vemecsdb;
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -87,8 +89,8 @@ ALTER TABLE `vemecs`
 --
 -- AUTO_INCREMENT for table `vemecs_data`
 --
-ALTER TABLE `vemecs_data`
-  MODIFY `Id_Vemec` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `vemecs_data` NOT NULL AUTO_INCREMENT
+  MODIFY `Id_Vemec` int(11);
 
 --
 -- Constraints for dumped tables
