@@ -10,7 +10,6 @@ package controller;
  */
 import conf.Connection;
 import entities.VeMec;
-import entities.VeMec_data;
 //import entities.VeMec_data;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;

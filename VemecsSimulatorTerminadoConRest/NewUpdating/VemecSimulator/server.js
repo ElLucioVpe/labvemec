@@ -21,7 +21,7 @@ io.sockets.on('connection', (socket) => {
     socket.on ('envio_datosVeMec', function (msg) {
         console.log('data: '+msg);
         var json = JSON.parse(msg);
-        io.sockets.emit('datosVeMec'+json.Id, json);
+        io.sockets.emit('datosVeMec'+json.Id_Vemec, json);
     });
 
 })

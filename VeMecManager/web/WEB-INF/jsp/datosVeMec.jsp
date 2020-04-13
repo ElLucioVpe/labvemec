@@ -32,7 +32,7 @@
             }
             
             const socket = io('http://localhost:4000');
-
+            
             socket.on('datosVeMec'+${id}, (res) => {
                 console.log("recibiendo datos de vemec...");
                 var json = res;
