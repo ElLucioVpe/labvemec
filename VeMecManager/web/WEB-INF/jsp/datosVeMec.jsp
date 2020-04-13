@@ -17,9 +17,6 @@
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
         <script language = "javascript" type = "text/javascript">
-            if(${ultimo_dato} === null) {
-                
-            }
             //Grafica de presión
             var arrayDatos = [];
             var segundos = 0;
