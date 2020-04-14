@@ -58,7 +58,7 @@ class VeMec {
           date + "T" + time + "Z[UTC]"
         );
         socket.emit("envio_datosVeMec", JSON.stringify(data.getData()));
-        console.log("> Esto es el ventialdor " + _this.id + "ts" + data.time_Stamp);
+        console.log("> Esto es el ventilador " + _this.id + "ts" + data.time_Stamp);
         segs += 1;
 
         if (segs > 60) {
