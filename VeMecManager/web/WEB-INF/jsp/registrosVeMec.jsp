@@ -43,16 +43,16 @@
                     <table id="tabla-registros" class="table table-striped table-bordered table-sm" style="width:100%">
                         <thead>
                             <th class="th-sm">ID</th>
-                            <th class="th-sm">Presión Maxima(mmHg)</th>
-                            <th class="th-sm">Presión Minima(mmHg)</th>
-                            <th class="th-sm">Gás(cc)</th>
-                            <th class="th-sm">Frecuencia(veces/min)</th>
-                            <th class="th-sm">Mezcla(%)</th>
-                            <th class="th-sm">Humedad(%)</th>
-                            <th class="th-sm">Temperatura Entrada(ºC)</th>
-                            <th class="th-sm">Temperatura Salida(ºC)</th>
-                            <th class="th-sm">Presión Entrada(mmHg)</th>
-                            <th class="th-sm">Presión Salida(mmHg)</th>
+                            <th class="th-sm">Presión Maxima</th>
+                            <th class="th-sm">Presión Minima</th>
+                            <th class="th-sm">Gás</th>
+                            <th class="th-sm">Frecuencia</th>
+                            <th class="th-sm">Mezcla</th>
+                            <th class="th-sm">Humedad</th>
+                            <th class="th-sm">Temperatura Entrada</th>
+                            <th class="th-sm">Temperatura Salida</th>
+                            <th class="th-sm">Presión Entrada</th>
+                            <th class="th-sm">Presión Salida</th>
                             <th class="th-sm">Timestamp</th>
                         </thead>
                         <tbody>
@@ -76,16 +76,16 @@
                         </tbody>
                         <tfoot>
                             <th class="th-sm">ID</th>
-                            <th class="th-sm">Presión Maxima</th>
-                            <th class="th-sm">Presión Minima</th>
-                            <th class="th-sm">Gás</th>
-                            <th class="th-sm">Frecuencia</th>
-                            <th class="th-sm">Mezcla</th>
-                            <th class="th-sm">Humedad</th>
-                            <th class="th-sm">Temperatura Entrada</th>
-                            <th class="th-sm">Temperatura Salida</th>
-                            <th class="th-sm">Presión Entrada</th>
-                            <th class="th-sm">Presión Salida</th>
+                            <th class="th-sm">mmHg</th>
+                            <th class="th-sm">mmHg</th>
+                            <th class="th-sm">cc</th>
+                            <th class="th-sm">veces/min</th>
+                            <th class="th-sm">%</th>
+                            <th class="th-sm">%</th>
+                            <th class="th-sm">ºC</th>
+                            <th class="th-sm">ºC</th>
+                            <th class="th-sm">mmHg</th>
+                            <th class="th-sm">mmHg</th>
                             <th class="th-sm">Timestamp</th>
                         </tfoot>
                     </table>
