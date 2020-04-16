@@ -19,16 +19,16 @@ class VeMec {
     return new Promise(async (resolve, reject) => {
       let _this = this;
       let sendTimer = setInterval(function () {
-        let RandomPresMax = _this.randomIntFromInterval(15, 35);
-        let RandomPresMin = _this.randomIntFromInterval(15, 35);
-        let RandomGas = _this.randomIntFromInterval(15, 35);
-        let RandomFrecuencia = _this.randomIntFromInterval(15, 35);
-        let RandomMezcla = _this.randomIntFromInterval(15, 35);
-        let RandomHumedad = _this.randomIntFromInterval(15, 35);
-        let RandomTemperatura_in = _this.randomIntFromInterval(15, 35);
-        let RandomTemperatura_out = _this.randomIntFromInterval(15, 35);
-        let RandomPresion_in = _this.randomIntFromInterval(15, 35);
-        let RandomPresion_out = _this.randomIntFromInterval(15, 35);
+        let RandomPresMax = _this.randomIntFromInterval(130, 139); //?
+        let RandomPresMin = _this.randomIntFromInterval(80, 84); //?
+        let RandomGas = _this.randomIntFromInterval(380, 760);
+        let RandomFrecuencia = _this.randomIntFromInterval(12, 16);
+        let RandomMezcla = _this.randomIntFromInterval(40, 100);
+        let RandomHumedad = _this.randomIntFromInterval(80, 100);
+        let RandomTemperatura_in = _this.randomIntFromInterval(35, 39);
+        let RandomTemperatura_out = _this.randomIntFromInterval(30, 45);
+        let RandomPresion_in = _this.randomIntFromInterval(10, 13); //Dudamos mas de este valor que de nostros mismos
+        let RandomPresion_out = _this.randomIntFromInterval(8, 15); //Igual en este
         let today = new Date();
         let date =
           today.getFullYear() +
@@ -58,7 +58,7 @@ class VeMec {
           date + "T" + time + "Z[UTC]"
         );
         socket.emit("envio_datosVeMec", JSON.stringify(data.getData()));
-        console.log("> Esto es el ventilador " + _this.id + "ts" + data.time_Stamp);
+        console.log("> Esto es el ventialdor " + _this.id + "ts" + data.time_Stamp);
         segs += 1;
 
         if (segs > 60) {
