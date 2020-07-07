@@ -6,6 +6,12 @@
     <class>entities.Contactos</class>
     <class>entities.Slaves</class>
     <class>entities.AccionesMedicas</class>
+    <class>entities.Vemec</class>
+    <class>entities.Slave</class>
+    <class>entities.Contacto</class>
+    <class>entities.AccionMedica</class>
+    <class>entities.Paciente</class>
+    <class>entities.Vemec_Data</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/vemecsdb?zeroDateTimeBehavior=CONVERT_TO_NULL"/>

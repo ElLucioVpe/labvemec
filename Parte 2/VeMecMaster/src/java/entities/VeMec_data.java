@@ -11,8 +11,6 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -23,42 +21,34 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author esteban
+ * @author Esteban
  */
 @Entity
 @Table(name = "vemecs_data")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "VeMec_data.findAll", query = "SELECT v FROM VeMec_data v"),
-    @NamedQuery(name = "VeMec_data.findByIdData", query = "SELECT v FROM VeMec_data v WHERE v.veMec_dataPK.idData = :idData"),
-    @NamedQuery(name = "VeMec_data.findByIdVemec", query = "SELECT v FROM VeMec_data v WHERE v.veMec_dataPK.idVemec = :idVemec"),
-    @NamedQuery(name = "VeMec_data.findByPresionMaxima", query = "SELECT v FROM VeMec_data v WHERE v.presionMaxima = :presionMaxima"),
-    @NamedQuery(name = "VeMec_data.findByPresionMinima", query = "SELECT v FROM VeMec_data v WHERE v.presionMinima = :presionMinima"),
-    @NamedQuery(name = "VeMec_data.findByGas", query = "SELECT v FROM VeMec_data v WHERE v.gas = :gas"),
-    @NamedQuery(name = "VeMec_data.findByFrecuencia", query = "SELECT v FROM VeMec_data v WHERE v.frecuencia = :frecuencia"),
-    @NamedQuery(name = "VeMec_data.findByMezcla", query = "SELECT v FROM VeMec_data v WHERE v.mezcla = :mezcla"),
-    @NamedQuery(name = "VeMec_data.findByHumedad", query = "SELECT v FROM VeMec_data v WHERE v.humedad = :humedad"),
-    @NamedQuery(name = "VeMec_data.findByTemperaturaEntrada", query = "SELECT v FROM VeMec_data v WHERE v.temperaturaEntrada = :temperaturaEntrada"),
-    @NamedQuery(name = "VeMec_data.findByTemperaturaSalida", query = "SELECT v FROM VeMec_data v WHERE v.temperaturaSalida = :temperaturaSalida"),
-    @NamedQuery(name = "VeMec_data.findByPresionEntrada", query = "SELECT v FROM VeMec_data v WHERE v.presionEntrada = :presionEntrada"),
-    @NamedQuery(name = "VeMec_data.findByPresionSalida", query = "SELECT v FROM VeMec_data v WHERE v.presionSalida = :presionSalida"),
-    @NamedQuery(name = "VeMec_data.findByTimestampData", query = "SELECT v FROM VeMec_data v WHERE v.timestampData = :timestampData")})
-public class VeMec_data implements Serializable {
-
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "Pulsaciones")
-    private int pulsaciones;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "Conectado_Corriente")
-    private boolean conectadoCorriente;
-    @Column(name = "Energia")
-    private Integer energia;
+    @NamedQuery(name = "Vemec_Data.findAll", query = "SELECT v FROM Vemec_Data v"),
+    @NamedQuery(name = "Vemec_Data.findByIdData", query = "SELECT v FROM Vemec_Data v WHERE v.vemec_DataPK.idData = :idData"),
+    @NamedQuery(name = "Vemec_Data.findByIdVemec", query = "SELECT v FROM Vemec_Data v WHERE v.vemec_DataPK.idVemec = :idVemec"),
+    @NamedQuery(name = "Vemec_Data.findByPresionMaxima", query = "SELECT v FROM Vemec_Data v WHERE v.presionMaxima = :presionMaxima"),
+    @NamedQuery(name = "Vemec_Data.findByPresionMinima", query = "SELECT v FROM Vemec_Data v WHERE v.presionMinima = :presionMinima"),
+    @NamedQuery(name = "Vemec_Data.findByGas", query = "SELECT v FROM Vemec_Data v WHERE v.gas = :gas"),
+    @NamedQuery(name = "Vemec_Data.findByFrecuencia", query = "SELECT v FROM Vemec_Data v WHERE v.frecuencia = :frecuencia"),
+    @NamedQuery(name = "Vemec_Data.findByMezcla", query = "SELECT v FROM Vemec_Data v WHERE v.mezcla = :mezcla"),
+    @NamedQuery(name = "Vemec_Data.findByHumedad", query = "SELECT v FROM Vemec_Data v WHERE v.humedad = :humedad"),
+    @NamedQuery(name = "Vemec_Data.findByTemperaturaEntrada", query = "SELECT v FROM Vemec_Data v WHERE v.temperaturaEntrada = :temperaturaEntrada"),
+    @NamedQuery(name = "Vemec_Data.findByTemperaturaSalida", query = "SELECT v FROM Vemec_Data v WHERE v.temperaturaSalida = :temperaturaSalida"),
+    @NamedQuery(name = "Vemec_Data.findByPresionEntrada", query = "SELECT v FROM Vemec_Data v WHERE v.presionEntrada = :presionEntrada"),
+    @NamedQuery(name = "Vemec_Data.findByPresionSalida", query = "SELECT v FROM Vemec_Data v WHERE v.presionSalida = :presionSalida"),
+    @NamedQuery(name = "Vemec_Data.findByPulsaciones", query = "SELECT v FROM Vemec_Data v WHERE v.pulsaciones = :pulsaciones"),
+    @NamedQuery(name = "Vemec_Data.findByConectadoCorriente", query = "SELECT v FROM Vemec_Data v WHERE v.conectadoCorriente = :conectadoCorriente"),
+    @NamedQuery(name = "Vemec_Data.findByEnergia", query = "SELECT v FROM Vemec_Data v WHERE v.energia = :energia"),
+    @NamedQuery(name = "Vemec_Data.findByTimestampData", query = "SELECT v FROM Vemec_Data v WHERE v.timestampData = :timestampData")})
+public class Vemec_Data implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    protected VeMec_dataPK veMec_dataPK;
+    protected Vemec_DataPK vemec_DataPK;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "Presion_Maxima")
     private Float presionMaxima;
@@ -80,30 +70,46 @@ public class VeMec_data implements Serializable {
     private Float presionEntrada;
     @Column(name = "Presion_Salida")
     private Float presionSalida;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "Pulsaciones")
+    private int pulsaciones;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "Conectado_Corriente")
+    private boolean conectadoCorriente;
+    @Column(name = "Energia")
+    private Integer energia;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "Timestamp_Data")
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestampData;
-    @JoinColumn(name = "Id_Vemec", referencedColumnName = "Id", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private VeMec veMec;
 
-    public VeMec_data() {
+    public Vemec_Data() {
     }
 
-    public VeMec_data(VeMec_dataPK veMec_dataPK) {
-        this.veMec_dataPK = veMec_dataPK;
+    public Vemec_Data(Vemec_DataPK vemec_DataPK) {
+        this.vemec_DataPK = vemec_DataPK;
     }
 
-    public VeMec_data(int idData, int idVemec) {
-        this.veMec_dataPK = new VeMec_dataPK(idData, idVemec);
+    public Vemec_Data(Vemec_DataPK vemec_DataPK, int pulsaciones, boolean conectadoCorriente, Date timestampData) {
+        this.vemec_DataPK = vemec_DataPK;
+        this.pulsaciones = pulsaciones;
+        this.conectadoCorriente = conectadoCorriente;
+        this.timestampData = timestampData;
     }
 
-    public VeMec_dataPK getVeMec_dataPK() {
-        return veMec_dataPK;
+    public Vemec_Data(int idData, int idVemec) {
+        this.vemec_DataPK = new Vemec_DataPK(idData, idVemec);
     }
 
-    public void setVeMec_dataPK(VeMec_dataPK veMec_dataPK) {
-        this.veMec_dataPK = veMec_dataPK;
+    public Vemec_DataPK getVemec_DataPK() {
+        return vemec_DataPK;
+    }
+
+    public void setVemec_DataPK(Vemec_DataPK vemec_DataPK) {
+        this.vemec_DataPK = vemec_DataPK;
     }
 
     public Float getPresionMaxima() {
@@ -186,47 +192,6 @@ public class VeMec_data implements Serializable {
         this.presionSalida = presionSalida;
     }
 
-    public Date getTimestampData() {
-        return timestampData;
-    }
-
-    public void setTimestampData(Date timestampData) {
-        this.timestampData = timestampData;
-    }
-
-    public VeMec getVeMec() {
-        return veMec;
-    }
-
-    public void setVeMec(VeMec veMec) {
-        this.veMec = veMec;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (veMec_dataPK != null ? veMec_dataPK.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof VeMec_data)) {
-            return false;
-        }
-        VeMec_data other = (VeMec_data) object;
-        if ((this.veMec_dataPK == null && other.veMec_dataPK != null) || (this.veMec_dataPK != null && !this.veMec_dataPK.equals(other.veMec_dataPK))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "entities.VeMec_data[ veMec_dataPK=" + veMec_dataPK + " ]";
-    }
-
     public int getPulsaciones() {
         return pulsaciones;
     }
@@ -249,6 +214,39 @@ public class VeMec_data implements Serializable {
 
     public void setEnergia(Integer energia) {
         this.energia = energia;
+    }
+
+    public Date getTimestampData() {
+        return timestampData;
+    }
+
+    public void setTimestampData(Date timestampData) {
+        this.timestampData = timestampData;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (vemec_DataPK != null ? vemec_DataPK.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Vemec_Data)) {
+            return false;
+        }
+        Vemec_Data other = (Vemec_Data) object;
+        if ((this.vemec_DataPK == null && other.vemec_DataPK != null) || (this.vemec_DataPK != null && !this.vemec_DataPK.equals(other.vemec_DataPK))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "entities.Vemec_Data[ vemec_DataPK=" + vemec_DataPK + " ]";
     }
     
 }

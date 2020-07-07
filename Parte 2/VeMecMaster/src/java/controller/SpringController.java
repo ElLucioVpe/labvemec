@@ -9,7 +9,7 @@ package controller;
  * @author esteban
  */
 import conf.Connection;
-import entities.VeMec;
+import entities.Slave;
 //import entities.VeMec_data;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -31,81 +31,62 @@ public class SpringController {
     //Este codigo sera editado en el siguiente capitulo
     @RequestMapping("index.htm")
     public ModelAndView ListarTabla() {
-        String consulta = "select * from vemecs";
+        String consulta = "select * from slaves";
         datos = this.template.queryForList(consulta);
         mav.addObject("lista", datos);
         mav.setViewName("index");
         return mav;
     }
     
-    @RequestMapping(value = "altaVeMec.htm", method = RequestMethod.GET)
-    public ModelAndView AltaVeMec() {
-        mav.addObject(new VeMec());
-        mav.setViewName("altaVeMec");
+    @RequestMapping(value = "altaSeccion.htm", method = RequestMethod.GET)
+    public ModelAndView AltaSeccion() {
+        mav.addObject(new Slave());
+        mav.setViewName("altaSeccion");
         return mav;
     }
     
-    @RequestMapping(value = "altaVeMec.htm", method = RequestMethod.POST)
-    public ModelAndView AltaVeMec(VeMec vem) {
-        String consulta = "insert into vemecs(Marca, Modelo, Ubicacion) values(?,?,?)";
-        this.template.update(consulta, vem.getMarca(), vem.getModelo(), vem.getUbicacion());
+    @RequestMapping(value = "altaSeccion.htm", method = RequestMethod.POST)
+    public ModelAndView AltaSeccion(Slave slv) {
+        String consulta = "insert into slaves(Nombre, Intervalo_Envio, Intervalo_Emergencia) values(?,?,?)";
+        this.template.update(consulta, slv.getNombre(), slv.getIntervaloEnvio(), slv.getIntervaloEmergencia());
         return new ModelAndView("redirect:/index.htm");
     }
     
-    @RequestMapping(value = "modificarVeMec.htm", method = RequestMethod.GET)
-    public ModelAndView ModificarVeMec(HttpServletRequest request) {
+    @RequestMapping(value = "modificarSeccion.htm", method = RequestMethod.GET)
+    public ModelAndView ModificarSeccion(HttpServletRequest request) {
         id = Integer.parseInt(request.getParameter("id"));
-        String consulta = "select * from vemecs where Id="+id;
+        String consulta = "select * from slaves where id="+id;
         datos = this.template.queryForList(consulta);
         mav.addObject("lista", datos);
-        mav.setViewName("modificarVeMec");
+        mav.setViewName("modificarSeccion");
         return mav;
     }
     
-    @RequestMapping(value = "modificarVeMec.htm", method = RequestMethod.POST)
-    public ModelAndView ModificarVeMec(VeMec vem) {
-        String consulta = "update vemecs set Marca=?,Modelo=?,Ubicacion=? where Id="+id;
-        this.template.update(consulta, vem.getMarca(), vem.getModelo(), vem.getUbicacion());
+    @RequestMapping(value = "modificarSeccion.htm", method = RequestMethod.POST)
+    public ModelAndView ModificarSeccion(Slave slv) {
+        String consulta = "update slaves set Nombre=?,Intervalo_Envio=?,Intervalo_Emergencia=? where id="+id;
+        this.template.update(consulta, slv.getNombre(), slv.getIntervaloEnvio(), slv.getIntervaloEmergencia());
         return new ModelAndView("redirect:/index.htm");
     }
     
-    @RequestMapping("bajaVeMec.htm")
-    public ModelAndView BajaVeMec(HttpServletRequest request) {
+    @RequestMapping("bajaSeccion.htm")
+    public ModelAndView BajaSeccion(HttpServletRequest request) {
         id = Integer.parseInt(request.getParameter("id"));
-        String consulta = "delete from vemecs_data where Id_VeMec="+id;
-        this.template.update(consulta);
-        consulta = "delete from vemecs where Id="+id;
+        //String consulta = "delete from vemecs_data where Id_VeMec="+id;
+        //this.template.update(consulta);
+        //consulta = "delete from vemecs where Id="+id;
+        String consulta = "delete from slaves where Id="+id;
         this.template.update(consulta);
         return new ModelAndView("redirect:/index.htm");
     }
     
-    @RequestMapping("datosVeMec.htm")
-    public ModelAndView DatosActualesVeMec(HttpServletRequest request) {
-        //en ultima timestamp
-        //con graficas presión de entrada y presión de salida
-        id = Integer.parseInt(request.getParameter("id"));
-        String consulta = "select * from vemecs_data where Id_Vemec="+id+" order by Timestamp_Data";
+    @RequestMapping("seccion.htm")
+    public ModelAndView DatosSeccion(HttpServletRequest request) {
+        /*id = Integer.parseInt(request.getParameter("id"));
+        String consulta = "select * from vemecs where id_slave="+id;
         datos = this.template.queryForList(consulta);
-        
-        mav.addObject("datos", datos);
-        mav.addObject("id", id);
-        if(!datos.isEmpty()) {
-            mav.addObject("ultimo_dato", datos.get(datos.size()-1));
-        } else {
-            mav.addObject("ultimo_dato", null);
-        }
-        mav.setViewName("datosVeMec");
-        return mav;
-    }
-    
-    @RequestMapping("registrosVeMec.htm")
-    public ModelAndView RegistrosVeMec(HttpServletRequest request) {
-        //paginado
-        id = Integer.parseInt(request.getParameter("id"));
-        String consulta = "select * from vemecs_data where Id_Vemec="+id;
-        datos = this.template.queryForList(consulta);
-        mav.addObject("lista", datos);
-        mav.setViewName("registrosVeMec");
+        mav.addObject("lista", datos);*/
+        mav.setViewName("seccion");
         return mav;
     }
 }

@@ -13,23 +13,23 @@ import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author esteban
+ * @author Esteban
  */
 @Embeddable
-public class VeMec_dataPK implements Serializable {
+public class Vemec_DataPK implements Serializable {
 
     @Basic(optional = false)
-    @NotNull
     @Column(name = "Id_Data")
     private int idData;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "Id_Vemec")
     private int idVemec;
 
-    public VeMec_dataPK() {
+    public Vemec_DataPK() {
     }
 
-    public VeMec_dataPK(int idData, int idVemec) {
+    public Vemec_DataPK(int idData, int idVemec) {
         this.idData = idData;
         this.idVemec = idVemec;
     }
@@ -61,10 +61,10 @@ public class VeMec_dataPK implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof VeMec_dataPK)) {
+        if (!(object instanceof Vemec_DataPK)) {
             return false;
         }
-        VeMec_dataPK other = (VeMec_dataPK) object;
+        Vemec_DataPK other = (Vemec_DataPK) object;
         if (this.idData != other.idData) {
             return false;
         }
@@ -76,7 +76,7 @@ public class VeMec_dataPK implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.VeMec_dataPK[ idData=" + idData + ", idVemec=" + idVemec + " ]";
+        return "entities.Vemec_DataPK[ idData=" + idData + ", idVemec=" + idVemec + " ]";
     }
     
 }

@@ -11,7 +11,7 @@
         <title>Laboratorio 1 JavaEE - VeMec</title>
     </head>
 
-    <body >
+    <body>
         
         <div class="container mt-4" style="background-color: #15bef1">
             <div class="card">

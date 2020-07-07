@@ -5,10 +5,10 @@
 
 <html>
     <head>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Laboratorio 1 JavaEE - VeMec</title>
+        <title>VeMecMaster - Principal</title>
     </head>
 
     <body >
@@ -16,40 +16,40 @@
         <div class="container mt-4" style="background-color: #15bef1">
             <div class="card">
                 <div class="card-header">
-                   <a class="btn btn-light" href="altaVeMec.htm">
+                   <a class="btn btn-light" href="altaSeccion.htm">
                         <i class="fas fa-plus"></i>
-                        Agregar nuevo VeMec
+                        Agregar una nueva seccion.
                     </a>
                 </div>
                 
                 <div class="card-header text-center" style="background-color: #15bef1">
-                    Lista de VeMecs
+                    Secciones
                 </div>
                 <div class="card-body bg-light">
                     <table class="table table-hover">
                         <thead>
                             <th>ID</th>
-                            <th>Marca</th>
-                            <th>Modelo</th>
-                            <th>Ubicacion</th>
+                            <th>Nombre</th>
+                            <th>Intervalo de envio</th>
+                            <th>Intervalo de envio (Emergencia)</th>
                         </thead>
                         <tbody>
-                            <c:forEach var="vemec" items="${lista}">
+                            <c:forEach var="slave" items="${lista}">
                                 <tr>
-                                    <td>${vemec.Id}</td>
-                                    <td>${vemec.Marca}</td>
-                                    <td>${vemec.Modelo}</td>
-                                    <td>${vemec.Ubicacion}</td>
+                                    <td>${slave.id}</td>
+                                    <td>${slave.Nombre}</td>
+                                    <td>${slave.Intervalo_Envio}</td>
+                                    <td>${slave.Intervalo_Emergencia}</td>
                                     <td>
-                                        <a href="datosVeMec.htm?id=${vemec.Id}" class="btn btn-light" style="background-color: #15bef1">
+                                        <a href="seccion.htm?id=${slave.id}" class="btn btn-light" style="background-color: #15bef1">
                                             <i class="fas fa-database"></i>
                                             Datos
                                         </a>
-                                        <a href="modificarVeMec.htm?id=${vemec.Id}" class="btn btn-light" style="background-color: #15bef1">
+                                        <a href="modificarSeccion.htm?id=${slave.id}" class="btn btn-light" style="background-color: #15bef1">
                                             <i class="fas fa-edit"></i>
                                             Modificar
                                         </a>
-                                        <a href="bajaVeMec.htm?id=${vemec.Id}" class="btn btn-danger">
+                                        <a href="bajaSeccion.htm?id=${slave.id}" class="btn btn-danger">
                                             <i class="fas fa-trash"></i> 
                                             Eliminar
                                         </a>

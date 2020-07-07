@@ -32,14 +32,14 @@
 	</servlet-class>
 	<init-param>
 		<param-name>javax.ws.rs.Application</param-name>
-		<param-value>conf.VeMecApplication</param-value>			
+		<param-value>conf.VeMecSlaveApplication</param-value>			
 	</init-param>		
 	<load-on-startup>1</load-on-startup>
     </servlet>
  
     <servlet-mapping>
         <servlet-name>jersey-servlet</servlet-name>
-        <url-pattern>/VerMecManager/*</url-pattern>
+        <url-pattern>/VerMecSlave/*</url-pattern>
     </servlet-mapping>
         <!--
     <servlet>

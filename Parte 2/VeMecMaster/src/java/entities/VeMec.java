@@ -8,7 +8,6 @@ package entities;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,19 +26,25 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author esteban
+ * @author Esteban
  */
 @Entity
 @Table(name = "vemecs")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "VeMec_1.findAll", query = "SELECT v FROM VeMec_1 v"),
-    @NamedQuery(name = "VeMec_1.findById", query = "SELECT v FROM VeMec_1 v WHERE v.id = :id"),
-    @NamedQuery(name = "VeMec_1.findByMarca", query = "SELECT v FROM VeMec_1 v WHERE v.marca = :marca"),
-    @NamedQuery(name = "VeMec_1.findByModelo", query = "SELECT v FROM VeMec_1 v WHERE v.modelo = :modelo"),
-    @NamedQuery(name = "VeMec_1.findByUbicacion", query = "SELECT v FROM VeMec_1 v WHERE v.ubicacion = :ubicacion")})
-public class VeMec implements Serializable {
+    @NamedQuery(name = "Vemec.findAll", query = "SELECT v FROM Vemec v"),
+    @NamedQuery(name = "Vemec.findById", query = "SELECT v FROM Vemec v WHERE v.id = :id"),
+    @NamedQuery(name = "Vemec.findByMarca", query = "SELECT v FROM Vemec v WHERE v.marca = :marca"),
+    @NamedQuery(name = "Vemec.findByModelo", query = "SELECT v FROM Vemec v WHERE v.modelo = :modelo"),
+    @NamedQuery(name = "Vemec.findByUbicacion", query = "SELECT v FROM Vemec v WHERE v.ubicacion = :ubicacion")})
+public class Vemec implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "Id")
+    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 30)
@@ -56,30 +61,21 @@ public class VeMec implements Serializable {
     @Column(name = "Ubicacion")
     private String ubicacion;
     @OneToMany(mappedBy = "idVemec")
-    private Collection<AccionesMedicas> accionesMedicasCollection;
+    private Collection<AccionMedica> accionMedicaCollection;
     @OneToMany(mappedBy = "idVemec")
-    private Collection<Pacientes> pacientesCollection;
+    private Collection<Paciente> pacienteCollection;
     @JoinColumn(name = "id_slave", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Slaves idSlave;
+    private Slave idSlave;
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "Id")
-    private Integer id;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "veMec")
-    private Collection<VeMec_data> veMecdataCollection;
-
-    public VeMec() {
+    public Vemec() {
     }
 
-    public VeMec(Integer id) {
+    public Vemec(Integer id) {
         this.id = id;
     }
 
-    public VeMec(Integer id, String marca, String modelo, String ubicacion) {
+    public Vemec(Integer id, String marca, String modelo, String ubicacion) {
         this.id = id;
         this.marca = marca;
         this.modelo = modelo;
@@ -92,41 +88,6 @@ public class VeMec implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-
-    @XmlTransient
-    public Collection<VeMec_data> getVeMecdataCollection() {
-        return veMecdataCollection;
-    }
-
-    public void setVeMecdataCollection(Collection<VeMec_data> veMecdataCollection) {
-        this.veMecdataCollection = veMecdataCollection;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof VeMec)) {
-            return false;
-        }
-        VeMec other = (VeMec) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "entities.VeMec_1[ id=" + id + " ]";
     }
 
     public String getMarca() {
@@ -154,29 +115,54 @@ public class VeMec implements Serializable {
     }
 
     @XmlTransient
-    public Collection<AccionesMedicas> getAccionesMedicasCollection() {
-        return accionesMedicasCollection;
+    public Collection<AccionMedica> getAccionMedicaCollection() {
+        return accionMedicaCollection;
     }
 
-    public void setAccionesMedicasCollection(Collection<AccionesMedicas> accionesMedicasCollection) {
-        this.accionesMedicasCollection = accionesMedicasCollection;
+    public void setAccionMedicaCollection(Collection<AccionMedica> accionMedicaCollection) {
+        this.accionMedicaCollection = accionMedicaCollection;
     }
 
     @XmlTransient
-    public Collection<Pacientes> getPacientesCollection() {
-        return pacientesCollection;
+    public Collection<Paciente> getPacienteCollection() {
+        return pacienteCollection;
     }
 
-    public void setPacientesCollection(Collection<Pacientes> pacientesCollection) {
-        this.pacientesCollection = pacientesCollection;
+    public void setPacienteCollection(Collection<Paciente> pacienteCollection) {
+        this.pacienteCollection = pacienteCollection;
     }
 
-    public Slaves getIdSlave() {
+    public Slave getIdSlave() {
         return idSlave;
     }
 
-    public void setIdSlave(Slaves idSlave) {
+    public void setIdSlave(Slave idSlave) {
         this.idSlave = idSlave;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Vemec)) {
+            return false;
+        }
+        Vemec other = (Vemec) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "entities.Vemec[ id=" + id + " ]";
     }
     
 }
