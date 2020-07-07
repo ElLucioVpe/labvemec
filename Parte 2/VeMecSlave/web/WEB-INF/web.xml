@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/applicationContext.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <servlet>
+        <servlet-name>dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>*.htm</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>redirect.jsp</welcome-file>
+    </welcome-file-list>
+    
+    <servlet>
+	<servlet-name>jersey-servlet</servlet-name>
+	<servlet-class>
+            org.glassfish.jersey.servlet.ServletContainer
+	</servlet-class>
+	<init-param>
+		<param-name>javax.ws.rs.Application</param-name>
+		<param-value>conf.VeMecApplication</param-value>			
+	</init-param>		
+	<load-on-startup>1</load-on-startup>
+    </servlet>
+ 
+    <servlet-mapping>
+        <servlet-name>jersey-servlet</servlet-name>
+        <url-pattern>/VerMecManager/*</url-pattern>
+    </servlet-mapping>
+        <!--
+    <servlet>
+        <servlet-name>conf.FilterApp</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+
+        
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>conf.FilterApp</param-value>
+        </init-param>
+
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>conf</param-value>
+        </init-param>
+
+        <init-param>
+            <param-name>jersey.config.server.provider.classnames</param-name>
+            <param-value>conf.CORSFilter;org.glassfish.jersey.filter.LoggingFilter</param-value>
+        </init-param>
+            
+        <init-param>
+            <param-name>jersey.config.server.tracing</param-name>
+            <param-value>ALL</param-value>
+        </init-param>
+
+        
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>conf.FilterApp</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>-->
+</web-app>
