@@ -17,11 +17,27 @@
         <property name="mappings">
             <props>
                 <prop key="index.htm">springController</prop>
+                
+                <prop key="secciones.htm">springController</prop>
+                <prop key="seccion.htm">springController</prop>
                 <prop key="altaSeccion.htm">springController</prop>
                 <prop key="modificarSeccion.htm">springController</prop>
                 <prop key="bajaSeccion.htm">springController</prop>
-                <prop key="seccion.htm">springController</prop>
-                <prop key="index.htm">indexController</prop>
+                
+                <prop key="pacientes.htm">springController</prop>
+                <prop key="agregarPaciente.htm">springController</prop>
+                <prop key="modificarPaciente.htm">springController</prop>
+                <prop key="bajaPaciente.htm">springController</prop>
+                
+                <prop key="accionesMedicas.htm">springController</prop>
+                <prop key="altaAccionMedica.htm">springController</prop>
+                <prop key="modificarAccionMedica.htm">springController</prop>
+                <prop key="bajaAccionMedica.htm">springController</prop>
+                
+                <prop key="vemecs.htm">springController</prop>
+                <prop key="altaVeMec.htm">springController</prop>
+                <prop key="modificarVeMec.htm">springController</prop>
+                <prop key="bajaVeMec.htm">springController</prop>
             </props>
         </property>
     </bean>

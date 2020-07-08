@@ -15,8 +15,8 @@ public class Connection {
     public DriverManagerDataSource getConnection() {
 
         DriverManagerDataSource bds = new DriverManagerDataSource();
-        bds.setDriverClassName("com.mysql.jdbc.Driver");
-        bds.setUrl("jdbc:mysql://localhost:3306/vemecsdb");
+        bds.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        bds.setUrl("jdbc:mysql://localhost/vemecsdb?zeroDateTimeBehavior=CONVERT_TO_NULL&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
 	bds.setUsername("Admin");
 	bds.setPassword("1234");
 

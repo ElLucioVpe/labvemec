@@ -8,10 +8,46 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>VeMecMaster - Alta Seccion</title>
     </head>
+    <style>
+        body{
+            background-color: #15bef1;
+        }
+        
+        .btn-light {
+            background-color: #15bef1;
+            color: white;
+        }
+        
+        .card-header {
+            background-color: #15bef1;
+            font-weight: 600;
+        }
+    </style>
+    
     <body>
-        <h1>Hello World!</h1>
+        <div class="container mt-4 col-lg-4">
+            <div class="card">
+                <div class="card-header text-white">
+                    Alta de Seccion
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <input type="text" name="nombre" class="form-control" placeholder="Nombre">
+                        <input type="number" name="intervalo_envio" class="form-control" placeholder="Intervalo de envio a servidor (min)">
+                        <input type="number" name="intervalo_emergencia" class="form-control" placeholder="Intervalo de envio en emergencia (seg)">
+                        <input type="submit" value="Agregar" class="btn btn-light">
+                        <a href="index.htm" class="btn btn-secondary" style="color: #15bef1">
+                            <i class="fas fa-chevron-left"></i> 
+                            Regresar
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
