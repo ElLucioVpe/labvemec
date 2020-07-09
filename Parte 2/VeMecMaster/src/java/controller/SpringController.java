@@ -10,11 +10,14 @@ package controller;
  */
 import conf.Connection;
 import dto.DatosVeMec;
+import entities.AccionMedica;
 import entities.Paciente;
 import entities.Slave;
 import entities.Vemec;
 import entities.Vemec_Data;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -122,8 +125,19 @@ public class SpringController {
             data.setVemec(vem);
             datos.add(data);
         });
-       
         mav.addObject("datos_vemecs", datos);
+        
+        //Secciones/Slaves para seleccionar
+        consulta = "select * from slaves";
+        datos = this.template.queryForList(consulta);
+        mav.addObject("slaves", datos);
+        //
+        //Vemecs para seleccionar
+        consulta = "select * from vemecs where id_paciente IS NULL";
+        datos = this.template.queryForList(consulta);
+        mav.addObject("vemecs_libres", datos);
+        //
+        
         mav.setViewName("seccion");
         return mav;
     }
@@ -137,7 +151,7 @@ public class SpringController {
         mav.addObject("slaves", datos);
         //
         //Vemecs para seleccionar
-        consulta = "select * from vemecs where id_paciente=NULL";
+        consulta = "select * from vemecs where id_paciente IS NULL";
         datos = this.template.queryForList(consulta);
         mav.addObject("vemecs_libres", datos);
         //
@@ -169,7 +183,7 @@ public class SpringController {
         mav.addObject("slaves", datos);
         //
         //Vemecs para seleccionar
-        consulta = "select * from vemecs where id_paciente=NULL";
+        consulta = "select * from vemecs where id_paciente IS NULL";
         datos = this.template.queryForList(consulta);
         mav.addObject("vemecs_libres", datos);
         //
@@ -177,7 +191,7 @@ public class SpringController {
         return mav;
     }
     
-    @RequestMapping(value = "modificarSeccion.htm", method = RequestMethod.POST)
+    @RequestMapping(value = "modificarPaciente.htm", method = RequestMethod.POST)
     public ModelAndView ModificarPaciente(Paciente pac) {
         String consulta = "update pacientes set CI=?, Nombre=?, Sexo=?, Edad=?, Nacionalidad=?,"
                 + " Lugar_Residencia=?, Direccion=?, Coordenadas=?, Antecedentes_Clinicos=?, Nivel_Riesgo=?,"
@@ -197,6 +211,14 @@ public class SpringController {
         this.template.update(consulta);
         return new ModelAndView("redirect:/index.htm");
     }
+    
+    @RequestMapping(value="/getPaciente", method = RequestMethod.POST, produces = "application/json")
+    public Paciente GetPaciente(int id) {
+        String consulta = "select * from pacientes where id="+id;
+        List<Paciente> data = this.template.query(consulta, new BeanPropertyRowMapper<>(Paciente.class));
+        if(!data.isEmpty()) return data.get(0);
+        else return null;
+    }
     //
     
     //AccionesMedicas
@@ -208,6 +230,17 @@ public class SpringController {
         mav.addObject("lista", datos);
         mav.setViewName("accionesMedicas");
         return mav;
+    }
+    
+    @RequestMapping(value = "altaAccionMedica.htm", method = RequestMethod.POST)
+    public void AltaAccionMedica(AccionMedica amed) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        
+        String consulta = "insert into acciones_medicas(id_paciente, fecha_hora, nivel_riesgo,"
+                + "medicacion, descripcion, id_vemec, medico_tratante) values(?,?,?,?,?,?,?)";
+        this.template.update(consulta, amed.getIdPaciente(), formatter.format(new Date()), amed.getNivelRiesgo(),
+                amed.getMedicacion(), amed.getDescripcion(), amed.getIdVemec(), amed.getMedicoTratante());
+        //return new ModelAndView("redirect:/vemecs.htm");
     }
     
     @RequestMapping("bajaAccionMedica.htm")

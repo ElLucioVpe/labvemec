@@ -47,7 +47,7 @@
                                                 <td>
                                                     <a href="seccion.htm?id=${slave.id}" class="btn btn-light" style="background-color: #15bef1">
                                                         <i class="fas fa-database"></i>
-                                                        Datos
+                                                        Ir A
                                                     </a>
                                                     <a href="modificarSeccion.htm?id=${slave.id}" class="btn btn-light" style="background-color: #15bef1">
                                                         <i class="fas fa-edit"></i>

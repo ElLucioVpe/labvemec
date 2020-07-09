@@ -21,6 +21,7 @@
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
   <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
   
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
@@ -32,10 +33,25 @@
 <c:set var="uri" value="${req.requestURI}" />
 <c:set var="baseUrl" value="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/" />
 
+<style>
+    #select_slave, #id_vemec {
+        display: none;
+    }
+</style>
+
 <script type="text/javascript">
     $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip();
-    <c:forEach var="dato" items="${datos_vemecs}">
+        
+	$('a[data-confirm]').click(function(ev) {
+            var href = $(this).attr('href');
+            $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
+            $('#dataConfirmOK').attr('href', href);
+            $('#dataConfirmModal').modal({show:true});
+            return false;
+	});
+        
+        <c:forEach var="dato" items="${datos_vemecs}">
             var array = [];
             <c:forEach var="reg" items="${dato.getRegistros()}">
                 array.push({
@@ -45,8 +61,70 @@
                 });
             </c:forEach>
             cargarDatosGraficas(${dato.getVemec().getId()}, array);
-    </c:forEach>
+        </c:forEach>
     });
+    
+    //Escucha para actualizar datos y alertas
+    const socket = io('http://localhost:4000');
+    socket.on('datos_masterSlave'+${slave.id}, (res) => {
+        actualizarDatos(res);
+    });
+    
+    $('accionMedicaForm').on('submit',function(e){
+        e.preventDefault();
+        $.ajax({
+            type     : "POST",
+            cache    : false,
+            url      : $(this).attr('action'),
+            data     : $(this).serializeArray(),
+            success  : function(data) {}
+        });
+
+    });
+    
+    function asignarPaciente(id) {
+        $('form_idPaciente').val(id);
+    }
+
+    function actualizarDatos(json) {
+        console.log("recibiendo datos de vemec...");
+
+        document.getElementById('Pmax'+json.Id_Vemec).innerHTML = json.Presion_Maxima;
+        document.getElementById('Pmin'+json.Id_Vemec).innerHTML = json.Presion_Minima;
+        document.getElementById('Gas'+json.Id_Vemec).innerHTML = json.Gas;
+        document.getElementById('Fr'+json.Id_Vemec).innerHTML = json.Frecuencia;
+        document.getElementById('O2'+json.Id_Vemec).innerHTML = json.Mezcla+"%";
+        document.getElementById('Hum'+json.Id_Vemec).innerHTML = json.Humedad+"%";
+        document.getElementById('TE'+json.Id_Vemec).innerHTML = json.Temperatura_Entrada;
+        document.getElementById('TS'+json.Id_Vemec).innerHTML = json.Temperatura_Salida;
+        document.getElementById('PE'+json.Id_Vemec).innerHTML = json.Presion_Entrada;
+        document.getElementById('PS'+json.Id_Vemec).innerHTML = json.Presion_Salida;
+        document.getElementById('Pulso'+json.Id_Vemec).innerHTML = json.Pulsaciones;
+        
+        if(json.Conectado_Corriente === "true")
+            document.getElementById('p_out').innerHTML = 'Conectado a corriente <i class="fas fa-plug" aria-hidden="true"></i>';
+        else document.getElementById('p_out').innerHTML = json.Energia+'%<i class="fa fa-bolt" aria-hidden="true"></i>';
+
+        console.log("agregando datos a la grafica...");
+        var chartPE = $("#div-PEchart"+json.Id_Vemec).CanvasJS();
+        var chartPS = $("#div-PSchart"+json.Id_Vemec).CanvasJS();
+        
+        chartPE.options.dataPoints.push({
+            x: new Date(json.Timestamp_Data),
+            y: json.Presion_Entrada
+        });
+        chartPS.options.dataPoints.push({
+            x: new Date(json.Timestamp_Data),
+            y: json.Presion_Salida
+        });
+        if(chartPE.options.dataPoints.length > 20) chartPE.options.dataPoints.shift();
+        if(chartPS.options.dataPoints.length > 20) chartPS.options.dataPoints.shift();
+        
+        if(json.alerta === "activarAlerta") modoAlerta(true, "alerta", json.Id_Vemec);
+        if(json.alerta === "activarBajaBateria") modoAlerta(true, "energia", json.Id_Vemec);
+        if(json.alerta === "desactivarAlerta") modoAlerta(false, "alerta", json.Id_Vemec);
+        if(json.alerta === "desactivarBajaBateria") modoAlerta(false, "energia", json.Id_Vemec);
+    }
 
     function cargarDatosGraficas(idVeMec, registros) {
         var datosPE = [];
@@ -63,14 +141,13 @@
         });
 
         if(registros !== undefined || registros.length === 0) {
-            var tiempo0 = registros[0].timestampData;
             registros.forEach(item => {
                datosPE.push({
-                   x: timeDifference(tiempo0, item.timestampData, "segundos"),
+                   x: new Date(item.timestampData),
                    y: item.presionEntrada
                });
                datosPS.push({
-                   x: timeDifference(tiempo0, item.timestampData, "segundos"),
+                   x: new Date(item.timestampData),
                    y: item.presionSalida
                });
             });
@@ -81,20 +158,6 @@
         if (datosPS.length > 20) datosPS.shift();
         chartPE.render();
         chartPS.render();
-    }
-
-    function timeDifference(date1, date2, tipo) {
-        var difference = new Date(date1).getTime() - new Date(date2).getTime();
-        if(tipo === "minutos") {
-            var minutesDifference = Math.floor(difference/1000/60);
-            difference -= minutesDifference*1000*60;
-            return minutesDifference;
-        }
-        if(tipo === "segundos") {
-            var secondsDifference = Math.floor(difference/1000);
-            return secondsDifference;
-        }
-
     }
 
     function modoAlerta(activar, tipo, idVeMec) {
@@ -267,7 +330,7 @@
                         <div class="dropdown-header">Acciones:</div>
                         <a class="dropdown-item" href="#">Ver Datos Paciente</a>
                         <a class="dropdown-item" href="#">Ver Historial Medico</a>
-                        <a class="dropdown-item" href="#">Accion Medica</a>
+                        <a class="dropdown-item" data-toggle="modal" data-target="#accionMedicaModal">Accion Medica</a>
                       </div>
                     </div>
                 </div>
@@ -373,23 +436,122 @@
 
   </div>
 
-  <!-- Logout Modal-->
-  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <!-- Modal Accion Medica -->
+  <div class="modal fade" id="accionMedicaModal" tabindex="-1" role="dialog" aria-labelledby="accionMedicaModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <h5 class="modal-title" id="accionMedicaModalLabel">Accion Medica</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
             <span aria-hidden="true">×</span>
           </button>
         </div>
-        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+          <div class="modal-body">
+              <form action="altaAccionMedica()">
+                <input id="form_idPaciente" name="id_paciente" type="hidden" value=""/>
+                <label for="nivel_riesgo">Nivel de Riesgo:</label>
+                <select name="nivel_riesgo" id="nivel_riesgo" class="form-control">
+                    <option value="Bajo">Bajo</option>
+                    <option value="Medio">Medio</option>
+                    <option value="Alto">Alto</option>
+                    <option value="Grave">Grave</option>
+                    <option value="Muy Grave">Muy Grave</option>
+                </select>
+                <label for="medicacion">Recetar Medicacion:</label>
+                <textarea type="text" name="medicacion" class="form-control">
+                </textarea>
+                <label for="descripcion">Descripcion:</label>
+                <textarea type="text" name="descripcion" class="form-control">
+                </textarea>
+                <label for="sexo">Cambiar Seccion o VeMec?:</label>
+                <select name="selectVemec" id="selectVemec" class="form-control mb-1" onchange="showDiv('select_slave', this)">
+                    <option selected value="null">No</option>
+                    <option value="1">Si</option>
+                </select>
+                <!-- Oculto -->
+                <select name="select_slave" id="select_slave" class="form-control mb-1" onchange="showDiv('id_vemec', this)">
+                    <option selected value="null">Seleccione una seccion</option>
+                    <c:forEach var="slave" items="${slaves}">
+                        <option value="${slave.id}">${slave.Nombre}</option>
+                    </c:forEach>
+                </select>
+                <select name="id_vemec" id="id_vemec" class="form-control mb-1">
+                    <option selected value="null">Seleccione un VeMec</option>
+                    <c:forEach var="vemec" items="${vemecs_libres}">
+                        <c:if test="${vemec.id_slave} == id_slave">
+                            <option value="${vemec.id}">${vemec.Modelo} - ${vemec.Ubicacion}</option>
+                        </c:if>
+                    </c:forEach>
+                </select>
+                <!-- -->
+                <label for="medico_tratante">Medico tratante:</label>
+                <input type="text" name="medico_tratante" class="form-control">
+                <input type="submit" value="Agregar" class="btn btn-light">
+              </form>
+              <script>
+                var arrayVeMecs = [];
+                var arraySlaves = [];
+                <c:forEach var="item" items="${slaves}">
+                    arraySlaves.push({
+                        id: "${item.id}", 
+                        Nombre: "${item.Nombre}"
+                    });
+                </c:forEach>
+                <c:forEach var="item" items="${vemecs_libres}">
+                    arrayVeMecs.push({
+                        id: "${item.id}", 
+                        Modelo: "${item.Modelo}",
+                        Marca: "${item.Marca}",
+                        Ubicacion: "${item.Ubicacion}",
+                        id_slave: "${item.id_slave}"
+                    });
+                </c:forEach>
+
+                function showDiv(hiddenItem, element)
+                {
+                    if(element.value !== null && element.value !== "null") {
+                        let html = "";
+                        if(hiddenItem === "id_vemec") {
+                            html = '<option selected value="null">Seleccione un VeMec</option>';
+                            arrayVeMecs.forEach(vemec => {
+                                if(vemec.id_slave === element.value) {
+                                    html+='<option value="'+vemec.id+'">'+vemec.Modelo+' - '+vemec.Ubicacion+'</option>';
+                                }
+                            });
+                        }
+                        if(hiddenItem === "select_slave") {
+                            html = '<option selected value="null">Seleccione una seccion</option>';
+                            arraySlaves.forEach(slave => {
+                                html+='<option value="'+slave.id+'">'+slave.Nombre+'</option>';
+                            });
+                        }
+                        document.getElementById(hiddenItem).innerHTML = html;
+                    }
+
+                    document.getElementById(hiddenItem).style.display = element.value === "null" ? 'none' : 'block';
+                }
+            </script>
+          </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="login.html">Logout</a>
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+          <a class="btn btn-primary" onclick="altaAccionMedica()">Enviar</a>
         </div>
       </div>
     </div>
+  </div>
+  
+  <!-- Modal de confirmacion -->
+  <div id="dataConfirmModal" class="modal" role="dialog" aria-labelledby="dataConfirmLabel" aria-hidden="true">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h3 id="dataConfirmLabel">Por favor confirme su accion</h3>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+          <a class="btn btn-primary" id="dataConfirmOK">Confirmar</a>
+      </div>
   </div>
 
 </body>

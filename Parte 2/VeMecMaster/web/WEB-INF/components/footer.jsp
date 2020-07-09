@@ -1,36 +1,26 @@
 <!DOCTYPE html>
 <style>
     body {
-        margin-bottom:70px;
+        margin-bottom:30px;
     }
     footer {
         position: fixed;
-        height: 50px;
+        height: 30px;
         bottom: 0px;
         left: 0px;
         right: 0px;
         margin-bottom: 0px;
-    }
-    .botonTop {
-        position: fixed;
-        height: 20px;
-        bottom: 0px;
-        left: 0px;
-        right: 0px;
-        margin-bottom: 50px;
+        font-size: 20px;
     }
     
 </style>
 <!-- Footer -->
-<div class="text-center botonTop">
-    <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-    </a>
-</div>
 <footer class="sticky-footer bg-white">
     <div class="container my-auto">
-        <div class="copyright text-center my-auto">
-            <span>Copyright "Los Creadores" 2020</span>
+        <div class="text-center botonTop">
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up font-weight-bold"></i>
+            </a>
         </div>
     </div>
 </footer>
