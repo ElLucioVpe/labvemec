@@ -106,16 +106,20 @@ public class SpringController {
         List<Vemec> vemecs = this.template.query(consulta, new BeanPropertyRowMapper<>(Vemec.class));
         
         vemecs.forEach((vem) -> {
-            //Obtengo el nombre del paciente
-            Paciente pac = vem.getIdPaciente();
-            String pac_nombre = "";
-            if(pac != null) pac_nombre = pac.getNombre();
-            //Obtengo el ultimo dato
-            String query = "select * from vemecs_data where Id_Vemec="+vem.getId()+" order by Timestamp_Data";
-            List<Vemec_Data> vemecs_data = this.template.query(query, new BeanPropertyRowMapper<>(Vemec_Data.class));
-            DatosVeMec data = new DatosVeMec(vem, null, pac_nombre);
-            if(!vemecs_data.isEmpty()) data.setUltimoDato(vemecs_data.get(vemecs_data.size()-1));
-           //System.out.print(vem);
+            DatosVeMec data = new DatosVeMec();
+            //Obtengo el paciente
+            String query = "select * from pacientes where id_vemec="+vem.getId();
+            List<Paciente> pacientes = this.template.query(query, new BeanPropertyRowMapper<>(Paciente.class));
+            //Si el paciente existe, lo agrego al vemec y busco sus datos
+            if(!pacientes.isEmpty()) {
+                Paciente pac = pacientes.get(0);
+                vem.setIdPaciente(pac); //Al traerlo del query no trae bien la entidad por eso lo obtenemos asi
+                //Obtengo los registros del paciente
+                query = "select * from vemecs_data where Id_Vemec="+vem.getId()+" and id_paciente="+pac.getId()+" order by Timestamp_Data";
+                List<Vemec_Data> vemecs_data = this.template.query(query, new BeanPropertyRowMapper<>(Vemec_Data.class));
+                data.setRegistros(vemecs_data);
+            }
+            data.setVemec(vem);
             datos.add(data);
         });
        

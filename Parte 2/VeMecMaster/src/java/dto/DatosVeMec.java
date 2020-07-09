@@ -7,6 +7,7 @@ package dto;
 
 import entities.Vemec;
 import entities.Vemec_Data;
+import java.util.List;
 
 /**
  *
@@ -14,16 +15,14 @@ import entities.Vemec_Data;
  */
 public class DatosVeMec {
     private Vemec vemec;
-    private Vemec_Data ultimo_dato;
-    private String paciente;
+    private List<Vemec_Data> registros;
 
     public DatosVeMec() {
     }
 
-    public DatosVeMec(Vemec vemec, Vemec_Data dato, String pac) {
+    public DatosVeMec(Vemec vemec, List<Vemec_Data> lista) {
         this.vemec = vemec;
-        this.ultimo_dato = dato;
-        this.paciente = pac;
+        this.registros = lista;
     }
     
     public Vemec getVemec() {
@@ -31,22 +30,20 @@ public class DatosVeMec {
     }
     
     public Vemec_Data getUltimoDato() {
-        return ultimo_dato;
+        if(registros != null) return registros.get(registros.size()-1);
+        else return null;
+    }
+    
+    public List<Vemec_Data> getRegistros() {
+        return registros;
     }
     
     public void setVemec(Vemec vem) {
         this.vemec = vem;
     }
     
-    public void setUltimoDato(Vemec_Data dato) {
-        this.ultimo_dato = dato;
+    public void setRegistros(List<Vemec_Data> lista) {
+        this.registros = lista;
     }
-    
-    public String getNombrePaciente() {
-        return paciente;
-    }
-    
-    public void setNombrePaciente(String pac) {
-        this.paciente = pac;
-    }
+
 }
