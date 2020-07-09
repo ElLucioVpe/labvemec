@@ -3,8 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/cualit-mktg-dell-2/Documents/NetBeansProjects/RESTapi/web/index.html</file>
-            <file>file:/C:/Users/cualit-mktg-dell-2/Documents/NetBeansProjects/RESTapi/src/conf/persistence.xml</file>
+            <file>file:/C:/OLD/LabRespiradores/Git/labvemec/Parte%202/RESTapi/src/java/Entities/Vemecs.java</file>
+            <file>file:/C:/OLD/LabRespiradores/Git/labvemec/Parte%202/RESTapi/src/conf/persistence.xml</file>
+            <file>file:/C:/OLD/LabRespiradores/Git/labvemec/Parte%202/RESTapi/src/java/service/ApplicationConfig.java</file>
+            <file>file:/C:/OLD/LabRespiradores/Git/labvemec/Parte%202/RESTapi/src/java/service/VemecsFacadeREST.java</file>
+            <file>file:/C:/OLD/LabRespiradores/Git/labvemec/Parte%202/RESTapi/web/WEB-INF/glassfish-resources.xml</file>
+            <file>file:/C:/OLD/LabRespiradores/Git/labvemec/Parte%202/RESTapi/src/java/Entities/VemecsDataPK.java</file>
+            <file>file:/C:/OLD/LabRespiradores/Git/labvemec/Parte%202/RESTapi/src/java/Entities/VemecsData.java</file>
+            <file>file:/C:/OLD/LabRespiradores/Git/labvemec/Parte%202/RESTapi/src/java/service/VemecsDataFacadeREST.java</file>
         </group>
     </open-files>
 </project-private>
