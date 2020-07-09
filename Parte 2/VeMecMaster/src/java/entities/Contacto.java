@@ -36,12 +36,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Contacto.findByEsPaciente", query = "SELECT c FROM Contacto c WHERE c.esPaciente = :esPaciente")})
 public class Contacto implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 60)
@@ -56,6 +50,13 @@ public class Contacto implements Serializable {
     @NotNull
     @Column(name = "esPaciente")
     private boolean esPaciente;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
     @JoinColumn(name = "id_paciente", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Paciente idPaciente;
@@ -82,13 +83,6 @@ public class Contacto implements Serializable {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
 
     public String getInfocontacto() {
         return infocontacto;
@@ -98,13 +92,6 @@ public class Contacto implements Serializable {
         this.infocontacto = infocontacto;
     }
 
-    public boolean getEsPaciente() {
-        return esPaciente;
-    }
-
-    public void setEsPaciente(boolean esPaciente) {
-        this.esPaciente = esPaciente;
-    }
 
     public Paciente getIdPaciente() {
         return idPaciente;
@@ -137,6 +124,22 @@ public class Contacto implements Serializable {
     @Override
     public String toString() {
         return "entities.Contacto[ id=" + id + " ]";
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public boolean getEsPaciente() {
+        return esPaciente;
+    }
+
+    public void setEsPaciente(boolean esPaciente) {
+        this.esPaciente = esPaciente;
     }
     
 }

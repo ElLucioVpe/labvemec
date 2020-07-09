@@ -48,19 +48,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Paciente.findByDefuncion", query = "SELECT p FROM Paciente p WHERE p.defuncion = :defuncion")})
 public class Paciente implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 11)
     @Column(name = "CI")
     private String ci;
     @Basic(optional = false)
-    @NotNull
+    @NotNull()
     @Size(min = 1, max = 60)
     @Column(name = "Nombre")
     private String nombre;
@@ -107,6 +101,14 @@ public class Paciente implements Serializable {
     @NotNull
     @Column(name = "Defuncion")
     private boolean defuncion;
+    @OneToMany(mappedBy = "idPaciente")
+    private Collection<Vemec> vemecCollection;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPaciente")
     private Collection<AccionMedica> accionMedicaCollection;
     @JoinColumn(name = "id_vemec", referencedColumnName = "Id")
@@ -145,45 +147,6 @@ public class Paciente implements Serializable {
         this.id = id;
     }
 
-    public String getCi() {
-        return ci;
-    }
-
-    public void setCi(String ci) {
-        this.ci = ci;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getSexo() {
-        return sexo;
-    }
-
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
-    }
-
-    public int getEdad() {
-        return edad;
-    }
-
-    public void setEdad(int edad) {
-        this.edad = edad;
-    }
-
-    public String getNacionalidad() {
-        return nacionalidad;
-    }
-
-    public void setNacionalidad(String nacionalidad) {
-        this.nacionalidad = nacionalidad;
-    }
 
     public String getLugarResidencia() {
         return lugarResidencia;
@@ -193,21 +156,6 @@ public class Paciente implements Serializable {
         this.lugarResidencia = lugarResidencia;
     }
 
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
-    public String getCoordenadas() {
-        return coordenadas;
-    }
-
-    public void setCoordenadas(String coordenadas) {
-        this.coordenadas = coordenadas;
-    }
 
     public String getAntecedentesClinicos() {
         return antecedentesClinicos;
@@ -225,13 +173,6 @@ public class Paciente implements Serializable {
         this.nivelRiesgo = nivelRiesgo;
     }
 
-    public boolean getDefuncion() {
-        return defuncion;
-    }
-
-    public void setDefuncion(boolean defuncion) {
-        this.defuncion = defuncion;
-    }
 
     @XmlTransient
     public Collection<AccionMedica> getAccionMedicaCollection() {
@@ -282,6 +223,79 @@ public class Paciente implements Serializable {
     @Override
     public String toString() {
         return "entities.Paciente[ id=" + id + " ]";
+    }
+
+    public String getCi() {
+        return ci;
+    }
+
+    public void setCi(String ci) {
+        this.ci = ci;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
+
+    public String getNacionalidad() {
+        return nacionalidad;
+    }
+
+    public void setNacionalidad(String nacionalidad) {
+        this.nacionalidad = nacionalidad;
+    }
+    
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getCoordenadas() {
+        return coordenadas;
+    }
+
+    public void setCoordenadas(String coordenadas) {
+        this.coordenadas = coordenadas;
+    }
+
+    public boolean getDefuncion() {
+        return defuncion;
+    }
+
+    public void setDefuncion(boolean defuncion) {
+        this.defuncion = defuncion;
+    }
+
+    @XmlTransient
+    public Collection<Vemec> getVemecCollection() {
+        return vemecCollection;
+    }
+
+    public void setVemecCollection(Collection<Vemec> vemecCollection) {
+        this.vemecCollection = vemecCollection;
     }
     
 }

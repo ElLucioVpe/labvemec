@@ -9,12 +9,15 @@ package controller;
  * @author esteban
  */
 import conf.Connection;
+import dto.DatosVeMec;
 import entities.Paciente;
 import entities.Slave;
 import entities.Vemec;
-//import entities.VeMec_data;
+import entities.Vemec_Data;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,10 +93,37 @@ public class SpringController {
     
     @RequestMapping("seccion.htm")
     public ModelAndView DatosSeccion(HttpServletRequest request) {
-        /*id = Integer.parseInt(request.getParameter("id"));
-        String consulta = "select * from vemecs where id_slave="+id;
+        if(request.getParameter("id") == null) return new ModelAndView("redirect:index.htm");
+        
+        id = Integer.parseInt(request.getParameter("id"));
+        //Obtengo Slave
+        String consulta = "select * from slaves where id="+id;
         datos = this.template.queryForList(consulta);
-        mav.addObject("lista", datos);*/
+        mav.addObject("slave", datos.get(0));
+        //Obtengo VeMecs
+        datos = new ArrayList<>();
+        consulta = "select * from vemecs where id_slave="+id;
+        List<Vemec> vemecs = this.template.query(consulta, new BeanPropertyRowMapper<>(Vemec.class));
+        
+        vemecs.forEach((vem) -> {
+            DatosVeMec data = new DatosVeMec();
+            //Obtengo el paciente
+            String query = "select * from pacientes where id_vemec="+vem.getId();
+            List<Paciente> pacientes = this.template.query(query, new BeanPropertyRowMapper<>(Paciente.class));
+            //Si el paciente existe, lo agrego al vemec y busco sus datos
+            if(!pacientes.isEmpty()) {
+                Paciente pac = pacientes.get(0);
+                vem.setIdPaciente(pac); //Al traerlo del query no trae bien la entidad por eso lo obtenemos asi
+                //Obtengo los registros del paciente
+                query = "select * from vemecs_data where Id_Vemec="+vem.getId()+" and id_paciente="+pac.getId()+" order by Timestamp_Data";
+                List<Vemec_Data> vemecs_data = this.template.query(query, new BeanPropertyRowMapper<>(Vemec_Data.class));
+                data.setRegistros(vemecs_data);
+            }
+            data.setVemec(vem);
+            datos.add(data);
+        });
+       
+        mav.addObject("datos_vemecs", datos);
         mav.setViewName("seccion");
         return mav;
     }
