@@ -46,6 +46,20 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Vemec_Data.findByTimestampData", query = "SELECT v FROM Vemec_Data v WHERE v.timestampData = :timestampData")})
 public class Vemec_Data implements Serializable {
 
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "Pulsaciones")
+    private int pulsaciones;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "Conectado_Corriente")
+    private boolean conectadoCorriente;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "Timestamp_Data")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timestampData;
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected Vemec_DataPK vemec_DataPK;
@@ -70,21 +84,8 @@ public class Vemec_Data implements Serializable {
     private Float presionEntrada;
     @Column(name = "Presion_Salida")
     private Float presionSalida;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "Pulsaciones")
-    private int pulsaciones;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "Conectado_Corriente")
-    private boolean conectadoCorriente;
     @Column(name = "Energia")
     private Integer energia;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "Timestamp_Data")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date timestampData;
 
     public Vemec_Data() {
     }
@@ -192,13 +193,6 @@ public class Vemec_Data implements Serializable {
         this.presionSalida = presionSalida;
     }
 
-    public int getPulsaciones() {
-        return pulsaciones;
-    }
-
-    public void setPulsaciones(int pulsaciones) {
-        this.pulsaciones = pulsaciones;
-    }
 
     public boolean getConectadoCorriente() {
         return conectadoCorriente;
@@ -247,6 +241,14 @@ public class Vemec_Data implements Serializable {
     @Override
     public String toString() {
         return "entities.Vemec_Data[ vemec_DataPK=" + vemec_DataPK + " ]";
+    }
+
+    public int getPulsaciones() {
+        return pulsaciones;
+    }
+
+    public void setPulsaciones(int pulsaciones) {
+        this.pulsaciones = pulsaciones;
     }
     
 }

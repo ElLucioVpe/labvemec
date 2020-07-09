@@ -39,12 +39,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Vemec.findByUbicacion", query = "SELECT v FROM Vemec v WHERE v.ubicacion = :ubicacion")})
 public class Vemec implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "Id")
-    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 30)
@@ -60,6 +54,16 @@ public class Vemec implements Serializable {
     @Size(min = 1, max = 30)
     @Column(name = "Ubicacion")
     private String ubicacion;
+    @JoinColumn(name = "id_paciente", referencedColumnName = "id")
+    @ManyToOne
+    private Paciente idPaciente;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "Id")
+    private Integer id;
     @OneToMany(mappedBy = "idVemec")
     private Collection<AccionMedica> accionMedicaCollection;
     @OneToMany(mappedBy = "idVemec")
@@ -90,29 +94,6 @@ public class Vemec implements Serializable {
         this.id = id;
     }
 
-    public String getMarca() {
-        return marca;
-    }
-
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
-
-    public String getModelo() {
-        return modelo;
-    }
-
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
-    }
-
-    public String getUbicacion() {
-        return ubicacion;
-    }
-
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
-    }
 
     @XmlTransient
     public Collection<AccionMedica> getAccionMedicaCollection() {
@@ -163,6 +144,38 @@ public class Vemec implements Serializable {
     @Override
     public String toString() {
         return "entities.Vemec[ id=" + id + " ]";
+    }
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+
+    public String getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
+    public Paciente getIdPaciente() {
+        return idPaciente;
+    }
+
+    public void setIdPaciente(Paciente idPaciente) {
+        this.idPaciente = idPaciente;
     }
     
 }

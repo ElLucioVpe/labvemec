@@ -9,12 +9,15 @@ package controller;
  * @author esteban
  */
 import conf.Connection;
+import dto.DatosVeMec;
 import entities.Paciente;
 import entities.Slave;
 import entities.Vemec;
-//import entities.VeMec_data;
+import entities.Vemec_Data;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,10 +93,33 @@ public class SpringController {
     
     @RequestMapping("seccion.htm")
     public ModelAndView DatosSeccion(HttpServletRequest request) {
-        /*id = Integer.parseInt(request.getParameter("id"));
-        String consulta = "select * from vemecs where id_slave="+id;
+        if(request.getParameter("id") == null) return new ModelAndView("redirect:index.htm");
+        
+        id = Integer.parseInt(request.getParameter("id"));
+        //Obtengo Slave
+        String consulta = "select * from slaves where id="+id;
         datos = this.template.queryForList(consulta);
-        mav.addObject("lista", datos);*/
+        mav.addObject("slave", datos.get(0));
+        //Obtengo VeMecs
+        datos = new ArrayList<>();
+        consulta = "select * from vemecs where id_slave="+id;
+        List<Vemec> vemecs = this.template.query(consulta, new BeanPropertyRowMapper<>(Vemec.class));
+        
+        vemecs.forEach((vem) -> {
+            //Obtengo el nombre del paciente
+            Paciente pac = vem.getIdPaciente();
+            String pac_nombre = "";
+            if(pac != null) pac_nombre = pac.getNombre();
+            //Obtengo el ultimo dato
+            String query = "select * from vemecs_data where Id_Vemec="+vem.getId()+" order by Timestamp_Data";
+            List<Vemec_Data> vemecs_data = this.template.query(query, new BeanPropertyRowMapper<>(Vemec_Data.class));
+            DatosVeMec data = new DatosVeMec(vem, null, pac_nombre);
+            if(!vemecs_data.isEmpty()) data.setUltimoDato(vemecs_data.get(vemecs_data.size()-1));
+           //System.out.print(vem);
+            datos.add(data);
+        });
+       
+        mav.addObject("datos_vemecs", datos);
         mav.setViewName("seccion");
         return mav;
     }

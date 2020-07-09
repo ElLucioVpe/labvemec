@@ -25,6 +25,54 @@
 
 </head>
 
+<script>
+    $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+    
+    function cargarDatosCanvas(idVeMec) {
+        
+    }
+    
+    function modoAlerta(activar, tipo, idVeMec) {
+        
+    }
+</script>
+
+<style>
+    .vemec-col {
+        width: 33%;
+    }
+    
+    .vemec-card {
+        font-size: 15px;
+        width: 100%;
+        height: 330px;
+    }
+    
+    .vemec-chart {
+        width: 50%;
+        height: 50%;
+    }
+    
+    .alert-mode {
+        background: red;
+    }
+    
+    .lowEnergy-mode {
+        background: yellow;
+    }
+    
+    @media screen and (max-width: 1000px) { 
+        .vemec-col {
+            width: 100%;
+        }
+        .vemec-col {
+            height: 50%;
+        }
+    }
+</style>
+
 <body id="page-top">
 
   <div id="wrapper">
@@ -33,7 +81,7 @@
       <div id="content">
         <div class="container-fluid">
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Seccion X</h1>
+            <h1 class="h3 mb-0 text-gray-800">${slave.Nombre}</h1>
             <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generar Reporte de Paciente</a>
           </div>
           <div class="row">
@@ -93,65 +141,140 @@
           <!-- Content Row -->
 
           <div class="row">
-
-            <!-- Ejemplo 1 -->
-            <div class="col">
-              <div class="card shadow mb-4">
+            <!-- Informacion VeMecs -->
+            <c:forEach var="dato" items="${datos_vemecs}">
+            <div class="col-xl-4 vemec-col">
+              <div class="card shadow mb-4 vemec-card">
                 <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">VeMec 1</h6>
-                  <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownVeMec1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownVeMec1">
-                      <div class="dropdown-header">Acciones:</div>
-                      <a class="dropdown-item" href="#">Ver Datos Paciente</a>
-                      <a class="dropdown-item" href="#">Ver Historial Medico</a>
-                      <a class="dropdown-item" href="#">Accion Medica</a>
+                <div class="card-header py-3 d-flex flex-row justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-dark pull-left">
+                        <c:choose>
+                        <c:when test="${dato.getVemec().getIdPaciente() == null}">
+                            No hay paciente asociado actualmente
+                        </c:when>
+                        <c:otherwise>
+                            ${dato.getNombrePaciente()}
+                        </c:otherwise>
+                        </c:choose>
+                    </h6>
+                    <h6 class="m-0 font-weight-bold text-dark pull-right">
+                        <c:if test="${dato.getUltimoDato() != null && dato.getVemec().getIdPaciente() != null}">
+                            <c:choose>
+                            <c:when test="${dato.getUltimoDato().getConectadoCorriente()}">
+                                Conectado a corriente <i class="fas fa-plug" aria-hidden="true"></i>
+                            </c:when>
+                            <c:otherwise>
+                                ${dato.getUltimoDato().getEnergia()}%<i class="fa fa-bolt" aria-hidden="true"></i>
+                            </c:otherwise>
+                            </c:choose>
+                        </c:if>
+                    </h6>
+                    <div class="dropdown no-arrow">
+                      <a class="dropdown-toggle" href="#" role="button" id="dropdownVeMec1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownVeMec1">
+                        <div class="dropdown-header">Acciones:</div>
+                        <a class="dropdown-item" href="#">Ver Datos Paciente</a>
+                        <a class="dropdown-item" href="#">Ver Historial Medico</a>
+                        <a class="dropdown-item" href="#">Accion Medica</a>
+                      </div>
                     </div>
-                  </div>
                 </div>
                 <!-- Card Body -->
-                <div class="card-body">
-                  <div id="datos-vemec">
-                      <div class="form-inline">
-                        <small class="font-weight-bold">PrM(mmgh)</small>
-                        <h2 class="font-weight-bold">
-                            <strong>120</strong>
-                        </h2>
+                <div class="card-body row">
+                    <c:choose>
+                    <c:when test="${dato.getUltimoDato() == null || dato.getVemec().getIdPaciente() == null}">
+                        <h1 >VeMec Desconectado</h1>
+                    </c:when>
+                    <c:otherwise>
+                    <div class="col">
+                      <div id="div-chart1">
+                        <canvas class="vemec-chart" id="PEchart${dato.getVemec().getId()}"></canvas>
                       </div>
-                  </div>
-                  <div id="chart-area">
-                    <canvas id="myAreaChart"></canvas>
-                  </div>
+                      <div id="div-chart2">
+                        <canvas class="vemec-chart" id="PSchart${dato.getVemec().getId()}"></canvas>
+                      </div>
+                    </div>
+                    <div id="datos-vemec" class="col">
+                        <div class="row">
+                            <div class="form-inline mx-1" data-toggle="tooltip" title="Presión Maxima (mmHg)">
+                              <small class="font-weight-bold">Pmax</small>
+                              <h4 class="font-weight-bold">
+                                  <strong id="Pmax${dato.getVemec().getId()}">${dato.getUltimoDato().getPresionMaxima()}</strong>
+                              </h4>
+                            </div>
+                            <div class="form-inline mx-1" data-toggle="tooltip" title="Presión Mínima (mmHg)">
+                              <small class="font-weight-bold">Pmin</small>
+                              <h4 class="font-weight-bold">
+                                  <strong id="Pmin${dato.getVemec().getId()}">${dato.getUltimoDato().getPresionMinima()}</strong>
+                              </h4>
+                            </div>
+                            <div class="form-inline mx-1" data-toggle="tooltip" title="Gas (cc)">
+                              <small class="font-weight-bold">Gas</small>
+                              <h4 class="font-weight-bold">
+                                  <strong id="Gas${dato.getVemec().getId()}">${dato.getUltimoDato().getGas()}</strong>
+                              </h4>
+                            </div>
+                            <div class="form-inline mx-1" data-toggle="tooltip" title="Frecuencia de aporte (/min)">
+                              <small class="font-weight-bold">Fr</small>
+                              <h4 class="font-weight-bold">
+                                  <strong id="Fr${dato.getVemec().getId()}">${dato.getUltimoDato().getFrecuencia()}</strong>
+                              </h4>
+                            </div>
+                            <div class="form-inline mx-1" data-toggle="tooltip" title="Composición de mezcla en porcentaje de O2">
+                              <small class="font-weight-bold">O2</small>
+                              <h4 class="font-weight-bold">
+                                  <strong id="O2${dato.getVemec().getId()}">${dato.getUltimoDato().getMezcla()}%</strong>
+                              </h4>
+                            </div>
+                            <div class="form-inline mx-1" data-toggle="tooltip" title="Humedad del aire">
+                              <small class="font-weight-bold">Hum</small>
+                              <h4 class="font-weight-bold">
+                                  <strong id="Hum${dato.getVemec().getId()}">${dato.getUltimoDato().getHumedad()}%</strong>
+                              </h4>
+                            </div>
+                            <div class="form-inline mx-1" data-toggle="tooltip" title="Temperatura de entrada (ºC)">
+                              <small class="font-weight-bold">TE</small>
+                              <h4 class="font-weight-bold">
+                                  <strong id="TE${dato.getVemec().getId()}">${dato.getUltimoDato().getTemperaturaEntrada()}</strong>
+                              </h4>
+                            </div>
+                            <div class="form-inline mx-1" data-toggle="tooltip" title="Temperatura de salida (ºC)">
+                              <small class="font-weight-bold">TS</small>
+                              <h4 class="font-weight-bold">
+                                  <strong id="TS${dato.getVemec().getId()}">${dato.getUltimoDato().getTemperaturaSalida()}</strong>
+                              </h4>
+                            </div>
+                            <div class="form-inline mx-1" data-toggle="tooltip" title="Presion de entrada (mmHg)">
+                              <small class="font-weight-bold">PE</small>
+                              <h4 class="font-weight-bold">
+                                  <strong id="PE${dato.getVemec().getId()}">${dato.getUltimoDato().getPresionEntrada()}</strong>
+                              </h4>
+                            </div>
+                            <div class="form-inline mx-1" data-toggle="tooltip" title="Presion de salida (mmHg)">
+                              <small class="font-weight-bold">PS</small>
+                              <h4 class="font-weight-bold">
+                                  <strong id="PS${dato.getVemec().getId()}">${dato.getUltimoDato().getPresionSalida()}</strong>
+                              </h4>
+                            </div>
+                            <div class="form-inline mx-1 pull-left" data-toggle="tooltip" title="Pulsaciones">
+                              <h2 class="font-weight-bold">
+                                  <strong id="Pulso${dato.getVemec().getId()}">${dato.getUltimoDato().getPulsaciones()}</strong>
+                              </h2>
+                              <h1>
+                                  <i class="fa fa-heartbeat" aria-hidden="true" style="color: salmon"></i>
+                              </h1>
+                            </div>
+                        </div>
+                    </div>
+                    </c:otherwise>
+                    </c:choose>
                 </div>
               </div>
             </div>
-            <!-- Ejemplo 2 -->
-            <div class="col">
-              <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">VeMec 2</h6>
-                </div>
-                <div class="card-body">
-                  <h4 class="small font-weight-bold">Se Murieron <span class="float-right">90%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 90%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Estan en esa <span class="float-right">8%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 8%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Sanos <span class="float-right">2%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar" role="progressbar" style="width: 2%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            </c:forEach>
           </div>
-
         </div>
         <!-- /.container-fluid -->
 
