@@ -7,14 +7,18 @@ package Entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -40,6 +44,20 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "VemecsData.findByPresionSalida", query = "SELECT v FROM VemecsData v WHERE v.presionSalida = :presionSalida"),
     @NamedQuery(name = "VemecsData.findByTimestampData", query = "SELECT v FROM VemecsData v WHERE v.timestampData = :timestampData")})
 public class VemecsData implements Serializable {
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "Pulsaciones")
+    private int pulsaciones;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "Conectado_Corriente")
+    private boolean conectadoCorriente;
+    @Column(name = "Energia")
+    private Integer energia;
+    @JoinColumn(name = "id_paciente", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Pacientes idPaciente;
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -199,6 +217,38 @@ public class VemecsData implements Serializable {
     @Override
     public String toString() {
         return "Entities.VemecsData[ vemecsDataPK=" + vemecsDataPK + " ]";
+    }
+
+    public int getPulsaciones() {
+        return pulsaciones;
+    }
+
+    public void setPulsaciones(int pulsaciones) {
+        this.pulsaciones = pulsaciones;
+    }
+
+    public boolean getConectadoCorriente() {
+        return conectadoCorriente;
+    }
+
+    public void setConectadoCorriente(boolean conectadoCorriente) {
+        this.conectadoCorriente = conectadoCorriente;
+    }
+
+    public Integer getEnergia() {
+        return energia;
+    }
+
+    public void setEnergia(Integer energia) {
+        this.energia = energia;
+    }
+
+    public Pacientes getIdPaciente() {
+        return idPaciente;
+    }
+
+    public void setIdPaciente(Pacientes idPaciente) {
+        this.idPaciente = idPaciente;
     }
     
 }

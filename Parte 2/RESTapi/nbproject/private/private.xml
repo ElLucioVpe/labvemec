@@ -6,11 +6,9 @@
             <file>file:/C:/OLD/LabRespiradores/Git/labvemec/Parte%202/RESTapi/src/java/Entities/Vemecs.java</file>
             <file>file:/C:/OLD/LabRespiradores/Git/labvemec/Parte%202/RESTapi/src/conf/persistence.xml</file>
             <file>file:/C:/OLD/LabRespiradores/Git/labvemec/Parte%202/RESTapi/src/java/service/ApplicationConfig.java</file>
-            <file>file:/C:/OLD/LabRespiradores/Git/labvemec/Parte%202/RESTapi/src/java/service/VemecsFacadeREST.java</file>
             <file>file:/C:/OLD/LabRespiradores/Git/labvemec/Parte%202/RESTapi/web/WEB-INF/glassfish-resources.xml</file>
             <file>file:/C:/OLD/LabRespiradores/Git/labvemec/Parte%202/RESTapi/src/java/Entities/VemecsDataPK.java</file>
             <file>file:/C:/OLD/LabRespiradores/Git/labvemec/Parte%202/RESTapi/src/java/Entities/VemecsData.java</file>
-            <file>file:/C:/OLD/LabRespiradores/Git/labvemec/Parte%202/RESTapi/src/java/service/VemecsDataFacadeREST.java</file>
         </group>
     </open-files>
 </project-private>

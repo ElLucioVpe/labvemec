@@ -8,21 +8,32 @@ package service;
 import Entities.VemecsData;
 import Entities.VemecsDataPK;
 import java.util.List;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.PathSegment;
 
 /**
  *
- * @author cualit-mktg-dell-2
+ * @author pagol
  */
-@javax.ejb.Stateless
-@javax.ws.rs.Path("entities.vemecsdata")
+@Stateless
+@Path("entities.vemecsdata")
 public class VemecsDataFacadeREST extends AbstractFacade<VemecsData> {
 
     @PersistenceContext(unitName = "RESTapiPU")
     private EntityManager em;
 
-    private VemecsDataPK getPrimaryKey(javax.ws.rs.core.PathSegment pathSegment) {
+    private VemecsDataPK getPrimaryKey(PathSegment pathSegment) {
         /*
          * pathSemgent represents a URI path segment and any associated matrix parameters.
          * URI path part is supposed to be in form of 'somePath;idData=idDataValue;idVemec=idVemecValue'.
@@ -47,52 +58,52 @@ public class VemecsDataFacadeREST extends AbstractFacade<VemecsData> {
         super(VemecsData.class);
     }
 
-    @javax.ws.rs.POST
+    @POST
     @Override
-    @javax.ws.rs.Consumes({javax.ws.rs.core.MediaType.APPLICATION_XML, javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void create(VemecsData entity) {
         super.create(entity);
     }
 
-    @javax.ws.rs.PUT
-    @javax.ws.rs.Path("{id}")
-    @javax.ws.rs.Consumes({javax.ws.rs.core.MediaType.APPLICATION_XML, javax.ws.rs.core.MediaType.APPLICATION_JSON})
-    public void edit(@javax.ws.rs.PathParam("id") javax.ws.rs.core.PathSegment id, VemecsData entity) {
+    @PUT
+    @Path("{id}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void edit(@PathParam("id") PathSegment id, VemecsData entity) {
         super.edit(entity);
     }
 
-    @javax.ws.rs.DELETE
-    @javax.ws.rs.Path("{id}")
-    public void remove(@javax.ws.rs.PathParam("id") javax.ws.rs.core.PathSegment id) {
+    @DELETE
+    @Path("{id}")
+    public void remove(@PathParam("id") PathSegment id) {
         Entities.VemecsDataPK key = getPrimaryKey(id);
         super.remove(super.find(key));
     }
 
-    @javax.ws.rs.GET
-    @javax.ws.rs.Path("{id}")
-    @javax.ws.rs.Produces({javax.ws.rs.core.MediaType.APPLICATION_XML, javax.ws.rs.core.MediaType.APPLICATION_JSON})
-    public VemecsData find(@javax.ws.rs.PathParam("id") javax.ws.rs.core.PathSegment id) {
+    @GET
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public VemecsData find(@PathParam("id") PathSegment id) {
         Entities.VemecsDataPK key = getPrimaryKey(id);
         return super.find(key);
     }
 
-    @javax.ws.rs.GET
+    @GET
     @Override
-    @javax.ws.rs.Produces({javax.ws.rs.core.MediaType.APPLICATION_XML, javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<VemecsData> findAll() {
         return super.findAll();
     }
 
-    @javax.ws.rs.GET
-    @javax.ws.rs.Path("{from}/{to}")
-    @javax.ws.rs.Produces({javax.ws.rs.core.MediaType.APPLICATION_XML, javax.ws.rs.core.MediaType.APPLICATION_JSON})
-    public List<VemecsData> findRange(@javax.ws.rs.PathParam("from") Integer from, @javax.ws.rs.PathParam("to") Integer to) {
+    @GET
+    @Path("{from}/{to}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<VemecsData> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 
-    @javax.ws.rs.GET
-    @javax.ws.rs.Path("count")
-    @javax.ws.rs.Produces(javax.ws.rs.core.MediaType.TEXT_PLAIN)
+    @GET
+    @Path("count")
+    @Produces(MediaType.TEXT_PLAIN)
     public String countREST() {
         return String.valueOf(super.count());
     }

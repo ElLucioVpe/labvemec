@@ -6,18 +6,23 @@
 package Entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -34,12 +39,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Vemecs.findByUbicacion", query = "SELECT v FROM Vemecs v WHERE v.ubicacion = :ubicacion")})
 public class Vemecs implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "Id")
-    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 30)
@@ -55,6 +54,23 @@ public class Vemecs implements Serializable {
     @Size(min = 1, max = 30)
     @Column(name = "Ubicacion")
     private String ubicacion;
+    @OneToMany(mappedBy = "idVemec")
+    private Collection<AccionesMedicas> accionesMedicasCollection;
+    @OneToMany(mappedBy = "idVemec")
+    private Collection<Pacientes> pacientesCollection;
+    @JoinColumn(name = "id_slave", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Slaves idSlave;
+    @JoinColumn(name = "id_paciente", referencedColumnName = "id")
+    @ManyToOne
+    private Pacientes idPaciente;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "Id")
+    private Integer id;
 
     public Vemecs() {
     }
@@ -76,6 +92,32 @@ public class Vemecs implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Vemecs)) {
+            return false;
+        }
+        Vemecs other = (Vemecs) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Entities.Vemecs[ id=" + id + " ]";
     }
 
     public String getMarca() {
@@ -102,29 +144,38 @@ public class Vemecs implements Serializable {
         this.ubicacion = ubicacion;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
+    @XmlTransient
+    public Collection<AccionesMedicas> getAccionesMedicasCollection() {
+        return accionesMedicasCollection;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Vemecs)) {
-            return false;
-        }
-        Vemecs other = (Vemecs) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+    public void setAccionesMedicasCollection(Collection<AccionesMedicas> accionesMedicasCollection) {
+        this.accionesMedicasCollection = accionesMedicasCollection;
     }
 
-    @Override
-    public String toString() {
-        return "Entities.Vemecs[ id=" + id + " ]";
+    @XmlTransient
+    public Collection<Pacientes> getPacientesCollection() {
+        return pacientesCollection;
+    }
+
+    public void setPacientesCollection(Collection<Pacientes> pacientesCollection) {
+        this.pacientesCollection = pacientesCollection;
+    }
+
+    public Slaves getIdSlave() {
+        return idSlave;
+    }
+
+    public void setIdSlave(Slaves idSlave) {
+        this.idSlave = idSlave;
+    }
+
+    public Pacientes getIdPaciente() {
+        return idPaciente;
+    }
+
+    public void setIdPaciente(Pacientes idPaciente) {
+        this.idPaciente = idPaciente;
     }
     
 }
