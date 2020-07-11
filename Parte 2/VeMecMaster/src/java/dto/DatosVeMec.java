@@ -18,6 +18,7 @@ public class DatosVeMec {
     private List<Vemec_Data> registros;
 
     public DatosVeMec() {
+        this.registros = null;
     }
 
     public DatosVeMec(Vemec vemec, List<Vemec_Data> lista) {
@@ -30,7 +31,7 @@ public class DatosVeMec {
     }
     
     public Vemec_Data getUltimoDato() {
-        if(registros != null) return registros.get(registros.size()-1);
+        if(registros != null && !registros.isEmpty()) return registros.get(registros.size()-1);
         else return null;
     }
     

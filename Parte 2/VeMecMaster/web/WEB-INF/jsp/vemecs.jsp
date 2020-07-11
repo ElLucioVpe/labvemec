@@ -43,11 +43,11 @@
                                             <td>${vemec.Modelo}</td>
                                             <td>${vemec.Ubicacion}</td>
                                             <td>
-                                                <a href="modificarVeMec.htm?id=${vemec.Id}" class="btn btn-light" style="background-color: #15bef1">
+                                                <a href="modificarVeMec?id=${vemec.Id}" class="btn btn-light" style="background-color: #15bef1">
                                                     <i class="fas fa-edit"></i>
                                                     Modificar
                                                 </a>
-                                                <a href="bajaVeMec.htm?id=${vemec.Id}" class="btn btn-danger">
+                                                <a href="bajaVeMec?id=${vemec.Id}" class="btn btn-danger">
                                                     <i class="fas fa-trash"></i> 
                                                     Eliminar
                                                 </a>

@@ -9,22 +9,31 @@ package controller;
  * @author esteban
  */
 import conf.Connection;
+import dto.DatosAccionMedica;
 import dto.DatosVeMec;
-import entities.AccionMedica;
+import entities.Contacto;
 import entities.Paciente;
 import entities.Slave;
 import entities.Vemec;
 import entities.Vemec_Data;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -36,14 +45,14 @@ public class SpringController {
     int id;
     List datos;
     
-    @RequestMapping("index.htm")
+    @RequestMapping("/")
     public ModelAndView getIndex() {
         mav.setViewName("index");
         return mav;
     }
     
     //Secciones
-    @RequestMapping("secciones.htm")
+    @RequestMapping("/secciones")
     public ModelAndView ListarSecciones() {
         String consulta = "select * from slaves";
         datos = this.template.queryForList(consulta);
@@ -52,21 +61,21 @@ public class SpringController {
         return mav;
     }
     
-    @RequestMapping(value = "altaSeccion.htm", method = RequestMethod.GET)
+    @RequestMapping(value = "/altaSeccion", method = RequestMethod.GET)
     public ModelAndView AltaSeccion() {
         mav.addObject(new Slave());
         mav.setViewName("altaSeccion");
         return mav;
     }
     
-    @RequestMapping(value = "altaSeccion.htm", method = RequestMethod.POST)
+    @RequestMapping(value = "/altaSeccion", method = RequestMethod.POST)
     public ModelAndView AltaSeccion(Slave slv) {
         String consulta = "insert into slaves(Nombre, Intervalo_Envio, Intervalo_Emergencia) values(?,?,?)";
         this.template.update(consulta, slv.getNombre(), slv.getIntervaloEnvio(), slv.getIntervaloEmergencia());
-        return new ModelAndView("redirect:/index.htm");
+        return new ModelAndView("redirect:/");
     }
     
-    @RequestMapping(value = "modificarSeccion.htm", method = RequestMethod.GET)
+    @RequestMapping(value = "/modificarSeccion", method = RequestMethod.GET)
     public ModelAndView ModificarSeccion(HttpServletRequest request) {
         id = Integer.parseInt(request.getParameter("id"));
         String consulta = "select * from slaves where id="+id;
@@ -76,14 +85,14 @@ public class SpringController {
         return mav;
     }
     
-    @RequestMapping(value = "modificarSeccion.htm", method = RequestMethod.POST)
+    @RequestMapping(value = "/modificarSeccion", method = RequestMethod.POST)
     public ModelAndView ModificarSeccion(Slave slv) {
         String consulta = "update slaves set Nombre=?,Intervalo_Envio=?,Intervalo_Emergencia=? where id="+id;
         this.template.update(consulta, slv.getNombre(), slv.getIntervaloEnvio(), slv.getIntervaloEmergencia());
         return new ModelAndView("redirect:/index.htm");
     }
     
-    @RequestMapping("bajaSeccion.htm")
+    @RequestMapping("/bajaSeccion")
     public ModelAndView BajaSeccion(HttpServletRequest request) {
         id = Integer.parseInt(request.getParameter("id"));
         //String consulta = "delete from vemecs_data where Id_VeMec="+id;
@@ -91,12 +100,12 @@ public class SpringController {
         //consulta = "delete from vemecs where Id="+id;
         String consulta = "delete from slaves where Id="+id;
         this.template.update(consulta);
-        return new ModelAndView("redirect:/index.htm");
+        return new ModelAndView("redirect:/");
     }
     
-    @RequestMapping("seccion.htm")
+    @RequestMapping("/seccion")
     public ModelAndView DatosSeccion(HttpServletRequest request) {
-        if(request.getParameter("id") == null) return new ModelAndView("redirect:index.htm");
+        if(request.getParameter("id") == null) return new ModelAndView("redirect:/");
         
         id = Integer.parseInt(request.getParameter("id"));
         //Obtengo Slave
@@ -143,7 +152,7 @@ public class SpringController {
     }
     
     //Pacientes
-    @RequestMapping(value = "agregarPaciente.htm", method = RequestMethod.GET)
+    @RequestMapping(value = "/agregarPaciente", method = RequestMethod.GET)
     public ModelAndView AltaPaciente() {
         //Secciones/Slaves para seleccionar
         String consulta = "select * from slaves";
@@ -160,7 +169,7 @@ public class SpringController {
         return mav;
     }
     
-    @RequestMapping(value = "agregarPaciente.htm", method = RequestMethod.POST)
+    @RequestMapping(value = "/agregarPaciente", method = RequestMethod.POST)
     public ModelAndView AltaPaciente(Paciente pac) {
         String consulta = "insert into pacientes(CI, Nombre, Sexo, Edad, Nacionalidad,"
                 + " Lugar_Residencia, Direccion, Coordenadas, Antecedentes_Clinicos, Nivel_Riesgo,"
@@ -168,10 +177,10 @@ public class SpringController {
         this.template.update(consulta, pac.getCi(), pac.getNombre(), pac.getSexo(), pac.getEdad(), 
                 pac.getNacionalidad(), pac.getLugarResidencia(), pac.getDireccion(), pac.getCoordenadas(),
                 pac.getAntecedentesClinicos(), pac.getNivelRiesgo(), false, pac.getIdVemec());
-        return new ModelAndView("redirect:/index.htm");
+        return new ModelAndView("redirect:/");
     }
     
-    @RequestMapping(value = "modificarPaciente.htm", method = RequestMethod.GET)
+    @RequestMapping(value = "/modificarPaciente", method = RequestMethod.GET)
     public ModelAndView ModificarPaciente(HttpServletRequest request) {
         id = Integer.parseInt(request.getParameter("id"));
         String consulta = "select * from pacientes where id="+id;
@@ -191,7 +200,7 @@ public class SpringController {
         return mav;
     }
     
-    @RequestMapping(value = "modificarPaciente.htm", method = RequestMethod.POST)
+    @RequestMapping(value = "/modificarPaciente", method = RequestMethod.POST)
     public ModelAndView ModificarPaciente(Paciente pac) {
         String consulta = "update pacientes set CI=?, Nombre=?, Sexo=?, Edad=?, Nacionalidad=?,"
                 + " Lugar_Residencia=?, Direccion=?, Coordenadas=?, Antecedentes_Clinicos=?, Nivel_Riesgo=?,"
@@ -199,30 +208,36 @@ public class SpringController {
         this.template.update(consulta, pac.getCi(), pac.getNombre(), pac.getSexo(), pac.getEdad(), 
                 pac.getNacionalidad(), pac.getLugarResidencia(), pac.getDireccion(), pac.getCoordenadas(),
                 pac.getAntecedentesClinicos(), pac.getNivelRiesgo(), pac.getDefuncion(), pac.getIdVemec());
-        return new ModelAndView("redirect:/index.htm");
+        return new ModelAndView("redirect:/");
     }
     
-    @RequestMapping("bajaPaciente.htm")
+    @RequestMapping("/bajaPaciente")
     public ModelAndView BajaPaciente(HttpServletRequest request) {
         id = Integer.parseInt(request.getParameter("id"));
         String consulta = "delete from contactos where id_paciente="+id;
         this.template.update(consulta);
         consulta = "delete from pacientes where id="+id;
         this.template.update(consulta);
-        return new ModelAndView("redirect:/index.htm");
+        return new ModelAndView("redirect:/");
     }
     
-    @RequestMapping(value="/getPaciente", method = RequestMethod.POST, produces = "application/json")
-    public Paciente GetPaciente(int id) {
+    @RequestMapping(value="/getPaciente", method = RequestMethod.POST)
+    public @ResponseBody Paciente GetPaciente(Integer id) {
         String consulta = "select * from pacientes where id="+id;
         List<Paciente> data = this.template.query(consulta, new BeanPropertyRowMapper<>(Paciente.class));
-        if(!data.isEmpty()) return data.get(0);
+        if(!data.isEmpty()) { 
+            Paciente pac = data.get(0);
+            consulta = "select * from contactos where id_paciente="+id;
+            List contactos = this.template.queryForList(consulta);
+            pac.setContactoCollection(contactos);
+            return pac;
+        }
         else return null;
     }
     //
     
     //AccionesMedicas
-    @RequestMapping(value = "accionesMedicas.htm", method = RequestMethod.GET)
+    @RequestMapping(value = "/accionesMedicas", method = RequestMethod.GET)
     public ModelAndView ListarAccionesMedicas(HttpServletRequest request) {
         id = Integer.parseInt(request.getParameter("id"));
         String consulta = "select * from acciones_medicas where id_paciente="+id;
@@ -232,27 +247,39 @@ public class SpringController {
         return mav;
     }
     
-    @RequestMapping(value = "altaAccionMedica.htm", method = RequestMethod.POST)
-    public void AltaAccionMedica(AccionMedica amed) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    @RequestMapping(value = "/altaAccionMedica", method = RequestMethod.POST)
+    public @ResponseBody DatosAccionMedica AltaAccionMedica(@RequestBody DatosAccionMedica amed) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
+        if(amed.getAlta() || amed.getDefuncion()) {
+            String cons = "update vemecs set id_paciente=? where id_paciente="+amed.getIdPaciente();
+            this.template.update(cons, "NULL");
+            if(amed.getDefuncion()){
+                cons = "update pacientes set Defuncion=1 where id="+amed.getIdPaciente();
+                this.template.update(cons, "NULL");
+            }
+            cons = "update pacientes set id_vemec=? where id="+amed.getIdPaciente();
+            this.template.update(cons, "NULL");
+        }
         
         String consulta = "insert into acciones_medicas(id_paciente, fecha_hora, nivel_riesgo,"
                 + "medicacion, descripcion, id_vemec, medico_tratante) values(?,?,?,?,?,?,?)";
         this.template.update(consulta, amed.getIdPaciente(), formatter.format(new Date()), amed.getNivelRiesgo(),
                 amed.getMedicacion(), amed.getDescripcion(), amed.getIdVemec(), amed.getMedicoTratante());
-        //return new ModelAndView("redirect:/vemecs.htm");
+        
+        return amed;
     }
     
-    @RequestMapping("bajaAccionMedica.htm")
+    @RequestMapping("/bajaAccionMedica")
     public ModelAndView BajaAccionMedica(HttpServletRequest request) {
         id = Integer.parseInt(request.getParameter("id"));
         String consulta = "delete from acciones_medicas where id="+id;
         this.template.update(consulta);
-        return new ModelAndView("redirect:/accionesMedicas.htm");
+        return new ModelAndView("redirect:/accionesMedicas");
     }
     //VeMecs
     //Este codigo sera editado en el siguiente capitulo
-    @RequestMapping("vemecs.htm")
+    @RequestMapping("/vemecs")
     public ModelAndView ListarVeMecs() {
         String consulta = "select * from vemecs";
         datos = this.template.queryForList(consulta);
@@ -261,21 +288,21 @@ public class SpringController {
         return mav;
     }
     
-    @RequestMapping(value = "altaVeMec.htm", method = RequestMethod.GET)
+    @RequestMapping(value = "/altaVeMec", method = RequestMethod.GET)
     public ModelAndView AltaVeMec() {
         mav.addObject(new Vemec());
         mav.setViewName("altaVeMec");
         return mav;
     }
     
-    @RequestMapping(value = "altaVeMec.htm", method = RequestMethod.POST)
+    @RequestMapping(value = "/altaVeMec", method = RequestMethod.POST)
     public ModelAndView AltaVeMec(Vemec vem) {
         String consulta = "insert into vemecs(Marca, Modelo, Ubicacion) values(?,?,?)";
         this.template.update(consulta, vem.getMarca(), vem.getModelo(), vem.getUbicacion());
-        return new ModelAndView("redirect:/vemecs.htm");
+        return new ModelAndView("redirect:/vemecs");
     }
     
-    @RequestMapping(value = "modificarVeMec.htm", method = RequestMethod.GET)
+    @RequestMapping(value = "/modificarVeMec", method = RequestMethod.GET)
     public ModelAndView ModificarVeMec(HttpServletRequest request) {
         id = Integer.parseInt(request.getParameter("id"));
         String consulta = "select * from vemecs where Id="+id;
@@ -285,24 +312,24 @@ public class SpringController {
         return mav;
     }
     
-    @RequestMapping(value = "modificarVeMec.htm", method = RequestMethod.POST)
+    @RequestMapping(value = "/modificarVeMec", method = RequestMethod.POST)
     public ModelAndView ModificarVeMec(Vemec vem) {
         String consulta = "update vemecs set Marca=?,Modelo=?,Ubicacion=? where Id="+id;
         this.template.update(consulta, vem.getMarca(), vem.getModelo(), vem.getUbicacion());
-        return new ModelAndView("redirect:/vemecs.htm");
+        return new ModelAndView("redirect:/vemecs");
     }
     
-    @RequestMapping("bajaVeMec.htm")
+    @RequestMapping("/bajaVeMec")
     public ModelAndView BajaVeMec(HttpServletRequest request) {
         id = Integer.parseInt(request.getParameter("id"));
         String consulta = "delete from vemecs_data where Id_VeMec="+id;
         this.template.update(consulta);
         consulta = "delete from vemecs where Id="+id;
         this.template.update(consulta);
-        return new ModelAndView("redirect:/vemecs.htm");
+        return new ModelAndView("redirect:/vemecs");
     }
     
-    @RequestMapping("datosVeMec.htm")
+    @RequestMapping("/datosVeMec")
     public ModelAndView DatosActualesVeMec(HttpServletRequest request) {
         //en ultima timestamp
         //con graficas presión de entrada y presión de salida
@@ -321,7 +348,7 @@ public class SpringController {
         return mav;
     }
     
-    @RequestMapping("registrosVeMec.htm")
+    @RequestMapping("/registrosVeMec")
     public ModelAndView RegistrosVeMec(HttpServletRequest request) {
         //paginado
         id = Integer.parseInt(request.getParameter("id"));

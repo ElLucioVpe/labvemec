@@ -45,15 +45,15 @@
                                                 <td>${slave.Intervalo_Envio}</td>
                                                 <td>${slave.Intervalo_Emergencia}</td>
                                                 <td>
-                                                    <a href="seccion.htm?id=${slave.id}" class="btn btn-light" style="background-color: #15bef1">
+                                                    <a href="seccion?id=${slave.id}" class="btn btn-light" style="background-color: #15bef1">
                                                         <i class="fas fa-database"></i>
                                                         Ir A
                                                     </a>
-                                                    <a href="modificarSeccion.htm?id=${slave.id}" class="btn btn-light" style="background-color: #15bef1">
+                                                    <a href="modificarSeccion?id=${slave.id}" class="btn btn-light" style="background-color: #15bef1">
                                                         <i class="fas fa-edit"></i>
                                                         Modificar
                                                     </a>
-                                                    <a href="bajaSeccion.htm?id=${slave.id}" class="btn btn-danger">
+                                                    <a href="bajaSeccion?id=${slave.id}" class="btn btn-danger">
                                                         <i class="fas fa-trash"></i> 
                                                         Eliminar
                                                     </a>

@@ -33,12 +33,6 @@
 <c:set var="uri" value="${req.requestURI}" />
 <c:set var="baseUrl" value="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${req.contextPath}/" />
 
-<style>
-    #select_slave, #id_vemec {
-        display: none;
-    }
-</style>
-
 <script type="text/javascript">
     $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip();
@@ -69,21 +63,66 @@
     socket.on('datos_masterSlave'+${slave.id}, (res) => {
         actualizarDatos(res);
     });
-    
-    $('accionMedicaForm').on('submit',function(e){
-        e.preventDefault();
-        $.ajax({
-            type     : "POST",
-            cache    : false,
-            url      : $(this).attr('action'),
-            data     : $(this).serializeArray(),
-            success  : function(data) {}
-        });
 
-    });
+    function altaAccionMedica() {
+        //var json = JSON.stringify($("accionMedicaForm").serializeArray());
+        var json = {};
+        json["idPaciente"] = document.getElementById("form_idPaciente").value;
+        json["nivelRiesgo"] = document.getElementById("form_nivel_riesgo").value;
+        json["medicacion"] = document.getElementById("form_medicacion").value;
+        json["descripcion"] = document.getElementById("form_descripcion").value;
+        //json["id_slave"] = document.getElementById("select_slave").value;
+        json["idVemec"] = document.getElementById("id_vemec").value;
+        json["medicoTratante"] = document.getElementById("form_medico_tratante").value;
+        json["alta"] = document.getElementById("form_alta").value === "true";
+        json["defuncion"] = document.getElementById("form_defuncion").value  === "true";
+
+        console.log(json);
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(json),
+            url: "altaAccionMedica",
+            success: function(data) {console.log("Accion realizada con exito");},
+            error: function(data) {console.log(data);}
+        });
+    }
     
     function asignarPaciente(id) {
-        $('form_idPaciente').val(id);
+        document.getElementById('form_idPaciente').value = id;
+    }
+    
+    function datosPaciente(id) {
+        console.log("recibiendo datos de paciente...");
+        $.ajax({
+            type : "POST",
+            contentType : "application/json",
+            dataType: "json",
+            url : "getPaciente?id="+id,
+            success  : function(data) {
+                var json = data;
+                console.log("cargando datos de paciente...");
+                document.getElementById('modal_ci').innerHTML = json.ci;
+                document.getElementById('modal_nombre').innerHTML = json.nombre;
+                document.getElementById('modal_sexo').innerHTML = json.sexo;
+                document.getElementById('modal_edad').innerHTML = json.edad;
+                document.getElementById('modal_nacionalidad').innerHTML = json.nacionalidad;
+                document.getElementById('modal_residencia').innerHTML = json.lugarResidencia;
+                document.getElementById('modal_direccion').innerHTML = json.direccion;
+                document.getElementById('modal_xyz').innerHTML = json.coordenadas;
+                document.getElementById('modal_antecedentes').innerHTML = json.antecedentesClinicos;
+                document.getElementById('modal_riesgo').innerHTML = json.nivelRiesgo;
+                document.getElementById('modal_pac_historial').href = "accionesMedicas?id="+json.id;
+                if(json.contactoCollection !== null) {
+                    json.contactoCollection.forEach(item => {
+                        let html = item.Nombre+" - "+item.Info_contacto;
+                        if(item.esPaciente) html += " (Paciente)";
+                        document.getElementById('modal_contactos').innerHTML += html+"\n";
+                    });
+                }
+            }, error: function(err){console.log(err);}
+        });
     }
 
     function actualizarDatos(json) {
@@ -191,6 +230,10 @@
 </script>
 
 <style>
+    #select_slave, #id_vemec {
+        display: none;
+    }
+    
     .vemec-col {
         width: 33%;
     }
@@ -328,9 +371,22 @@
                       </a>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownVeMec${dato.getVemec().getId()}">
                         <div class="dropdown-header">Acciones:</div>
-                        <a class="dropdown-item" href="#">Ver Datos Paciente</a>
-                        <a class="dropdown-item" href="#">Ver Historial Medico</a>
-                        <a class="dropdown-item" data-toggle="modal" data-target="#accionMedicaModal">Accion Medica</a>
+                        <c:choose>
+                            <c:when test="${dato.getVemec().getIdPaciente() != null}">
+                                <a class="dropdown-item" data-toggle="modal" data-target="#pacienteModal" onclick="datosPaciente(${dato.getVemec().getIdPaciente().getId()})">
+                                    Ver Datos Paciente
+                                </a>
+                                <a class="dropdown-item" data-toggle="modal" data-target="#accionMedicaModal" onclick="asignarPaciente(${dato.getVemec().getIdPaciente().getId()})">
+                                    Accion Medica
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <a class="dropdown-item">
+                                    No hay acciones
+                                </a>
+                            </c:otherwise>
+                        </c:choose>
+                        
                       </div>
                     </div>
                 </div>
@@ -446,11 +502,11 @@
             <span aria-hidden="true">×</span>
           </button>
         </div>
-          <div class="modal-body">
-              <form action="altaAccionMedica()">
+          <div id="modal_AM_body" class="modal-body">
+              <form id="accionMedicaForm" method="post">
                 <input id="form_idPaciente" name="id_paciente" type="hidden" value=""/>
                 <label for="nivel_riesgo">Nivel de Riesgo:</label>
-                <select name="nivel_riesgo" id="nivel_riesgo" class="form-control">
+                <select name="nivel_riesgo" id="form_nivel_riesgo" class="form-control">
                     <option value="Bajo">Bajo</option>
                     <option value="Medio">Medio</option>
                     <option value="Alto">Alto</option>
@@ -458,12 +514,10 @@
                     <option value="Muy Grave">Muy Grave</option>
                 </select>
                 <label for="medicacion">Recetar Medicacion:</label>
-                <textarea type="text" name="medicacion" class="form-control">
-                </textarea>
+                <textarea type="text" id="form_medicacion" name="medicacion" class="form-control"></textarea>
                 <label for="descripcion">Descripcion:</label>
-                <textarea type="text" name="descripcion" class="form-control">
-                </textarea>
-                <label for="sexo">Cambiar Seccion o VeMec?:</label>
+                <textarea type="text" id="form_descripcion" name="descripcion" class="form-control"></textarea>
+                <label for="selectVemec">Cambiar Seccion o VeMec?:</label>
                 <select name="selectVemec" id="selectVemec" class="form-control mb-1" onchange="showDiv('select_slave', this)">
                     <option selected value="null">No</option>
                     <option value="1">Si</option>
@@ -484,9 +538,23 @@
                     </c:forEach>
                 </select>
                 <!-- -->
+                <label for="alta">Dar de alta:</label>
+                <select name="alta" id="form_alta" class="form-control mb-1">
+                    <option selected value="false">No</option>
+                    <option value="true">Si</option>
+                </select>
+                <label for="defuncion">Registrar defuncion:</label>
+                <select name="defuncion" id="form_defuncion" class="form-control mb-1">
+                    <option selected value="false">No</option>
+                    <option value="true">Si</option>
+                </select>
                 <label for="medico_tratante">Medico tratante:</label>
-                <input type="text" name="medico_tratante" class="form-control">
-                <input type="submit" value="Agregar" class="btn btn-light">
+                <input type="text" name="medico_tratante" id="form_medico_tratante" class="form-control">
+                <div class="text-center">
+                    <button class="btn btn-secondary text-white mt-1" type="button" onclick="altaAccionMedica()">
+                        Enviar
+                    </button>
+                </div>
               </form>
               <script>
                 var arrayVeMecs = [];
@@ -534,7 +602,69 @@
           </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-          <a class="btn btn-primary" onclick="altaAccionMedica()">Enviar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Datos de Paciente -->
+  <div class="modal fade" id="pacienteModal" tabindex="-1" role="dialog" aria-labelledby="pacienteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="pacienteModalModalLabel">Paciente</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+          <div class="modal-body">
+              <div class="form-inline">
+                  <h6><strong>CI:</strong>&nbsp;</h6>
+                  <h6 id="modal_ci"></h6>
+              </div>
+              <div class="form-inline">
+                  <h6><strong>Nombre:</strong>&nbsp;</h6>
+                  <h6 id="modal_nombre"></h6>
+              </div>
+              <div class="form-inline">
+                  <h6><strong>Sexo:</strong>&nbsp;</h6>
+                  <h6 id="modal_sexo"></h6>
+              </div>
+              <div class="form-inline">
+                  <h6><strong>Edad:</strong>&nbsp;</h6>
+                  <h6 id="modal_edad"></h6>
+              </div>
+              <div class="form-inline">
+                  <h6><strong>Nacionalidad:</strong>&nbsp;</h6>
+                  <h6 id="modal_nacionalidad"></h6>
+              </div>
+              <div class="form-inline">
+                  <h6><strong>Lugar de Residencia:</strong>&nbsp;</h6>
+                  <h6 id="modal_residencia"></h6>
+              </div>
+              <div class="form-inline">
+                  <h6><strong>Direccion:</strong>&nbsp;</h6>
+                  <h6 id="modal_direccion"></h6>
+              </div>
+              <div class="form-inline">
+                  <h6><strong>Coordenadas:</strong>&nbsp;</h6>
+                  <h6 id="modal_xyz"></h6>
+              </div>
+              <div>
+                  <h6><strong>Antecedentes clinicos:</strong></h6>
+                  <textarea readonly id="modal_antecedentes" class="form-control"></textarea>
+              </div>
+              <div class="form-inline">
+                  <h6><strong>Nivel de riesgo: </strong>&nbsp;</h6>
+                  <h6 id="modal_riesgo"></h6>
+              </div>
+              <div>
+                  <h6><strong>Informacion de contacto:</strong></h6>
+                  <textarea readonly id="modal_contactos" class="form-control"></textarea>
+              </div>
+          </div>
+        <div class="modal-footer">
+          <button id="modal_pac_historial" class="btn btn-secondary" type="button" href="accionesMedicas">Historial Medico</button>
         </div>
       </div>
     </div>
