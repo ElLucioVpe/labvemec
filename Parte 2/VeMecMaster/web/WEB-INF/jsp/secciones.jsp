@@ -20,7 +20,7 @@
                    <div class="container mt-4" style="background-color: #15bef1">
                         <div class="card">
                             <div class="card-header">
-                               <a class="btn btn-light" href="altaSeccion.htm">
+                               <a class="btn btn-light" href="altaSeccion">
                                     <i class="fas fa-plus"></i>
                                     Agregar una nueva seccion.
                                 </a>

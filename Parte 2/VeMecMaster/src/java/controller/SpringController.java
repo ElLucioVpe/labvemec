@@ -11,21 +11,15 @@ package controller;
 import conf.Connection;
 import dto.DatosAccionMedica;
 import dto.DatosVeMec;
-import entities.Contacto;
+import entities.AccionMedica;
 import entities.Paciente;
 import entities.Slave;
 import entities.Vemec;
 import entities.Vemec_Data;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -152,6 +146,15 @@ public class SpringController {
     }
     
     //Pacientes
+    @RequestMapping("/pacientes")
+    public ModelAndView DatosPacientes(HttpServletRequest request) {      
+        String consulta = "select * from pacientes";
+        datos = this.template.queryForList(consulta);
+        mav.addObject("lista", datos);
+        mav.setViewName("pacientes");
+        return mav;
+    }
+    
     @RequestMapping(value = "/agregarPaciente", method = RequestMethod.GET)
     public ModelAndView AltaPaciente() {
         //Secciones/Slaves para seleccionar
@@ -185,7 +188,7 @@ public class SpringController {
         id = Integer.parseInt(request.getParameter("id"));
         String consulta = "select * from pacientes where id="+id;
         datos = this.template.queryForList(consulta);
-        mav.addObject("lista", datos);
+        mav.addObject("paciente", datos.get(0));
         //Secciones/Slaves para seleccionar
         consulta = "select * from slaves";
         datos = this.template.queryForList(consulta);
@@ -246,6 +249,47 @@ public class SpringController {
         mav.setViewName("accionesMedicas");
         return mav;
     }
+    
+    @RequestMapping(value="/getHistorialMedico", method = RequestMethod.POST)
+    public @ResponseBody List<AccionMedica> GetHistorialMedico(Integer id) {
+        String consulta = "select * from acciones_medicas where id_paciente="+id;
+        List<AccionMedica> data = this.template.query(consulta, new BeanPropertyRowMapper<>(AccionMedica.class));
+        
+        //Encuentro data vemec en el caso de que tenga
+        data.forEach((accion) -> {
+            if(accion.getIdVemec() != null) {
+                String cons = "select * from vemecs where Id="+accion.getIdVemec().getId();
+                accion.setIdVemec(this.template.query(consulta, new BeanPropertyRowMapper<>(Vemec.class)).get(0));
+            }
+        });
+        
+        return data;
+    }
+    
+    @RequestMapping(value="/getRegistrosGrafica", method = RequestMethod.POST)
+    public @ResponseBody List<Vemec_Data> getRegistrosGrafica(Integer id) {
+        String consulta = "select * from vemecs_data where id_paciente="+id;
+        List<Vemec_Data> data = this.template.query(consulta, new BeanPropertyRowMapper<>(Vemec_Data.class));
+        
+        //Cada 1 hora
+        datos = new ArrayList<>();
+        if(!data.isEmpty()) {
+            Vemec_Data anterior = data.get(0);
+            datos.add(anterior);
+            for(int i = 0; i < data.size(); i++) {
+                Vemec_Data dato = data.get(i);
+                System.out.print(i+"--"+dato.getTimestampData());
+                long diff = dato.getTimestampData().getTime() - anterior.getTimestampData().getTime();
+                diff = diff / (60 * 60 * 1000);
+                if(diff >= 1) {
+                    anterior = dato;
+                    datos.add(dato);
+                }
+            }
+        }
+        return datos;
+    }
+    
     
     @RequestMapping(value = "/altaAccionMedica", method = RequestMethod.POST)
     public @ResponseBody DatosAccionMedica AltaAccionMedica(@RequestBody DatosAccionMedica amed) {

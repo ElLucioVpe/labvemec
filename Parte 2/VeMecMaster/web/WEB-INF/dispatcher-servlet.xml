@@ -34,6 +34,7 @@
                 <prop key="/getPaciente">springController</prop>
                 
                 <prop key="/accionesMedicas">springController</prop>
+                <prop key="/getHistorialMedico">springController</prop>
                 <prop key="/altaAccionMedica">springController</prop>
                 <prop key="/modificarAccionMedica">springController</prop>
                 <prop key="/bajaAccionMedica">springController</prop>

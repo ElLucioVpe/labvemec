@@ -40,7 +40,7 @@
                                 <input type="number" name="intervalo_envio" class="form-control" placeholder="Intervalo de envio a servidor (min)">
                                 <input type="number" name="intervalo_emergencia" class="form-control" placeholder="Intervalo de envio en emergencia (seg)">
                                 <input type="submit" value="Agregar" class="btn btn-light">
-                                <a href="index.htm" class="btn btn-secondary" style="color: #15bef1">
+                                <a href="/" class="btn btn-secondary" style="color: #15bef1">
                                     <i class="fas fa-chevron-left"></i> 
                                     Regresar
                                 </a>

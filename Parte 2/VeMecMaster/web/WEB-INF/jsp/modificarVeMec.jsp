@@ -45,7 +45,7 @@
                                 <label>Ubicacion</label>
                                 <input type="text" name="ubicacion" class="form-control" value="${lista[0].Ubicacion}">
                                 <input type="submit" value="Modificar" class="btn btn-light">
-                                <a href="index.htm" class="btn btn-secondary" style="color: #15bef1">
+                                <a href="/" class="btn btn-secondary" style="color: #15bef1">
                                     <i class="fas fa-chevron-left"></i> 
                                     Regresar
                                 </a>

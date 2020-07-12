@@ -44,6 +44,69 @@
             $('#dataConfirmModal').modal({show:true});
             return false;
 	});
+       
+        $('#pacienteModal').on('click', '.btn', function(ev) {
+            var newmodal = $(this).data('target');
+            $('#pacienteModal').on('hidden.bs.modal', function(event) {
+                $(newmodal).modal('show');
+                $('#pacienteModal').off('hidden.bs.modal');
+            }).modal('hide');
+        });
+        
+        $('#historialMedicoModal').on('shown.bs.modal', function(ev) {
+            var id = document.getElementById('form_idPaciente').value;
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                dataType: "json",
+                url: "getHistorialMedico?id="+id,
+                success: function(data) {
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/json",
+                        dataType: "json",
+                        url: "getRegistrosGrafica?id="+id,
+                        success: function(data) {
+                            var datos1 = [];
+                            var datos2 = [];
+                            
+                            data.forEach(dato => {
+                                datos1.push({x: new Date(dato.timestampData).toLocaleString(), y: dato.presionSalida});
+                                datos2.push({x: new Date(dato.timestampData).toLocaleString(), y: dato.pulsaciones});
+                            });
+                            
+                            var chart1 = new CanvasJS.Chart("historial-RespiracionChart", {
+                                title :{text: "Respiracion"},
+                                axisY: {includeZero: false},      
+                                data: [{ type: "line", dataPoints: datos1}]
+                            });
+                            var chart2 = new CanvasJS.Chart("historial-PulsacionesChart", {
+                                title :{text: "Pulsaciones"},
+                                axisY: {includeZero: false},      
+                                data: [{ type: "line", dataPoints: datos2, lineColor: "green"}]
+                            });
+                            chart1.render();
+                            chart2.render();
+                        }
+                    });
+                    console.log("Accion realizada con exito");
+                    var html = "";
+                    data.forEach(item => {
+                        html += "<h6><strong>"+new Date(item.fechaHora).toLocaleString()+":</strong>&nbsp;"+item.descripcion+"<br/>";
+                        if(item.medicacion !== "" && item.medicacion !== null) 
+                            html+= "<strong>Medicación:</strong>&nbsp;"+item.medicacion+"<br/>";
+                        html+= "<strong>Nivel de riesgo:</strong>&nbsp;"+item.nivelRiesgo+"<br/>";
+                        if(item.idVemec !== "" && item.idVemec !== null) {
+                            html+= "<strong>Conectado a Unidad:</strong>&nbsp; VeMec"+item.idVemec.id+"<br/>";
+                            html+= "<strong>Localizada en:</strong>&nbsp;"+item.idVemec.ubicacion+"<br/>";
+                        }
+                        html+= "<strong>Médico tratante:</strong>&nbsp;"+item.medicoTratante+"<br/><hr/>";
+                    });
+                    document.getElementById("historialMedicoModalDatos").innerHTML = html;
+                },
+                error: function(data) {console.log(data);}
+            });
+        });
         
         <c:forEach var="dato" items="${datos_vemecs}">
             var array = [];
@@ -89,10 +152,6 @@
         });
     }
     
-    function asignarPaciente(id) {
-        document.getElementById('form_idPaciente').value = id;
-    }
-    
     function datosPaciente(id) {
         console.log("recibiendo datos de paciente...");
         $.ajax({
@@ -114,12 +173,19 @@
                 document.getElementById('modal_antecedentes').innerHTML = json.antecedentesClinicos;
                 document.getElementById('modal_riesgo').innerHTML = json.nivelRiesgo;
                 document.getElementById('modal_pac_historial').href = "accionesMedicas?id="+json.id;
+                
+                //Asigno para form de accion medica
+                document.getElementById('form_idPaciente').value = id;
+                document.getElementById('form_nivel_riesgo').value = json.nivelRiesgo;
+                //
                 if(json.contactoCollection !== null) {
+                    var html = "";
                     json.contactoCollection.forEach(item => {
-                        let html = item.Nombre+" - "+item.Info_contacto;
+                        html += item.Nombre+" - "+item.Info_contacto;
                         if(item.esPaciente) html += " (Paciente)";
-                        document.getElementById('modal_contactos').innerHTML += html+"\n";
+                        html+="\n";
                     });
+                    document.getElementById('modal_contactos').innerHTML = html;
                 }
             }, error: function(err){console.log(err);}
         });
@@ -227,11 +293,59 @@
             document.getElementById(count_div).innerHTML = parseInt(document.getElementById(count_div).innerHTML)-1;
         }
     }
+    
+    //Para seleccionar seccion y vemecs en caso de querer cambiarlos
+    var arrayVeMecs = [];
+    var arraySlaves = [];
+    <c:forEach var="item" items="${slaves}">
+        arraySlaves.push({
+            id: "${item.id}", 
+            Nombre: "${item.Nombre}"
+        });
+    </c:forEach>
+    <c:forEach var="item" items="${vemecs_libres}">
+        arrayVeMecs.push({
+            id: "${item.id}", 
+            Modelo: "${item.Modelo}",
+            Marca: "${item.Marca}",
+            Ubicacion: "${item.Ubicacion}",
+            id_slave: "${item.id_slave}"
+        });
+    </c:forEach>
+
+    function showDiv(hiddenItem, element)
+    {
+        if(element.value !== null && element.value !== "null") {
+            let html = "";
+            if(hiddenItem === "id_vemec") {
+                html = '<option selected value="null">Seleccione un VeMec</option>';
+                arrayVeMecs.forEach(vemec => {
+                    if(vemec.id_slave === element.value) {
+                        html+='<option value="'+vemec.id+'">'+vemec.Modelo+' - '+vemec.Ubicacion+'</option>';
+                    }
+                });
+            }
+            if(hiddenItem === "select_slave") {
+                html = '<option selected value="null">Seleccione una seccion</option>';
+                arraySlaves.forEach(slave => {
+                    html+='<option value="'+slave.id+'">'+slave.Nombre+'</option>';
+                });
+            }
+            document.getElementById(hiddenItem).innerHTML = html;
+        }
+
+        document.getElementById(hiddenItem).style.display = element.value === "null" ? 'none' : 'block';
+    }
 </script>
 
 <style>
     #select_slave, #id_vemec {
         display: none;
+    }
+    
+    #historialMedicoModal .modal-body {
+        height: 450px;
+        overflow-y: auto;
     }
     
     .vemec-col {
@@ -249,6 +363,11 @@
         height: 50%;
     }
     
+    .historial-chart {
+        width: 100%;
+        height: 100px;
+    }
+
     .alert-mode {
         background: red;
     }
@@ -278,7 +397,7 @@
         <div class="container-fluid">
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">${slave.Nombre}</h1>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generar Reporte de Paciente</a>
+            <a href="modificarSeccion?id=${slave.id}" class="d-none d-sm-inline-block btn btn btn-primary shadow">Modificar seccion</a>
           </div>
           <div class="row">
 
@@ -375,9 +494,6 @@
                             <c:when test="${dato.getVemec().getIdPaciente() != null}">
                                 <a class="dropdown-item" data-toggle="modal" data-target="#pacienteModal" onclick="datosPaciente(${dato.getVemec().getIdPaciente().getId()})">
                                     Ver Datos Paciente
-                                </a>
-                                <a class="dropdown-item" data-toggle="modal" data-target="#accionMedicaModal" onclick="asignarPaciente(${dato.getVemec().getIdPaciente().getId()})">
-                                    Accion Medica
                                 </a>
                             </c:when>
                             <c:otherwise>
@@ -551,54 +667,11 @@
                 <label for="medico_tratante">Medico tratante:</label>
                 <input type="text" name="medico_tratante" id="form_medico_tratante" class="form-control">
                 <div class="text-center">
-                    <button class="btn btn-secondary text-white mt-1" type="button" onclick="altaAccionMedica()">
+                    <button class="btn btn-secondary text-white mt-1" type="button" onclick="altaAccionMedica()" data-dismiss="modal">
                         Enviar
                     </button>
                 </div>
               </form>
-              <script>
-                var arrayVeMecs = [];
-                var arraySlaves = [];
-                <c:forEach var="item" items="${slaves}">
-                    arraySlaves.push({
-                        id: "${item.id}", 
-                        Nombre: "${item.Nombre}"
-                    });
-                </c:forEach>
-                <c:forEach var="item" items="${vemecs_libres}">
-                    arrayVeMecs.push({
-                        id: "${item.id}", 
-                        Modelo: "${item.Modelo}",
-                        Marca: "${item.Marca}",
-                        Ubicacion: "${item.Ubicacion}",
-                        id_slave: "${item.id_slave}"
-                    });
-                </c:forEach>
-
-                function showDiv(hiddenItem, element)
-                {
-                    if(element.value !== null && element.value !== "null") {
-                        let html = "";
-                        if(hiddenItem === "id_vemec") {
-                            html = '<option selected value="null">Seleccione un VeMec</option>';
-                            arrayVeMecs.forEach(vemec => {
-                                if(vemec.id_slave === element.value) {
-                                    html+='<option value="'+vemec.id+'">'+vemec.Modelo+' - '+vemec.Ubicacion+'</option>';
-                                }
-                            });
-                        }
-                        if(hiddenItem === "select_slave") {
-                            html = '<option selected value="null">Seleccione una seccion</option>';
-                            arraySlaves.forEach(slave => {
-                                html+='<option value="'+slave.id+'">'+slave.Nombre+'</option>';
-                            });
-                        }
-                        document.getElementById(hiddenItem).innerHTML = html;
-                    }
-
-                    document.getElementById(hiddenItem).style.display = element.value === "null" ? 'none' : 'block';
-                }
-            </script>
           </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
@@ -664,7 +737,60 @@
               </div>
           </div>
         <div class="modal-footer">
-          <button id="modal_pac_historial" class="btn btn-secondary" type="button" href="accionesMedicas">Historial Medico</button>
+            <button class="btn btn-secondary" data-target="#accionMedicaModal">
+                Accion Medica
+            </button>
+            <button id="modal_pac_historial" class="btn btn-secondary" data-target="#historialMedicoModal">
+                Historial Medico
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Historial Medico -->
+  <div class="modal fade" id="historialMedicoModal" tabindex="-1" role="dialog" aria-labelledby="historialMedicoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="historialMedicoModalLabel">Historial Medico</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+          <div class="modal-body">
+            <div class="col">
+                <div id="historial-RespiracionChart" class="historial-chart">
+                </div>
+                <div id="historial-PulsacionesChart" class="historial-chart">
+                </div>
+            </div>
+            <hr/>
+            <div id="historialMedicoModalDatos">
+                <!-- Template de ejemplo -->
+                <h6>
+                    <strong>Fecha y hora:</strong>&nbsp;
+                    Descripcion<br/>
+                    <!-- Si lo medican -->
+                    <strong>Medicación:</strong>&nbsp; Medicacion<br/>
+                    <!-- -->
+                    <strong>Nivel de riesgo:</strong>&nbsp; Nivel de riesto<br/>
+                    <!-- Si lo conectan a vemec -->
+                    <strong>Conectado a Unidad:</strong>&nbsp; VeMec.ID<br/>
+                    <strong>Localizada en:</strong> VeMec.Ubicacion<br/>
+                    <!-- -->
+                    <strong>Médico tratante:</strong>&nbsp; Medico<br/>
+                </h6>
+                <hr/>
+            </div>
+          </div>
+        <div class="modal-footer">
+            <button class="d-none d-sm-inline-block btn btn btn-primary shadow"><i class="fas fa-download fa-sm text-white-50"></i>
+                Generar historial en pdf
+            </button>
+            <button class="btn btn-secondary" data-dismiss="modal">
+                Cerrar
+            </button>
         </div>
       </div>
     </div>
