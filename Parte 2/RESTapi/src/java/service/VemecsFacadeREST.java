@@ -5,7 +5,7 @@
  */
 package service;
 
-import Entities.Vemecs;
+import Entities.Vemec;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -26,26 +26,26 @@ import javax.ws.rs.core.MediaType;
  */
 @Stateless
 @Path("entities.vemecs")
-public class VemecsFacadeREST extends AbstractFacade<Vemecs> {
+public class VemecsFacadeREST extends AbstractFacade<Vemec> {
 
     @PersistenceContext(unitName = "RESTapiPU")
     private EntityManager em;
 
     public VemecsFacadeREST() {
-        super(Vemecs.class);
+        super(Vemec.class);
     }
 
     @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Vemecs entity) {
+    public void create(Vemec entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") String id, Vemecs entity) {
+    public void edit(@PathParam("id") String id, Vemec entity) {
         super.edit(entity);
     }
 
@@ -58,21 +58,21 @@ public class VemecsFacadeREST extends AbstractFacade<Vemecs> {
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Vemecs find(@PathParam("id") String id) {
+    public Vemec find(@PathParam("id") String id) {
         return super.find(id);
     }
 
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Vemecs> findAll() {
+    public List<Vemec> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Vemecs> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+    public List<Vemec> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 

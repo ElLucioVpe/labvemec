@@ -5,7 +5,7 @@
  */
 package service;
 
-import Entities.AccionesMedicas;
+import Entities.AccionMedica;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -26,26 +26,26 @@ import javax.ws.rs.core.MediaType;
  */
 @Stateless
 @Path("entities.accionesmedicas")
-public class AccionesMedicasFacadeREST extends AbstractFacade<AccionesMedicas> {
+public class AccionesMedicasFacadeREST extends AbstractFacade<AccionMedica> {
 
     @PersistenceContext(unitName = "RESTapiPU")
     private EntityManager em;
 
     public AccionesMedicasFacadeREST() {
-        super(AccionesMedicas.class);
+        super(AccionMedica.class);
     }
 
     @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(AccionesMedicas entity) {
+    public void create(AccionMedica entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") String id, AccionesMedicas entity) {
+    public void edit(@PathParam("id") String id, AccionMedica entity) {
         super.edit(entity);
     }
 
@@ -58,21 +58,21 @@ public class AccionesMedicasFacadeREST extends AbstractFacade<AccionesMedicas> {
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public AccionesMedicas find(@PathParam("id") String id) {
+    public AccionMedica find(@PathParam("id") String id) {
         return super.find(id);
     }
 
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<AccionesMedicas> findAll() {
+    public List<AccionMedica> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<AccionesMedicas> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+    public List<AccionMedica> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 

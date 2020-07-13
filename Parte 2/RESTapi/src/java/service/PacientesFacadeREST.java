@@ -5,7 +5,7 @@
  */
 package service;
 
-import Entities.Pacientes;
+import Entities.Paciente;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -26,26 +26,26 @@ import javax.ws.rs.core.MediaType;
  */
 @Stateless
 @Path("entities.pacientes")
-public class PacientesFacadeREST extends AbstractFacade<Pacientes> {
+public class PacientesFacadeREST extends AbstractFacade<Paciente> {
 
     @PersistenceContext(unitName = "RESTapiPU")
     private EntityManager em;
 
     public PacientesFacadeREST() {
-        super(Pacientes.class);
+        super(Paciente.class);
     }
 
     @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Pacientes entity) {
+    public void create(Paciente entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") String id, Pacientes entity) {
+    public void edit(@PathParam("id") String id, Paciente entity) {
         super.edit(entity);
     }
 
@@ -58,21 +58,21 @@ public class PacientesFacadeREST extends AbstractFacade<Pacientes> {
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Pacientes find(@PathParam("id") String id) {
+    public Paciente find(@PathParam("id") String id) {
         return super.find(id);
     }
 
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Pacientes> findAll() {
+    public List<Paciente> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Pacientes> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+    public List<Paciente> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 

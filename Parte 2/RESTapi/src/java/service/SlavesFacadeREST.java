@@ -5,7 +5,7 @@
  */
 package service;
 
-import Entities.Slaves;
+import Entities.Slave;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -26,26 +26,26 @@ import javax.ws.rs.core.MediaType;
  */
 @Stateless
 @Path("entities.slaves")
-public class SlavesFacadeREST extends AbstractFacade<Slaves> {
+public class SlavesFacadeREST extends AbstractFacade<Slave> {
 
     @PersistenceContext(unitName = "RESTapiPU")
     private EntityManager em;
 
     public SlavesFacadeREST() {
-        super(Slaves.class);
+        super(Slave.class);
     }
 
     @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Slaves entity) {
+    public void create(Slave entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") String id, Slaves entity) {
+    public void edit(@PathParam("id") String id, Slave entity) {
         super.edit(entity);
     }
 
@@ -58,21 +58,21 @@ public class SlavesFacadeREST extends AbstractFacade<Slaves> {
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Slaves find(@PathParam("id") String id) {
+    public Slave find(@PathParam("id") String id) {
         return super.find(id);
     }
 
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Slaves> findAll() {
+    public List<Slave> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Slaves> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+    public List<Slave> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 

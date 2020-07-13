@@ -5,8 +5,8 @@
  */
 package service;
 
-import Entities.VemecsData;
-import Entities.VemecsDataPK;
+import Entities.VemecData;
+import Entities.VemecDataPK;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -28,12 +28,12 @@ import javax.ws.rs.core.PathSegment;
  */
 @Stateless
 @Path("entities.vemecsdata")
-public class VemecsDataFacadeREST extends AbstractFacade<VemecsData> {
+public class VemecsDataFacadeREST extends AbstractFacade<VemecData> {
 
     @PersistenceContext(unitName = "RESTapiPU")
     private EntityManager em;
 
-    private VemecsDataPK getPrimaryKey(PathSegment pathSegment) {
+    private VemecDataPK getPrimaryKey(PathSegment pathSegment) {
         /*
          * pathSemgent represents a URI path segment and any associated matrix parameters.
          * URI path part is supposed to be in form of 'somePath;idData=idDataValue;idVemec=idVemecValue'.
@@ -41,7 +41,7 @@ public class VemecsDataFacadeREST extends AbstractFacade<VemecsData> {
          * it is ignored in the following code.
          * Matrix parameters are used as field names to build a primary key instance.
          */
-        Entities.VemecsDataPK key = new Entities.VemecsDataPK();
+        Entities.VemecDataPK key = new Entities.VemecDataPK();
         javax.ws.rs.core.MultivaluedMap<String, String> map = pathSegment.getMatrixParameters();
         java.util.List<String> idData = map.get("idData");
         if (idData != null && !idData.isEmpty()) {
@@ -55,49 +55,49 @@ public class VemecsDataFacadeREST extends AbstractFacade<VemecsData> {
     }
 
     public VemecsDataFacadeREST() {
-        super(VemecsData.class);
+        super(VemecData.class);
     }
 
     @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(VemecsData entity) {
+    public void create(VemecData entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") PathSegment id, VemecsData entity) {
+    public void edit(@PathParam("id") PathSegment id, VemecData entity) {
         super.edit(entity);
     }
 
     @DELETE
     @Path("{id}")
     public void remove(@PathParam("id") PathSegment id) {
-        Entities.VemecsDataPK key = getPrimaryKey(id);
+        Entities.VemecDataPK key = getPrimaryKey(id);
         super.remove(super.find(key));
     }
 
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public VemecsData find(@PathParam("id") PathSegment id) {
-        Entities.VemecsDataPK key = getPrimaryKey(id);
+    public VemecData find(@PathParam("id") PathSegment id) {
+        Entities.VemecDataPK key = getPrimaryKey(id);
         return super.find(key);
     }
 
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<VemecsData> findAll() {
+    public List<VemecData> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<VemecsData> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+    public List<VemecData> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 
