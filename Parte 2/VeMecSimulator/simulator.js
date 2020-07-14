@@ -1,11 +1,13 @@
 const io = require("socket.io-client");
 const request = require("request");
+const axios = require("axios").default;
 
 const socket = io("http://localhost:4000");
 
 class VeMec {
-  constructor(_id, _marca, _modelo, _ubicacion, _running, _socket) {
+  constructor(_id, _marca, _modelo, _ubicacion, _running, _socket, _idSlave) {
     this.id = _id;
+    this.idSlave = _idSlave;
     this.marca = _marca;
     this.modelo = _modelo;
     this.ubicacion = _ubicacion;
@@ -29,22 +31,40 @@ class VeMec {
         let RandomTemperatura_out = _this.randomIntFromInterval(30, 45);
         let RandomPresion_in = _this.randomIntFromInterval(10, 13); //Dudamos mas de este valor que de nostros mismos
         let RandomPresion_out = _this.randomIntFromInterval(8, 15); //Igual en este
+        let RandomConectadoACorriente = _this.randomIntFromInterval(0,1);
+        let RandomEnergia = _this.randomIntFromInterval(0,100);
+        let RandomPulsaciones = _this.randomIntFromInterval(60,100);
         let today = new Date();
         let date =
           today.getFullYear() +
           "-" +
-          (today.getMonth()<10?'0'+today.getMonth():today.getMonth()) +
+          (today.getMonth() < 10 ? "0" + today.getMonth() : today.getMonth()) +
           "-" +
           today.getDate();
         let time =
           today.getHours() +
           ":" +
-          (today.getMinutes()<10?'0'+today.getMinutes():today.getMinutes()) +
+          (today.getMinutes() < 10
+            ? "0" + today.getMinutes()
+            : today.getMinutes()) +
           ":" +
           today.getSeconds();
 
+        if(_tihs.randomIntFromInterval(0,20) === 20) {
+          RandomPulsaciones = _this.randomIntFromInterval(110, 150);
+        } else if (_this.randomIntFromInterval(0, 20) === 20) {
+          RandomPulsaciones = _this.randomIntFromInterval(30, 50);
+        }
+        
+        if(RandomConectadoACorriente && RandomEnergia < 100) {
+          if(_this.randomIntFromInterval(0,2) === 2) {
+             RandomEnergia++;
+          }
+        }
+
         let data = new VeMecData(
           _this.id,
+          _this.idSlave,
           RandomPresMax,
           RandomPresMin,
           RandomGas,
@@ -55,32 +75,17 @@ class VeMec {
           RandomTemperatura_out,
           RandomPresion_in,
           RandomPresion_out,
+          RandomEnergia,
+          RandomPulsaciones,
+          RandomConectadoACorriente,
           date + "T" + time + "Z[UTC]"
         );
+        
         socket.emit("envio_datosVeMec", JSON.stringify(data.getData()));
-        console.log("> Esto es el ventialdor " + _this.id + "ts" + data.time_Stamp);
-        segs += 1;
-
-        if (segs > 60) {
-          segs = 0;
-          console.log("Enviando Respaldo a Bd");
-
-          console.log(JSON.stringify(data.getJSON()));
-          let json_data = JSON.stringify(data.getJSON());
-          request(
-            {
-              uri:
-                "http://localhost:8080/RESTapi/webresources/entities.vemecsdata",
-              method: "POST",
-              body: JSON.stringify(data.getJSON()),
-              headers: { "Content-Type": "application/json" },
-            },
-            function (error, response, body) {
-              console.log(body);
-            }
-          );
-        }
-      }, 1000);
+        console.log(
+          "> Esto es el ventilador " + _this.id + "ts" + data.time_Stamp
+        );
+      });
     });
   }
 
@@ -96,6 +101,7 @@ class VeMec {
 class VeMecData {
   constructor(
     _id_Vemec,
+    _id_Slave,
     _presion_max,
     _presion_min,
     _gas,
@@ -106,9 +112,13 @@ class VeMecData {
     _temperatura_out,
     _presion_in,
     _presion_out,
+    _energia,
+    _pulsaciones,
+    _conectado,
     _time_Stamp
   ) {
     this.id_Vemec = _id_Vemec;
+    this.id_Slave = _id_Slave;
     this.presion_max = _presion_max;
     this.presion_min = _presion_min;
     this.gas = _gas;
@@ -119,6 +129,9 @@ class VeMecData {
     this.temperatura_out = _temperatura_out;
     this.presion_in = _presion_in;
     this.presion_out = _presion_out;
+    this.energia = _energia;
+    this.pulsaciones = _pulsaciones;
+    this.conectado = _conectado;
     this.time_Stamp = _time_Stamp;
   }
 
@@ -136,7 +149,8 @@ class VeMecData {
     data["Presion_Entrada"] = this.presion_in;
     data["Presion_Salida"] = this.presion_out;
     data["Timestamp_Data"] = this.time_Stamp;
-
+    data[]
+    
     return data;
   }
 
@@ -154,23 +168,44 @@ class VeMecData {
     data["presionSalida"] = parseFloat(this.presion_out).toFixed(1);
     data["timestampData"] = this.time_Stamp;
     data["vemecsDataPK"] = {
-      "idData": 0,
-      "idVemec": this.id_Vemec
+      idData: 0,
+      idVemec: this.id_Vemec,
     };
-  
+
     return data;
   }
 }
 
-let veMec1 = new VeMec(1, "Marca", "Modelo", "ubicacion", true, socket);
-let veMec2 = new VeMec(2, "asdasd", "adsasd", "ubicacion", true, socket);
+request(
+  {
+    uri:
+      "http://localhost:8080/RESTapi/webresources/entities.vemecsdata",
+    method: "POST",
+    body: JSON.stringify(data.getJSON()),
+    headers: { "Content-Type": "application/json" },
+  },
+  function (error, response, body) {
+    console.log(body);
+  }
+);
 
-async function run_veMec1() {
-  await veMec1.checking();
-}
-async function run_veMec2() {
-  await veMec2.checking();
-}
+let vemecsData;
 
-//run_veMec1();
-run_veMec2();
+axios.get('url/obtener/vemecs').then(
+  function (response) {
+    console.log(response);
+    vemecsData = response;
+  }
+)
+
+let vemecs = [];
+
+vemecsData.forEach(function (vemec) {
+  vemecs.push(new VeMec(vemec.id, vemec.idSlave, vemec.marca, vemec.modelo, vemec.ubicacion, true, socket));
+})
+
+async function runVemecs() {
+  vemecs.forEach(function(vemec) {
+    await vemec.checking();
+  });
+}
