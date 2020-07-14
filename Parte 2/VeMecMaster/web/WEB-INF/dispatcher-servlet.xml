@@ -33,7 +33,6 @@
                 <prop key="/bajaPaciente">springController</prop>
                 <prop key="/getPaciente">springController</prop>
                 
-                <prop key="/accionesMedicas">springController</prop>
                 <prop key="/getHistorialMedico">springController</prop>
                 <prop key="/altaAccionMedica">springController</prop>
                 <prop key="/modificarAccionMedica">springController</prop>
@@ -53,5 +52,9 @@
           p:suffix=".jsp" />
 
     <bean name="springController" class="controller.SpringController"/>
+    
+    <mvc:resources mapping="/resources/**" location="/resources/"
+	cache-period="31556926"/>
+    
     <mvc:annotation-driven/>
 </beans>

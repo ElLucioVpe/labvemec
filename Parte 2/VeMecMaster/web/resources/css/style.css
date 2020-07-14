@@ -1,0 +1,50 @@
+
+#select_slave, #id_vemec, #datosPDF {
+    display: none;
+}
+
+#historialMedicoModal .modal-body {
+    height: 450px;
+    overflow-y: auto;
+}
+
+.vemec-col {
+    width: 33%;
+}
+
+.vemec-card {
+    font-size: 15px;
+    width: 100%;
+    height: 330px;
+}
+
+.vemec-chart {
+    width: 100%;
+    height: 50%;
+}
+
+.historial-chart {
+    width: 100%;
+    height: 150px;
+}
+
+.alert-mode {
+    background: red;
+}
+
+.lowEnergy-mode {
+    background: yellow;
+}
+
+.w-90 {
+    width: 90%;
+}
+
+@media screen and (max-width: 1000px) { 
+    .vemec-col {
+        width: 100%;
+    }
+    .vemec-col {
+        height: 50%;
+    }
+}
