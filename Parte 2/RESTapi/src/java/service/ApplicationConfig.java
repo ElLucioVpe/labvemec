@@ -28,6 +28,10 @@ public class ApplicationConfig extends javax.ws.rs.core.Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(service.AccionesMedicasFacadeREST.class);
+        resources.add(service.ContactosFacadeREST.class);
+        resources.add(service.PacientesFacadeREST.class);
+        resources.add(service.SlavesFacadeREST.class);
         resources.add(service.VemecsDataFacadeREST.class);
         resources.add(service.VemecsFacadeREST.class);
     }

@@ -15,10 +15,6 @@
     </head>
     
     <style>
-        body{
-            background-color: #15bef1;
-        }
-        
         .btn-light {
             background-color: #15bef1;
             color: white;
@@ -31,27 +27,33 @@
     </style>
     
     <body>
-        <div class="container mt-4 col-lg-4">
-            <div class="card">
-                <div class="card-header text-white">
-                    Modificar VeMec
-                </div>
-                <div class="card-body">
-                    <form method="POST">
+        <div id="wrapper">
+            <div id="content-wrapper" class="d-flex flex-column">
+                <jsp:include page="../components/header.jsp"></jsp:include>
+                <div class="container mt-4 col-lg-6">
+                    <div class="card">
+                        <div class="card-header text-white">
+                            Modificar VeMec
+                        </div>
+                        <div class="card-body">
+                            <form method="POST">
 
-                        <label>Marca</label>
-                        <input type="text" name="marca" class="form-control" value="${lista[0].Marca}">
-                        <label>Modelo</label>
-                        <input type="text" name="modelo" class="form-control" value="${lista[0].Modelo}">
-                        <label>Ubicacion</label>
-                        <input type="text" name="ubicacion" class="form-control" value="${lista[0].Ubicacion}">
-                        <input type="submit" value="Modificar" class="btn btn-light">
-                        <a href="index.htm" class="btn btn-secondary" style="color: #15bef1">
-                            <i class="fas fa-chevron-left"></i> 
-                            Regresar
-                        </a>
-                    </form>
+                                <label>Marca</label>
+                                <input type="text" name="marca" class="form-control" value="${lista[0].Marca}">
+                                <label>Modelo</label>
+                                <input type="text" name="modelo" class="form-control" value="${lista[0].Modelo}">
+                                <label>Ubicacion</label>
+                                <input type="text" name="ubicacion" class="form-control" value="${lista[0].Ubicacion}">
+                                <input type="submit" value="Modificar" class="btn btn-light">
+                                <a href="/" class="btn btn-secondary" style="color: #15bef1">
+                                    <i class="fas fa-chevron-left"></i> 
+                                    Regresar
+                                </a>
+                            </form>
+                        </div>
+                    </div>
                 </div>
+                <jsp:include page="../components/footer.jsp"></jsp:include>
             </div>
         </div>
     </body>

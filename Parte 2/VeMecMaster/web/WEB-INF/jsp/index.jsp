@@ -13,7 +13,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>VeMecMaster - Seccion</title>
+  <title>VeMecMaster - Principal</title>
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -39,7 +39,7 @@
               
             <!-- Secciones -->
             <div class="col-xl-3 col-md-6 mb-4">
-              <a href="secciones.htm">
+              <a href="secciones">
               <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -57,7 +57,7 @@
 
             <!-- Pacientes -->
             <div class="col-xl-3 col-md-6 mb-4">
-              <a href="pacientes.htm">
+              <a href="pacientes">
               <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -75,7 +75,7 @@
 
             <!-- VeMecs -->
             <div class="col-xl-3 col-md-6 mb-4">
-              <a href="vemecs.htm">
+              <a href="vemecs">
               <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">

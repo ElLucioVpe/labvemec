@@ -14,10 +14,6 @@
         <title>VeMecMaster - Modificar Seccion</title>
     </head>
     <style>
-        body{
-            background-color: #15bef1;
-        }
-        
         .btn-light {
             background-color: #15bef1;
             color: white;
@@ -30,27 +26,33 @@
     </style>
     
     <body>
-        <div class="container mt-4 col-lg-4">
-            <div class="card">
-                <div class="card-header text-white">
-                    Modificar Seccion
-                </div>
-                <div class="card-body">
-                    <form method="POST">
+        <div id="wrapper">
+            <div id="content-wrapper" class="d-flex flex-column">
+                <jsp:include page="../components/header.jsp"></jsp:include>
+                <div class="container mt-4 col-lg-6">
+                    <div class="card">
+                        <div class="card-header text-white">
+                            Modificar Seccion
+                        </div>
+                        <div class="card-body">
+                            <form method="POST">
 
-                        <label>Nombre</label>
-                        <input type="text" name="nombre" class="form-control" value="${lista[0].Nombre}">
-                        <label>Intervalo de envio a servidor (min)</label>
-                        <input type="number" name="intervalo_envio" class="form-control" value="${lista[0].Intervalo_Envio}">
-                        <label>Intervalo de envio en emergencia (seg)</label>
-                        <input type="number" name="intervalo_emergencia" class="form-control" value="${lista[0].Intervalo_Emergencia}">
-                        <input type="submit" value="Modificar" class="btn btn-light">
-                        <a href="index.htm" class="btn btn-secondary" style="color: #15bef1">
-                            <i class="fas fa-chevron-left"></i> 
-                            Regresar
-                        </a>
-                    </form>
+                                <label>Nombre</label>
+                                <input type="text" name="nombre" class="form-control" value="${lista[0].Nombre}">
+                                <label>Intervalo de envio a servidor (min)</label>
+                                <input type="number" name="intervalo_envio" class="form-control" value="${lista[0].Intervalo_Envio}">
+                                <label>Intervalo de envio en emergencia (seg)</label>
+                                <input type="number" name="intervalo_emergencia" class="form-control" value="${lista[0].Intervalo_Emergencia}">
+                                <input type="submit" value="Modificar" class="btn btn-light">
+                                <a href="/" class="btn btn-secondary" style="color: #15bef1">
+                                    <i class="fas fa-chevron-left"></i> 
+                                    Regresar
+                                </a>
+                            </form>
+                        </div>
+                    </div>
                 </div>
+                <jsp:include page="../components/footer.jsp"></jsp:include>
             </div>
         </div>
     </body>

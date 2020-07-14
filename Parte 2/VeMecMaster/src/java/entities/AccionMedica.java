@@ -41,12 +41,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "AccionMedica.findByMedicoTratante", query = "SELECT a FROM AccionMedica a WHERE a.medicoTratante = :medicoTratante")})
 public class AccionMedica implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Column(name = "fecha_hora")
@@ -70,6 +64,13 @@ public class AccionMedica implements Serializable {
     @Size(min = 1, max = 60)
     @Column(name = "medico_tratante")
     private String medicoTratante;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
     @JoinColumn(name = "id_paciente", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Paciente idPaciente;
@@ -116,21 +117,6 @@ public class AccionMedica implements Serializable {
         this.nivelRiesgo = nivelRiesgo;
     }
 
-    public String getMedicacion() {
-        return medicacion;
-    }
-
-    public void setMedicacion(String medicacion) {
-        this.medicacion = medicacion;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
 
     public String getMedicoTratante() {
         return medicoTratante;
@@ -179,6 +165,22 @@ public class AccionMedica implements Serializable {
     @Override
     public String toString() {
         return "entities.AccionMedica[ id=" + id + " ]";
+    }
+
+    public String getMedicacion() {
+        return medicacion;
+    }
+
+    public void setMedicacion(String medicacion) {
+        this.medicacion = medicacion;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
     
 }

@@ -38,12 +38,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Slave.findByIntervaloEmergencia", query = "SELECT s FROM Slave s WHERE s.intervaloEmergencia = :intervaloEmergencia")})
 public class Slave implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
@@ -57,6 +51,13 @@ public class Slave implements Serializable {
     @NotNull
     @Column(name = "Intervalo_Emergencia")
     private int intervaloEmergencia;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSlave")
     private Collection<Vemec> vemecCollection;
 
@@ -82,13 +83,6 @@ public class Slave implements Serializable {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
 
     public int getIntervaloEnvio() {
         return intervaloEnvio;
@@ -138,6 +132,14 @@ public class Slave implements Serializable {
     @Override
     public String toString() {
         return "entities.Slave[ id=" + id + " ]";
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
     
 }

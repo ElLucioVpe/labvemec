@@ -12,55 +12,55 @@
     </head>
 
     <body>
-        
-        <div class="container mt-4" style="background-color: #15bef1">
-            <div class="card">
-                <div class="card-header">
-                   <a class="btn btn-light" href="altaVeMec.htm">
-                        <i class="fas fa-plus"></i>
-                        Agregar nuevo VeMec
-                    </a>
+        <div id="wrapper">
+            <div id="content-wrapper" class="d-flex flex-column">
+                <jsp:include page="../components/header.jsp"></jsp:include>
+                <div class="container mt-4" style="background-color: #15bef1">
+                    <div class="card">
+                        <div class="card-header">
+                           <a class="btn btn-light" href="altaVeMec">
+                                <i class="fas fa-plus"></i>
+                                Agregar nuevo VeMec
+                            </a>
+                        </div>
+
+                        <div class="card-header text-center" style="background-color: #15bef1">
+                            Lista de VeMecs
+                        </div>
+                        <div class="card-body bg-light">
+                            <table class="table table-hover">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+                                    <th>Ubicacion</th>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="vemec" items="${lista}">
+                                        <tr>
+                                            <td>${vemec.Id}</td>
+                                            <td>${vemec.Marca}</td>
+                                            <td>${vemec.Modelo}</td>
+                                            <td>${vemec.Ubicacion}</td>
+                                            <td>
+                                                <a href="modificarVeMec?id=${vemec.Id}" class="btn btn-light" style="background-color: #15bef1">
+                                                    <i class="fas fa-edit"></i>
+                                                    Modificar
+                                                </a>
+                                                <a href="bajaVeMec?id=${vemec.Id}" class="btn btn-danger">
+                                                    <i class="fas fa-trash"></i> 
+                                                    Eliminar
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="card-header text-center" style="background-color: #15bef1">
-                    Lista de VeMecs
-                </div>
-                <div class="card-body bg-light">
-                    <table class="table table-hover">
-                        <thead>
-                            <th>ID</th>
-                            <th>Marca</th>
-                            <th>Modelo</th>
-                            <th>Ubicacion</th>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="vemec" items="${lista}">
-                                <tr>
-                                    <td>${vemec.Id}</td>
-                                    <td>${vemec.Marca}</td>
-                                    <td>${vemec.Modelo}</td>
-                                    <td>${vemec.Ubicacion}</td>
-                                    <td>
-                                        <a href="datosVeMec.htm?id=${vemec.Id}" class="btn btn-light" style="background-color: #15bef1">
-                                            <i class="fas fa-database"></i>
-                                            Datos
-                                        </a>
-                                        <a href="modificarVeMec.htm?id=${vemec.Id}" class="btn btn-light" style="background-color: #15bef1">
-                                            <i class="fas fa-edit"></i>
-                                            Modificar
-                                        </a>
-                                        <a href="bajaVeMec.htm?id=${vemec.Id}" class="btn btn-danger">
-                                            <i class="fas fa-trash"></i> 
-                                            Eliminar
-                                        </a>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
+                <jsp:include page="../components/footer.jsp"></jsp:include>
             </div>
-            
         </div>
     </body>
 </html>

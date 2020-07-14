@@ -5,70 +5,80 @@
  */
 package service;
 
-import Entities.Vemecs;
+import Entities.Vemec;
 import java.util.List;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
- * @author cualit-mktg-dell-2
+ * @author pagol
  */
-@javax.ejb.Stateless
-@javax.ws.rs.Path("entities.vemecs")
-public class VemecsFacadeREST extends AbstractFacade<Vemecs> {
+@Stateless
+@Path("entities.vemecs")
+public class VemecsFacadeREST extends AbstractFacade<Vemec> {
 
     @PersistenceContext(unitName = "RESTapiPU")
     private EntityManager em;
 
     public VemecsFacadeREST() {
-        super(Vemecs.class);
+        super(Vemec.class);
     }
 
-    @javax.ws.rs.POST
+    @POST
     @Override
-    @javax.ws.rs.Consumes({javax.ws.rs.core.MediaType.APPLICATION_XML, javax.ws.rs.core.MediaType.APPLICATION_JSON})
-    public void create(Vemecs entity) {
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void create(Vemec entity) {
         super.create(entity);
     }
 
-    @javax.ws.rs.PUT
-    @javax.ws.rs.Path("{id}")
-    @javax.ws.rs.Consumes({javax.ws.rs.core.MediaType.APPLICATION_XML, javax.ws.rs.core.MediaType.APPLICATION_JSON})
-    public void edit(@javax.ws.rs.PathParam("id") Integer id, Vemecs entity) {
+    @PUT
+    @Path("{id}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void edit(@PathParam("id") String id, Vemec entity) {
         super.edit(entity);
     }
 
-    @javax.ws.rs.DELETE
-    @javax.ws.rs.Path("{id}")
-    public void remove(@javax.ws.rs.PathParam("id") Integer id) {
+    @DELETE
+    @Path("{id}")
+    public void remove(@PathParam("id") String id) {
         super.remove(super.find(id));
     }
 
-    @javax.ws.rs.GET
-    @javax.ws.rs.Path("{id}")
-    @javax.ws.rs.Produces({javax.ws.rs.core.MediaType.APPLICATION_XML, javax.ws.rs.core.MediaType.APPLICATION_JSON})
-    public Vemecs find(@javax.ws.rs.PathParam("id") Integer id) {
+    @GET
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Vemec find(@PathParam("id") String id) {
         return super.find(id);
     }
 
-    @javax.ws.rs.GET
+    @GET
     @Override
-    @javax.ws.rs.Produces({javax.ws.rs.core.MediaType.APPLICATION_XML, javax.ws.rs.core.MediaType.APPLICATION_JSON})
-    public List<Vemecs> findAll() {
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Vemec> findAll() {
         return super.findAll();
     }
 
-    @javax.ws.rs.GET
-    @javax.ws.rs.Path("{from}/{to}")
-    @javax.ws.rs.Produces({javax.ws.rs.core.MediaType.APPLICATION_XML, javax.ws.rs.core.MediaType.APPLICATION_JSON})
-    public List<Vemecs> findRange(@javax.ws.rs.PathParam("from") Integer from, @javax.ws.rs.PathParam("to") Integer to) {
+    @GET
+    @Path("{from}/{to}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Vemec> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 
-    @javax.ws.rs.GET
-    @javax.ws.rs.Path("count")
-    @javax.ws.rs.Produces(javax.ws.rs.core.MediaType.TEXT_PLAIN)
+    @GET
+    @Path("count")
+    @Produces(MediaType.TEXT_PLAIN)
     public String countREST() {
         return String.valueOf(super.count());
     }

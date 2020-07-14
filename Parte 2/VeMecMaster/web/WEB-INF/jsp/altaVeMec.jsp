@@ -10,10 +10,6 @@
     </head>
     
     <style>
-        body{
-            background-color: #15bef1;
-        }
-        
         .btn-light {
             background-color: #15bef1;
             color: white;
@@ -26,23 +22,29 @@
     </style>
     
     <body>
-        <div class="container mt-4 col-lg-4">
-            <div class="card">
-                <div class="card-header text-white">
-                    Alta de VeMec
+        <div id="wrapper">
+            <div id="content-wrapper" class="d-flex flex-column">
+                <jsp:include page="../components/header.jsp"></jsp:include>
+                <div class="container mt-4 col-lg-6">
+                    <div class="card">
+                        <div class="card-header text-white">
+                            Alta de VeMec
+                        </div>
+                        <div class="card-body">
+                            <form method="POST">
+                                <input type="text" name="marca" class="form-control" placeholder="Marca">
+                                <input type="text" name="modelo" class="form-control" placeholder="Modelo">
+                                <input type="text" name="ubicacion" class="form-control" placeholder="Ubicacion">
+                                <input type="submit" value="Agregar" class="btn btn-light">
+                                <a href="/" class="btn btn-secondary" style="color: #15bef1">
+                                    <i class="fas fa-chevron-left"></i> 
+                                    Regresar
+                                </a>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form method="POST">
-                        <input type="text" name="marca" class="form-control" placeholder="Marca">
-                        <input type="text" name="modelo" class="form-control" placeholder="Modelo">
-                        <input type="text" name="ubicacion" class="form-control" placeholder="Ubicacion">
-                        <input type="submit" value="Agregar" class="btn btn-light">
-                        <a href="index.htm" class="btn btn-secondary" style="color: #15bef1">
-                            <i class="fas fa-chevron-left"></i> 
-                            Regresar
-                        </a>
-                    </form>
-                </div>
+                <jsp:include page="../components/footer.jsp"></jsp:include>
             </div>
         </div>
     </body>

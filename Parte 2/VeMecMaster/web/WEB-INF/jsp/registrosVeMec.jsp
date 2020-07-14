@@ -89,7 +89,7 @@
                             <th class="th-sm">Timestamp</th>
                         </tfoot>
                     </table>
-                    <a href="index.htm" class="btn btn-secondary" style="color: #15bef1">
+                    <a href="/" class="btn btn-secondary" style="color: #15bef1">
                         <i class="fas fa-chevron-left"></i> 
                         Regresar
                     </a>
