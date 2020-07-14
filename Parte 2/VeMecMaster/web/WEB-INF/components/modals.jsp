@@ -80,7 +80,12 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="pacienteModalModalLabel">Paciente</h5>
+        <h5 class="modal-title" id="pacienteModalModalLabel">
+            Paciente
+            <a id="modal_modificarPac" href="" class="btn btn-sm-primary">
+                <i class="fas fa-edit"></i> 
+            </a>
+        </h5>
         <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
           <span aria-hidden="true">×</span>
         </button>

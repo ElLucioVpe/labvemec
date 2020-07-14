@@ -119,6 +119,7 @@ function datosPaciente(id) {
             document.getElementById('modal_xyz').innerHTML = json.coordenadas;
             document.getElementById('modal_antecedentes').innerHTML = json.antecedentesClinicos;
             document.getElementById('modal_riesgo').innerHTML = json.nivelRiesgo;
+            document.getElementById('modal_modificarPac').href = "modificarPaciente?id="+id;
 
             //Contenido pdf
             document.getElementById('pdf_ci').innerHTML = json.ci;

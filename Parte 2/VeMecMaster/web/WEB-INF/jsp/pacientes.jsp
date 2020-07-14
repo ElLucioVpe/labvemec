@@ -93,7 +93,7 @@
                     <!-- Fin Menu botones -->          
                     <div>
                         <c:forEach var="paciente" items="${lista}">
-                            <!-- Seccion -->
+                            <!-- Paciente -->
                             <div class="col w-90">
                               <a data-toggle="modal" data-target="#pacienteModal" onclick="datosPaciente(${paciente.id})">
                               <div class="card w-90 border-left-primary shadow h-100 py-2">

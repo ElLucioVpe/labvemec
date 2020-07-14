@@ -107,7 +107,7 @@
                                 </a>
                             </form>
                             <hr/>
-                            <a href="bajaSeccion?id=${lista[0].id}" data-confirm="¿Eliminar esta seccion? (Solo se puede eliminar una seccion vacia)" class="btn btn-danger mt-1 text-center">
+                            <a href="bajaPaciente?id=${paciente.id}" data-confirm="¿Eliminara este paciente?" class="btn btn-danger mt-1 text-center">
                                 <i class="fas fa-trash"></i> 
                                 Eliminar
                             </a>
