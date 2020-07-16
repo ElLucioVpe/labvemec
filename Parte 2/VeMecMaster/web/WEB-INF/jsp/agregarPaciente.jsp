@@ -9,27 +9,41 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <!-- js externos -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+        <!-- js internos -->
+        <script src="<c:url value="/resources/js/selectVemecs.js" />"></script>
+
+        <!-- css -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+        <link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
+        <link rel="stylesheet" href="<c:url value="/resources/css/forms.css" />">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>VeMecMaster - Agregar Paciente</title>
     </head>
-    <style>
-        .btn-light {
-            background-color: #15bef1;
-            color: white;
-        }
-        
-        .card-header {
-            background-color: #15bef1;
-            font-weight: 600;
-        }
-        
-        #select_slave, #id_vemec {
-            display: none;
-        }
-    </style>
-    
+    <script>
+        var arrayVeMecs = [];
+        var arraySlaves = [];
+        <c:forEach var="item" items="${slaves}">
+            arraySlaves.push({
+                id: "${item.id}", 
+                Nombre: "${item.Nombre}"
+            });
+        </c:forEach>
+        <c:forEach var="item" items="${vemecs_libres}">
+            arrayVeMecs.push({
+                id: "${item.id}", 
+                Modelo: "${item.Modelo}",
+                Marca: "${item.Marca}",
+                Ubicacion: "${item.Ubicacion}",
+                id_slave: "${item.id_slave}"
+            });
+        </c:forEach>
+    </script>
     <body>
         <div id="wrapper">
             <div id="content-wrapper" class="d-flex flex-column">
@@ -94,53 +108,10 @@
                                 </select>
                                 <!-- -->
                                 <input type="submit" value="Agregar" class="btn btn-light">
-                                <a href="/" class="btn btn-secondary" style="color: #15bef1">
+                                <a href="./" class="btn btn-secondary" style="color: #15bef1">
                                     <i class="fas fa-chevron-left"></i> 
                                     Regresar
                                 </a>
-                                <script>
-                                    var arrayVeMecs = [];
-                                    var arraySlaves = [];
-                                    <c:forEach var="item" items="${slaves}">
-                                        arraySlaves.push({
-                                            id: "${item.id}", 
-                                            Nombre: "${item.Nombre}"
-                                        });
-                                    </c:forEach>
-                                    <c:forEach var="item" items="${vemecs_libres}">
-                                        arrayVeMecs.push({
-                                            id: "${item.id}", 
-                                            Modelo: "${item.Modelo}",
-                                            Marca: "${item.Marca}",
-                                            Ubicacion: "${item.Ubicacion}",
-                                            id_slave: "${item.id_slave}"
-                                        });
-                                    </c:forEach>
-                                    
-                                    function showDiv(hiddenItem, element)
-                                    {
-                                        if(element.value !== null && element.value !== "null") {
-                                            let html = "";
-                                            if(hiddenItem === "id_vemec") {console.log(arrayVeMecs);
-                                                html = '<option selected value="null">Seleccione un VeMec</option>';
-                                                arrayVeMecs.forEach(vemec => {
-                                                    if(vemec.id_slave === element.value) {
-                                                        html+='<option value="'+vemec.id+'">'+vemec.Modelo+' - '+vemec.Ubicacion+'</option>';
-                                                    }
-                                                });
-                                            }
-                                            if(hiddenItem === "select_slave") {
-                                                html = '<option selected value="null">Seleccione una seccion</option>';
-                                                arraySlaves.forEach(slave => {
-                                                    html+='<option value="'+slave.id+'">'+slave.Nombre+'</option>';
-                                                });
-                                            }
-                                            document.getElementById(hiddenItem).innerHTML = html;
-                                        }
-
-                                        document.getElementById(hiddenItem).style.display = element.value === "null" ? 'none' : 'block';
-                                    }
-                                </script>
                             </form>
                         </div>
                     </div>

@@ -66,7 +66,7 @@ public class SpringController {
     public ModelAndView AltaSeccion(Slave slv) {
         String consulta = "insert into slaves(Nombre, Intervalo_Envio, Intervalo_Emergencia) values(?,?,?)";
         this.template.update(consulta, slv.getNombre(), slv.getIntervaloEnvio(), slv.getIntervaloEmergencia());
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("forward:/");
     }
     
     @RequestMapping(value = "/modificarSeccion", method = RequestMethod.GET)
@@ -74,6 +74,7 @@ public class SpringController {
         id = Integer.parseInt(request.getParameter("id"));
         String consulta = "select * from slaves where id="+id;
         datos = this.template.queryForList(consulta);
+        if(datos.isEmpty()) return new ModelAndView("forward:/");
         mav.addObject("lista", datos);
         mav.setViewName("modificarSeccion");
         return mav;
@@ -83,23 +84,22 @@ public class SpringController {
     public ModelAndView ModificarSeccion(Slave slv) {
         String consulta = "update slaves set Nombre=?,Intervalo_Envio=?,Intervalo_Emergencia=? where id="+id;
         this.template.update(consulta, slv.getNombre(), slv.getIntervaloEnvio(), slv.getIntervaloEmergencia());
-        return new ModelAndView("redirect:/index.htm");
+        return new ModelAndView("forward:/secciones");
     }
     
-    @RequestMapping("/bajaSeccion")
-    public ModelAndView BajaSeccion(HttpServletRequest request) {
-        id = Integer.parseInt(request.getParameter("id"));
-        //String consulta = "delete from vemecs_data where Id_VeMec="+id;
+    @RequestMapping(value="/bajaSeccion", method = RequestMethod.GET)
+    public ModelAndView BajaSeccion(int id) {
+        //String consulta = "update vemecs set id_slave=? where id_slave="+id;
         //this.template.update(consulta);
         //consulta = "delete from vemecs where Id="+id;
         String consulta = "delete from slaves where Id="+id;
         this.template.update(consulta);
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("forward:/secciones");
     }
     
     @RequestMapping("/seccion")
     public ModelAndView DatosSeccion(HttpServletRequest request) {
-        if(request.getParameter("id") == null) return new ModelAndView("redirect:/");
+        if(request.getParameter("id") == null) return new ModelAndView("forward:/");
         
         id = Integer.parseInt(request.getParameter("id"));
         //Obtengo Slave
@@ -147,10 +147,20 @@ public class SpringController {
     
     //Pacientes
     @RequestMapping("/pacientes")
-    public ModelAndView DatosPacientes(HttpServletRequest request) {      
+    public ModelAndView DatosPacientes(HttpServletRequest request) {
         String consulta = "select * from pacientes";
         datos = this.template.queryForList(consulta);
         mav.addObject("lista", datos);
+        //Secciones/Slaves para seleccionar
+        consulta = "select * from slaves";
+        datos = this.template.queryForList(consulta);
+        mav.addObject("slaves", datos);
+        //
+        //Vemecs para seleccionar
+        consulta = "select * from vemecs where id_paciente IS NULL";
+        datos = this.template.queryForList(consulta);
+        mav.addObject("vemecs_libres", datos);
+        //
         mav.setViewName("pacientes");
         return mav;
     }
@@ -180,7 +190,7 @@ public class SpringController {
         this.template.update(consulta, pac.getCi(), pac.getNombre(), pac.getSexo(), pac.getEdad(), 
                 pac.getNacionalidad(), pac.getLugarResidencia(), pac.getDireccion(), pac.getCoordenadas(),
                 pac.getAntecedentesClinicos(), pac.getNivelRiesgo(), false, pac.getIdVemec());
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("forward:/");
     }
     
     @RequestMapping(value = "/modificarPaciente", method = RequestMethod.GET)
@@ -188,6 +198,7 @@ public class SpringController {
         id = Integer.parseInt(request.getParameter("id"));
         String consulta = "select * from pacientes where id="+id;
         datos = this.template.queryForList(consulta);
+        if(datos.isEmpty()) return new ModelAndView("forward:/");
         mav.addObject("paciente", datos.get(0));
         //Secciones/Slaves para seleccionar
         consulta = "select * from slaves";
@@ -211,7 +222,7 @@ public class SpringController {
         this.template.update(consulta, pac.getCi(), pac.getNombre(), pac.getSexo(), pac.getEdad(), 
                 pac.getNacionalidad(), pac.getLugarResidencia(), pac.getDireccion(), pac.getCoordenadas(),
                 pac.getAntecedentesClinicos(), pac.getNivelRiesgo(), pac.getDefuncion(), pac.getIdVemec());
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("forward:/");
     }
     
     @RequestMapping("/bajaPaciente")
@@ -219,9 +230,13 @@ public class SpringController {
         id = Integer.parseInt(request.getParameter("id"));
         String consulta = "delete from contactos where id_paciente="+id;
         this.template.update(consulta);
+        consulta = "delete from vemecs_data where id_paciente="+id;
+        this.template.update(consulta);
+        consulta = "update vemecs set id_paciente=? where id_paciente="+id;
+        this.template.update(consulta, "NULL");
         consulta = "delete from pacientes where id="+id;
         this.template.update(consulta);
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("forward:/");
     }
     
     @RequestMapping(value="/getPaciente", method = RequestMethod.POST)
@@ -278,7 +293,7 @@ public class SpringController {
             datos.add(anterior);
             for(int i = 0; i < data.size(); i++) {
                 Vemec_Data dato = data.get(i);
-                System.out.print(i+"--"+dato.getTimestampData());
+                //System.out.print(i+"--"+dato.getTimestampData());
                 long diff = dato.getTimestampData().getTime() - anterior.getTimestampData().getTime();
                 diff = diff / (60 * 60 * 1000);
                 if(diff >= 1) {
@@ -319,7 +334,7 @@ public class SpringController {
         id = Integer.parseInt(request.getParameter("id"));
         String consulta = "delete from acciones_medicas where id="+id;
         this.template.update(consulta);
-        return new ModelAndView("redirect:/accionesMedicas");
+        return new ModelAndView("forward:/");
     }
     //VeMecs
     //Este codigo sera editado en el siguiente capitulo
@@ -343,7 +358,7 @@ public class SpringController {
     public ModelAndView AltaVeMec(Vemec vem) {
         String consulta = "insert into vemecs(Marca, Modelo, Ubicacion) values(?,?,?)";
         this.template.update(consulta, vem.getMarca(), vem.getModelo(), vem.getUbicacion());
-        return new ModelAndView("redirect:/vemecs");
+        return new ModelAndView("forward:/vemecs");
     }
     
     @RequestMapping(value = "/modificarVeMec", method = RequestMethod.GET)
@@ -351,6 +366,7 @@ public class SpringController {
         id = Integer.parseInt(request.getParameter("id"));
         String consulta = "select * from vemecs where Id="+id;
         datos = this.template.queryForList(consulta);
+        if(datos.isEmpty()) return new ModelAndView("forward:/index");
         mav.addObject("lista", datos);
         mav.setViewName("modificarVeMec");
         return mav;
@@ -360,7 +376,7 @@ public class SpringController {
     public ModelAndView ModificarVeMec(Vemec vem) {
         String consulta = "update vemecs set Marca=?,Modelo=?,Ubicacion=? where Id="+id;
         this.template.update(consulta, vem.getMarca(), vem.getModelo(), vem.getUbicacion());
-        return new ModelAndView("redirect:/vemecs");
+        return new ModelAndView("forward:/vemecs");
     }
     
     @RequestMapping("/bajaVeMec")
@@ -368,9 +384,11 @@ public class SpringController {
         id = Integer.parseInt(request.getParameter("id"));
         String consulta = "delete from vemecs_data where Id_VeMec="+id;
         this.template.update(consulta);
+        consulta = "update pacientes set id_vemec=? where id_vemec="+id;
+        this.template.update(consulta, "NULL");
         consulta = "delete from vemecs where Id="+id;
         this.template.update(consulta);
-        return new ModelAndView("redirect:/vemecs");
+        return new ModelAndView("forward:/vemecs");
     }
     
     @RequestMapping("/datosVeMec")
