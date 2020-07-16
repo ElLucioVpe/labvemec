@@ -1,7 +1,5 @@
 const io = require("socket.io-client");
-const request = require("request");
 const axios = require("axios").default;
-
 const socket = io("http://localhost:4000");
 
 class VeMec {
@@ -18,7 +16,7 @@ class VeMec {
   async checking() {
     let data;
     let segs = 0;
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async () => {
       let _this = this;
       let sendTimer = setInterval(function () {
         let RandomPresMax = _this.randomIntFromInterval(130, 139); //?
@@ -50,7 +48,7 @@ class VeMec {
           ":" +
           today.getSeconds();
 
-        if(_tihs.randomIntFromInterval(0,20) === 20) {
+        if(_this.randomIntFromInterval(0,20) === 20) {
           RandomPulsaciones = _this.randomIntFromInterval(110, 150);
         } else if (_this.randomIntFromInterval(0, 20) === 20) {
           RandomPulsaciones = _this.randomIntFromInterval(30, 50);
@@ -149,7 +147,6 @@ class VeMecData {
     data["Presion_Entrada"] = this.presion_in;
     data["Presion_Salida"] = this.presion_out;
     data["Timestamp_Data"] = this.time_Stamp;
-    data[]
     
     return data;
   }
@@ -176,36 +173,38 @@ class VeMecData {
   }
 }
 
-request(
-  {
-    uri:
-      "http://localhost:8080/RESTapi/webresources/entities.vemecsdata",
-    method: "POST",
-    body: JSON.stringify(data.getJSON()),
-    headers: { "Content-Type": "application/json" },
-  },
-  function (error, response, body) {
-    console.log(body);
-  }
-);
-
 let vemecsData;
 
-axios.get('url/obtener/vemecs').then(
-  function (response) {
-    console.log(response);
-    vemecsData = response;
-  }
-)
+async function getDatos() {
+  await axios.get('http://localhost:8080/RESTapi/webresources/entities.vemecs').then(
+    function (response) {
+      vemecsData = response.data;
+    }
+  )
+  console.log("> VeMecs recibidos");
+}
 
 let vemecs = [];
 
-vemecsData.forEach(function (vemec) {
-  vemecs.push(new VeMec(vemec.id, vemec.idSlave, vemec.marca, vemec.modelo, vemec.ubicacion, true, socket));
-})
+async function instanciarVemecs() {
+  vemecsData.forEach(function (vemec) {
+    vemecs.push(new VeMec(vemec.id, vemec.idSlave, vemec.marca, vemec.modelo, vemec.ubicacion, true, socket));
+    console.log(vemec.id);
+  })
+}
 
 async function runVemecs() {
-  vemecs.forEach(function(vemec) {
+  vemecs.forEach(async function(vemec) {
     await vemec.checking();
   });
+  console.log("> Esperando a lanzar VeMecs");
 }
+
+async function run() {
+  await getDatos();
+  await instanciarVemecs();
+  await runVemecs();
+  await console.log(vemecs);
+}
+
+run()
