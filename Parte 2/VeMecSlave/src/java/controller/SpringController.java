@@ -31,7 +31,7 @@ public class SpringController {
     //Este codigo sera editado en el siguiente capitulo
     @RequestMapping("index.htm")
     public ModelAndView ListarTabla() {
-        String consulta = "select * from vemecs";
+        String consulta = "select * from slaves";
         datos = this.template.queryForList(consulta);
         mav.addObject("lista", datos);
         mav.setViewName("index");
