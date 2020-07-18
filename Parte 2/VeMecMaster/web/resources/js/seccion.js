@@ -30,16 +30,19 @@ function actualizarDatos(json) {
     var chartPE = $("#div-PEchart"+json.Id_Vemec).CanvasJS();
     var chartPS = $("#div-PSchart"+json.Id_Vemec).CanvasJS();
 
-    chartPE.options.dataPoints.push({
+    chartPE.options.data[0].dataPoints.push({
         x: new Date(json.Timestamp_Data),
         y: parseFloat(json.Presion_Entrada)
     });
-    chartPS.options.dataPoints.push({
+    chartPS.options.data[0].dataPoints.push({
         x: new Date(json.Timestamp_Data),
         y: parseFloat(json.Presion_Salida)
     });
-    if(chartPE.options.dataPoints.length > 20) chartPE.options.dataPoints.shift();
-    if(chartPS.options.dataPoints.length > 20) chartPS.options.dataPoints.shift();
+    if(chartPE.options.data[0].dataPoints.length > 20) chartPE.options.data[0].dataPoints.shift();
+    if(chartPS.options.data[0].dataPoints.length > 20) chartPS.options.data[0].dataPoints.shift();
+
+    chartPE.render();
+    chartPS.render();
 
     if(json.alerta === "activarAlerta") modoAlerta(true, "alerta", json.Id_Vemec);
     if(json.alerta === "activarBajaBateria") modoAlerta(true, "energia", json.Id_Vemec);
