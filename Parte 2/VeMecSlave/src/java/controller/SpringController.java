@@ -83,8 +83,8 @@ public class SpringController {
     public ModelAndView DatosActualesVeMec(HttpServletRequest request) {
         //en ultima timestamp
         //con graficas presión de entrada y presión de salida
-        id = Integer.parseInt(request.getParameter("id"));
-        String consulta = "select * from vemecs_data where Id_Vemec="+id+" order by Timestamp_Data";
+        //id = Integer.parseInt(request.getParameter("id"));
+        String consulta = "select * from slaves where id = 1";
         datos = this.template.queryForList(consulta);
         
         mav.addObject("datos", datos);
