@@ -35,11 +35,11 @@
                             <form method="POST">
 
                                 <label>Marca</label>
-                                <input type="text" name="marca" class="form-control" value="${lista[0].Marca}">
+                                <input type="text" name="marca" class="form-control" value="${lista[0].Marca}" required>
                                 <label>Modelo</label>
-                                <input type="text" name="modelo" class="form-control" value="${lista[0].Modelo}">
+                                <input type="text" name="modelo" class="form-control" value="${lista[0].Modelo}" required>
                                 <label>Ubicacion</label>
-                                <input type="text" name="ubicacion" class="form-control" value="${lista[0].Ubicacion}">
+                                <input type="text" name="ubicacion" class="form-control" value="${lista[0].Ubicacion}" required>
                                 <input type="submit" value="Modificar" class="btn btn-light">
                                 <a href="vemecs" class="btn btn-secondary" style="color: #15bef1">
                                     <i class="fas fa-chevron-left"></i> 

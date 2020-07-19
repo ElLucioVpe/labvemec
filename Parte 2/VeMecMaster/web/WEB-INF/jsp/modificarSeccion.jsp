@@ -38,11 +38,11 @@
                             <form method="POST">
 
                                 <label>Nombre</label>
-                                <input type="text" name="nombre" class="form-control" value="${lista[0].Nombre}">
+                                <input type="text" name="nombre" class="form-control" value="${lista[0].Nombre}" required>
                                 <label>Intervalo de envio a servidor (min)</label>
-                                <input type="number" name="intervalo_envio" class="form-control" value="${lista[0].Intervalo_Envio}">
+                                <input type="number" name="intervalo_envio" class="form-control" value="${lista[0].Intervalo_Envio}" required>
                                 <label>Intervalo de envio en emergencia (seg)</label>
-                                <input type="number" name="intervalo_emergencia" class="form-control" value="${lista[0].Intervalo_Emergencia}">
+                                <input type="number" name="intervalo_emergencia" class="form-control" value="${lista[0].Intervalo_Emergencia}" required>
                                 <input type="submit" value="Modificar" class="btn btn-light">
                                 <a href="seccion?id=${lista[0].id}" class="btn btn-secondary" style="color: #15bef1">
                                     <i class="fas fa-chevron-left"></i> 

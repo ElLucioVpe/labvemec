@@ -41,15 +41,15 @@ $(document).ready(function(){
                             datos2.push({x: new Date(dato.timestampData), y: parseFloat(dato.pulsaciones)});
                         });
 
-                        var chart1 = new CanvasJS.Chart("historial-RespiracionChart", {
+                        var chart1 = $("historial-RespiracionChart").CanvasJSChart({
                             title :{text: "Respiracion"},
                             axisY: {includeZero: false},      
                             data: [{ type: "line", dataPoints: datos1}]
                         });
-                        var chart2 = new CanvasJS.Chart("historial-PulsacionesChart", {
+                        var chart2 = $("historial-PulsacionesChart").CanvasJSChart({
                             title :{text: "Pulsaciones"},
                             axisY: {includeZero: false},      
-                            data: [{ type: "line", dataPoints: datos2, lineColor: "green"}]
+                            data: [{ type: "line", dataPoints: datos2, color: "green"}]
                         });
                         chart1.render();
                         chart2.render();

@@ -10,6 +10,7 @@ package controller;
  */
 import conf.Connection;
 import dto.DatosAccionMedica;
+import dto.DatosContacto;
 import dto.DatosPaciente;
 import dto.DatosVeMec;
 import entities.AccionMedica;
@@ -22,9 +23,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -184,7 +187,7 @@ public class SpringController {
     }
     
     @RequestMapping(value = "/agregarPaciente", method = RequestMethod.POST)
-    public ModelAndView AltaPaciente(DatosPaciente pac) {
+    public ModelAndView AltaPaciente(@Valid DatosPaciente pac, BindingResult result) {
         String consulta = "insert into pacientes(CI, Nombre, Sexo, Edad, Nacionalidad,"
                 + " Lugar_Residencia, Direccion, Coordenadas, Antecedentes_Clinicos, Nivel_Riesgo,"
                 + "Defuncion, id_vemec) values(?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -200,7 +203,17 @@ public class SpringController {
                 this.template.update(consulta, data.get(0).getId());
             }
         }
-        
+        if(pac.getContactos() != null) {
+            consulta = "select * from pacientes where CI='"+pac.getCi()+"'";
+            List<Paciente> data = this.template.query(consulta, new BeanPropertyRowMapper<>(Paciente.class));
+            if(!data.isEmpty()) { 
+                pac.getContactos().forEach(contacto -> {
+                    System.out.print("holaa--"+contacto.getInfocontacto()+contacto.getNombre());
+                    String cons = "insert into contactos(id_paciente, Nombre, Info_contacto, esPaciente) values(?,?,?,?)";
+                    this.template.update(cons, data.get(0).getId(), contacto.getNombre(), contacto.getInfocontacto(), contacto.getEsPaciente());
+                });
+            }
+        }
         return new ModelAndView("forward:/");
     }
     
@@ -239,6 +252,16 @@ public class SpringController {
             this.template.update(consulta, pac.getId());
         }
         
+        //Elimino los contactos y luego agrego los que dejo el usuario
+        consulta = "delete from contactos where id_paciente="+pac.getId();
+        this.template.update(consulta);
+        if(pac.getContactos() != null) {
+            pac.getContactos().forEach(contacto -> {
+                String cons = "insert into contactos(id_paciente, Nombre, Info_contacto, esPaciente) values(?,?,?,?)";
+                this.template.update(cons, pac.getId(), contacto.getNombre(), contacto.getInfocontacto(), contacto.getEsPaciente());
+            });
+        }
+        
         return new ModelAndView("forward:/");
     }
     
@@ -260,7 +283,7 @@ public class SpringController {
     public @ResponseBody Paciente GetPaciente(Integer id) {
         String consulta = "select * from pacientes where id="+id;
         List<Paciente> data = this.template.query(consulta, new BeanPropertyRowMapper<>(Paciente.class));
-        if(!data.isEmpty()) { 
+        if(!data.isEmpty()) {
             Paciente pac = data.get(0);
             consulta = "select * from contactos where id_paciente="+id;
             List contactos = this.template.queryForList(consulta);
@@ -268,6 +291,20 @@ public class SpringController {
             return pac;
         }
         else return null;
+    }
+    
+    @RequestMapping(value="/getContactosPaciente", method = RequestMethod.POST)
+    public @ResponseBody List getContactosPaciente(Integer id) {
+        String consulta = "select * from contactos where id_paciente="+id;
+        datos = this.template.queryForList(consulta);
+        return datos;
+    }
+    
+    @RequestMapping(value="/existeCI", method = RequestMethod.POST)
+    public @ResponseBody boolean existeCI(String ci) {
+        String consulta = "select * from pacientes where CI='"+ci+"'";
+        List<DatosContacto> data = this.template.query(consulta, new BeanPropertyRowMapper<>(DatosContacto.class));
+        return !data.isEmpty();
     }
     //
     

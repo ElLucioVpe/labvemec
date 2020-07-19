@@ -88,11 +88,11 @@ public class DatosPaciente {
         this.idVemec = idVemec;
     }
     
-    public List<DatosContacto> getContactoCollection() {
+    public List<DatosContacto> getContactos() {
         return contactos;
     }
 
-    public void setContactoCollection(List<DatosContacto> contactos) {
+    public void setContactos(List<DatosContacto> contactos) {
         this.contactos = contactos;
     }
 
