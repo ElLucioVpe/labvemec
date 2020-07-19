@@ -11,9 +11,7 @@
         <title>JavaEE - Slaves Master</title>
         
     </head>
-
     <body>
-        
         <div class="container mt-4" style="background-color: #15bef1">
             <div class="card">
                 
@@ -30,26 +28,44 @@
                         </thead>
                         <tbody>
                             
-                            
-                            <c:forEach var="slave" items="${lista}">
-                                <tr>
-                                    <td>${slave.Id}</td>
-                                    <td>${slave.Nombre}</td>
-                                    <td>${slave.Intervalo_Envio}</td>
-                                    <td>${slave.Intervalo_Emergencia}</td>
-                                    <td>
-                                        <a href="datosVeMec.htm?id=${slave.Id}" class="btn btn-light" style="background-color: #15bef1">
-                                            <i class="fas fa-database"></i>
-                                            Datos
-                                        </a>
-                                    </td>
-                                </tr>
-                            </c:forEach>
+                        <div id="vemecs_list"></div>
                         </tbody>
                     </table>
                 </div>
             </div>
             
         </div>
+        <script>
+        $( document ).ready(function() {
+                let htmlVemecs_list = $("#vemecs_list");
+        	const url = "http://localhost:8080/RESTapi/webresources/entities.slaves";
+                let datosSlaves = fetch(url).then((resp) => return resp.json());
+                /*let datosSlaves = [{
+                	Id: "1",
+                	Nombre: "Ejemplo",
+                	Intervalo_Envio: "1",
+                	Intervalo_Emergencia: "20"
+                }];*/
+                let html = "";
+                datosSlaves.forEach(function(entry) {
+			html += `
+		        <tr>
+			    <td>`+entry.Id+`</td>
+			    <td>`+entry.Nombre+`</td>
+			    <td>`+entry.Intervalo_Envio+`</td>
+			    <td>`+entry.Intervalo_Emergencia+`</td>
+			    <td>
+				<a href="datosVeMec.htm?id=`+entry.Id+`&tiempo=`+entry.Timestamp_Data+`" class="btn btn-light" style="background-color: #15bef1">
+				    <i class="fas fa-database"></i>
+				    Datos
+				</a>
+			    </td>
+			</tr>
+			`;
+		  });
+		  htmlVemecs_list.html(html)
+	});
+        </script>
+
     </body>
 </html>
