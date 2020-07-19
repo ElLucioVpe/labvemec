@@ -24,7 +24,8 @@
             var charsVemecs = [];
             var charX;
             var charY;
-       
+       		const tiempo = location.search.split('tiempo=')[1]; // Obtiene el intervalo de tiempo desde GET
+       		const intervaloEmergencia = location.search.split('intervaloEmergencia=')[1];
        
         //var segundosAUX = segundos;
             const socket = io('http://localhost:4000');
@@ -39,7 +40,6 @@
             
                 if(arrayVemecsDatos2[json.Id] != null){
                      //Vamos promediando en array bidimensional
-                
                     arrayVemecsDatos2[json.Id][0] = Math.round(((arrayVemecsDatos2[json.Id][0] + json.Presion_Maxima) / 2) * 1e2 )/1e2;
                     arrayVemecsDatos2[json.Id][1] =  Math.round(((arrayVemecsDatos2[json.Id][1] + json.Presion_Minima) / 2)* 1e2 )/1e2;
                     arrayVemecsDatos2[json.Id][2] =  Math.round(((arrayVemecsDatos2[json.Id][2] + json.Gas) / 2)* 1e2 )/1e2;
@@ -63,9 +63,11 @@
                     document.getElementById('t_out'+json.Id).innerHTML = json.Temperatura_Salida + "ºC";
                     document.getElementById('p_in'+json.Id).innerHTML = json.Presion_Entrada + "mmHg";
                     document.getElementById('p_out'+json.Id).innerHTML = json.Presion_Salida + "mmHg";
-
-                    var tiempo = location.search.split('tiempo=')[1]; // Obtiene el intervalo de tiempo desde GET
-                    setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]) }, tiempo); // Cada cierto tiempo envia los datos a la DB
+                    
+                    if(json.Energia < 20) {
+                    	clearInterval(arrayVemecsDatos2[json.Id]);
+                    	arrayVemecsDatos2[json.Id][10] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]) }, intervaloEmergencia);
+                    }
 
                 //Nuevo Vemec
                 }else{
@@ -82,8 +84,9 @@
                         json.Temperatura_Salida,
                         json.Presion_Entrada,
                         json.Presion_Salida
-                    ]; 
+                    ];
             
+		            arrayVemecsDatos2[json.Id][10] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]) }, tiempo); // Cada cierto tiempo envia los datos a la DB
                   
                     //Creamos la nueva seccion para el nuevo vemec
                       document.getElementById("container-datos").innerHTML+= `
