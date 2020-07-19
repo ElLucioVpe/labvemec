@@ -64,7 +64,9 @@
                     document.getElementById('p_in'+json.Id).innerHTML = json.Presion_Entrada + "mmHg";
                     document.getElementById('p_out'+json.Id).innerHTML = json.Presion_Salida + "mmHg";
 
-                    
+                    var tiempo = location.search.split('tiempo=')[1]; // Obtiene el intervalo de tiempo desde GET
+                    setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]) }, tiempo); // Cada cierto tiempo envia los datos a la DB
+
                 //Nuevo Vemec
                 }else{
                     //agregamos datos nuevos a su array bidimensional promediado
@@ -81,7 +83,7 @@
                         json.Presion_Entrada,
                         json.Presion_Salida
                     ]; 
-                    
+            
                   
                     //Creamos la nueva seccion para el nuevo vemec
                       document.getElementById("container-datos").innerHTML+= `
@@ -227,12 +229,23 @@
               
                 charsVemecs[json.Id][0].render();
                 charsVemecs[json.Id][1].render();
-            
-                
-                
                 
             });     
-              
+             
+             
+            function enviarDatosADB(datos) {
+		        var url = 'http://localhost:8080/RESTapi/webresources/entities.vemecsdata';
+
+                fetch(url, {
+                  method: 'POST',
+                  body: JSON.stringify(datos),
+                  headers:{
+                    'Content-Type': 'application/json'
+                  }
+                }).then(res => res.json())
+                .catch(error => console.error('Error:', error))
+                .then(response => console.log('Success:', response));
+		    } 
     </script>
     </head>
     

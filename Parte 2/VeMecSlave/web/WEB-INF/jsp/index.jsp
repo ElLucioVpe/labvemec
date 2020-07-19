@@ -39,7 +39,10 @@
         $( document ).ready(function() {
                 let htmlVemecs_list = $("#vemecs_list");
         	const url = "http://localhost:8080/RESTapi/webresources/entities.slaves";
-                let datosSlaves = fetch(url).then((resp) => return resp.json());
+                let datosSlaves = await fetch("http://localhost/test.html")
+		  .then(function(response) {
+		    return response.json();
+		  });
                 /*let datosSlaves = [{
                 	Id: "1",
                 	Nombre: "Ejemplo",
