@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author Esteban
  */
-public class DatosAccionMedica {
+public class DTOAccionMedica {
     private int idPaciente;
     private String nivelRiesgo;
     private String medicacion;
@@ -21,10 +21,10 @@ public class DatosAccionMedica {
     private boolean alta;
     private boolean defuncion;
     
-    public DatosAccionMedica() {
+    public DTOAccionMedica() {
     }
 
-    public DatosAccionMedica(String nivelRiesgo, String medicacion, String descripcion, String medicoTratante, int id_paciente, Integer id_vemec, boolean alta, boolean defuncion) {
+    public DTOAccionMedica(String nivelRiesgo, String medicacion, String descripcion, String medicoTratante, int id_paciente, Integer id_vemec, boolean alta, boolean defuncion) {
         this.nivelRiesgo = nivelRiesgo;
         this.medicacion = medicacion;
         this.descripcion = descripcion;

@@ -69,7 +69,7 @@
                     document.getElementById('p_out'+json.Id).innerHTML = json.Presion_Salida + "mmHg";
                     
                     if(json.Energia < 20) {
-                    	clearInterval(arrayVemecsDatos2[json.Id]);
+                    	clearInterval(arrayVemecsDatos2[json.Id][10]);
                     	arrayVemecsDatos2[json.Id][10] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]) }, intervaloEmergencia);
                     }
 

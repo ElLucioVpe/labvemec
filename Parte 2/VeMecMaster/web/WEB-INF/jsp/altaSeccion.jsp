@@ -36,9 +36,9 @@
                                 <label>Nombre</label>
                                 <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
                                 <label>Intervalo de envio a servidor (min)</label>
-                                <input type="number" name="intervalo_envio" class="form-control" placeholder="Intervalo de envio a servidor (min)" required>
+                                <input type="number" name="intervaloEnvio" class="form-control" placeholder="Intervalo de envio a servidor (min)" required>
                                 <label>Intervalo de envio en emergencia (seg)</label>
-                                <input type="number" name="intervalo_emergencia" class="form-control" placeholder="Intervalo de envio en emergencia (seg)" required>
+                                <input type="number" name="intervaloEmergencia" class="form-control" placeholder="Intervalo de envio en emergencia (seg)" required>
                                 <input type="submit" value="Agregar" class="btn btn-light mt-1">
                                 <a href="secciones" class="btn btn-secondary mt-1" style="color: #15bef1">
                                     <i class="fas fa-chevron-left"></i> 
