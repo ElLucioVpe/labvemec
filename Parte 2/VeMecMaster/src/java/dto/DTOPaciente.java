@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Esteban
  */
-public class DatosPaciente {
+public class DTOPaciente {
     
     private String ci;
     private String nombre;
@@ -26,12 +26,12 @@ public class DatosPaciente {
     private boolean defuncion;
     private Integer id;
     private Integer idVemec;
-    private List<DatosContacto> contactos;
+    private List<DTOContacto> contactos;
 
-    public DatosPaciente() {
+    public DTOPaciente() {
     }
 
-    public DatosPaciente(Integer id, String ci, String nombre, String sexo, int edad, String nacionalidad, String lugarResidencia, String direccion, String coordenadas, String antecedentesClinicos, String nivelRiesgo, boolean defuncion) {
+    public DTOPaciente(Integer id, String ci, String nombre, String sexo, int edad, String nacionalidad, String lugarResidencia, String direccion, String coordenadas, String antecedentesClinicos, String nivelRiesgo, boolean defuncion) {
         this.id = id;
         this.ci = ci;
         this.nombre = nombre;
@@ -88,11 +88,11 @@ public class DatosPaciente {
         this.idVemec = idVemec;
     }
     
-    public List<DatosContacto> getContactos() {
+    public List<DTOContacto> getContactos() {
         return contactos;
     }
 
-    public void setContactos(List<DatosContacto> contactos) {
+    public void setContactos(List<DTOContacto> contactos) {
         this.contactos = contactos;
     }
 
