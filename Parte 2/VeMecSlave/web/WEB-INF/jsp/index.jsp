@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
         <title>JavaEE - Slaves Master</title>
         
     </head>
@@ -26,9 +27,8 @@
                             <th>Intervalo Envio</th>
                             <th>Intervalo Emergencia</th>
                         </thead>
-                        <tbody>
+                        <tbody id="vemecs_list">
                             
-                        <div id="vemecs_list"></div>
                         </tbody>
                     </table>
                 </div>
@@ -36,13 +36,22 @@
             
         </div>
         <script>
-        $( document ).ready(function() {
+           
+        $(document ).ready(async function() {
                 let htmlVemecs_list = $("#vemecs_list");
         	const url = "http://localhost:8080/RESTapi/webresources/entities.slaves";
-                let datosSlaves = await fetch("http://localhost/test.html")
+              
+                 let datosSlaves = await fetch(url, {
+                    method: 'GET', // or 'PUT'
+                    headers:{
+                      'Accept': 'application/json'
+                    }
+                  })
 		  .then(function(response) {
 		    return response.json();
 		  });
+                  
+                  console.log(datosSlaves);
                 /*let datosSlaves = [{
                 	Id: "1",
                 	Nombre: "Ejemplo",
@@ -53,12 +62,12 @@
                 datosSlaves.forEach(function(entry) {
 			html += `
 		        <tr>
-			    <td>`+entry.Id+`</td>
-			    <td>`+entry.Nombre+`</td>
-			    <td>`+entry.Intervalo_Envio+`</td>
-			    <td>`+entry.Intervalo_Emergencia+`</td>
+			    <td>`+entry.id+`</td>
+			    <td>`+entry.nombre+`</td>
+			    <td>`+entry.intervaloEnvio+`</td>
+			    <td>`+entry.intervaloEmergencia+`</td>
 			    <td>
-				<a href="datosVeMec.htm?id=`+entry.Id+`&tiempo=`+entry.Timestamp_Data+`" class="btn btn-light" style="background-color: #15bef1">
+				<a href="datosVeMec.htm?id=`+entry.id+`&tiempo=`+entry.intervaloEnvio+`&intervaloEmergencia=`+entry.intervaloEmergencia+`" class="btn btn-light" style="background-color: #15bef1">
 				    <i class="fas fa-database"></i>
 				    Datos
 				</a>

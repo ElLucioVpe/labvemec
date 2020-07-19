@@ -24,13 +24,17 @@
             var charsVemecs = [];
             var charX;
             var charY;
-       		const tiempo = location.search.split('tiempo=')[1]; // Obtiene el intervalo de tiempo desde GET
-       		const intervaloEmergencia = location.search.split('intervaloEmergencia=')[1];
+            var canvasesPE = [];
+            var canvasesPS = [];
+       		const tiempo = location.search.split('tiempo=')[1].split("&")[0];; // Obtiene el intervalo de tiempo desde GET
+                const id = location.search.split('id=')[1].split("&")[0];
+       		const intervaloEmergencia = location.search.split('intervaloEmergencia=')[1].split("&")[0];;
        
         //var segundosAUX = segundos;
+          console.log("recibiendo datos de vemec..." +id);
             const socket = io('http://localhost:4000');
-            socket.on('datosVeMec1', (res) => {
-                console.log("recibiendo datos de vemec...");
+            socket.on('datosVeMec'+id, (res) => {
+                console.log("recibiendo datos de vemec..."+id);
                 var json = res;
                 
                 
@@ -85,7 +89,6 @@
                         json.Presion_Entrada,
                         json.Presion_Salida
                     ];
-            
 		            arrayVemecsDatos2[json.Id][10] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]) }, tiempo); // Cada cierto tiempo envia los datos a la DB
                   
                     //Creamos la nueva seccion para el nuevo vemec
@@ -181,9 +184,8 @@
           </div>
              `;
     
-        var datosPE = [];
-        var datosPS = [];
-        charsVemecs[json.Id]=[];    
+        inicializarCanvas(json.Id);
+            /*
              charX = new CanvasJS.Chart("div-PEchart"+json.Id, {
                  title :{text: "Presión de entrada"},
                  axisY: {includeZero: false},      
@@ -194,10 +196,10 @@
                  axisY: {includeZero: false},      
                  data: [{ type: "line", dataPoints: datosPS, color: "red"}]
              });
-             
+             */
             
             
-           
+           /*
              //Evita se sature la grafica, solo 20 puntos visibles
              if (datosPE.length > 20) datosPE.shift();
              if (datosPS.length > 20) datosPS.shift();
@@ -205,12 +207,13 @@
              charsVemecs[json.Id][1]=charY;
              charsVemecs[json.Id][0].render();
              charsVemecs[json.Id][1].render();
-             
+             */
              
                 }
               
                 //document.getElementById('p_id').innerHTML = json.Id;
                 console.log("CARAMELOSS");
+                /*
                 console.log(charsVemecs[json.Id][0]);
                 console.log(charsVemecs[json.Id][1]);
 
@@ -232,6 +235,7 @@
               
                 charsVemecs[json.Id][0].render();
                 charsVemecs[json.Id][1].render();
+                */
                 
             });     
              
@@ -249,6 +253,84 @@
                 .catch(error => console.error('Error:', error))
                 .then(response => console.log('Success:', response));
 		    } 
+                    
+                    
+                    function inicializarCanvas(Id){                   
+                    var canvas = document.createElement('canvas');
+                    canvas.id = 'LayerPEchart' + Id;
+                    canvas.className = 'c';
+                    canvas.width = 400;
+                    canvas.height = 400;
+                    canvas.style.zIndex = Id;
+                    
+                    var canvas2 = document.createElement('canvas');
+                    canvas.id = 'LayerPSchart' + Id;
+                    canvas.className = 'c';
+                    canvas.width = 400;
+                    canvas.height = 400;
+                    canvas.style.zIndex = Id;
+
+                    document.getElementById('G').appendChild(canvas);
+                    document.getElementById('G').appendChild(canvas2);
+                    
+                     canvasesPE[Id] = canvas;
+                     canvasesPS[Id] = canvas2;
+                     
+                     canvasesPE[Id].ctx = canvas.getContext("2d");
+                     canvasesPS[Id].ctx = canvas2.getContext("2d");
+                     
+                     
+                     log.console(canvasesPE[Id].ctx);
+                     log.console(canvasesPS[Id].ctx);
+                     
+        
+                    matarme(Id);
+                    }
+                    
+                 function matarme(Id){
+                   
+                  let chart = new Chart(canvasesPE[Id].ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [{
+                            label: 'First dataset',
+                            data: [0, 20, 40, 50]
+                        }],
+                        labels: ['January', 'February', 'March', 'April']
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    suggestedMin: 50,
+                                    suggestedMax: 100
+                                }
+                            }]
+                        }
+                    }
+                });
+                
+                  let chart = new Chart(canvasesPS[Id].ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [{
+                            label: 'First dataset',
+                            data: [0, 20, 40, 50]
+                        }],
+                        labels: ['January', 'February', 'March', 'April']
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    suggestedMin: 50,
+                                    suggestedMax: 100
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
     </script>
     </head>
     
@@ -279,13 +361,8 @@
         <div id="container-datos" class="container mt-4">
                 
         </div>
-        
-          <div class="col-sm">
-                    <a href="index.htm" class="btn btn-secondary" style="color: #15bef1">
-                        <i class="fas fa-chevron-left"></i> 
-                        Regresar
-                    </a>
-          </div>
+            <div id="G" class="Output"></div> 
+      
 
     </body>
 </html>
