@@ -56,7 +56,7 @@
                         <div class="card-body">
                             <form method="POST">
                                 <label for="CI">Cedula de identidad (Ej:1.111.111-1):</label>
-                                <input type="text" name="CI" class="form-control">
+                                <input type="text" name="ci" class="form-control">
                                 <label for="nombre">Nombre:</label>
                                 <input type="text" name="nombre" class="form-control" placeholder="Nombre">
                                 <label for="sexo">Sexo:</label>
@@ -69,17 +69,16 @@
                                 <input type="number" name="edad" class="form-control" placeholder="Edad">
                                 <label for="nacionalidad">Nacionalidad:</label>
                                 <input type="text" name="nacionalidad" class="form-control" placeholder="Nacionalidad">
-                                <label for="lugar_residencia">Lugar de Residencia:</label>
-                                <input type="number" name="lugar_residencia" class="form-control" placeholder="Lugar de Residencia">
+                                <label for="lugarResidencia">Lugar de Residencia:</label>
+                                <input type="text" name="lugarResidencia" class="form-control" placeholder="Lugar de Residencia">
                                 <label for="direccion">Direccion:</label>
                                 <input type="text" name="direccion" class="form-control" placeholder="Direccion">
                                 <label for="coordenadas">Coordenadas:</label>
                                 <input type="text" name="coordenadas" class="form-control" placeholder="Coordenadas">
-                                <label for="antecedentes_clinicos">Antecedentes Clinicos:</label>
-                                <textarea type="text" name="antecedentes_clinicos" class="form-control" placeholder="Antecedentes Clinicos">
-                                </textarea>
-                                <label for="nivel_riesgo">Nivel de Riesgo:</label>
-                                <select name="nivel_riesgo" id="nivel_riesgo" class="form-control">
+                                <label for="antecedentesClinicos">Antecedentes Clinicos:</label>
+                                <textarea type="text" name="antecedentesClinicos" class="form-control" placeholder="Antecedentes Clinicos"></textarea>
+                                <label for="nivelRiesgo">Nivel de Riesgo:</label>
+                                <select name="nivelRiesgo" id="nivel_riesgo" class="form-control">
                                     <option value="Bajo">Bajo</option>
                                     <option value="Medio">Medio</option>
                                     <option value="Alto">Alto</option>
@@ -98,7 +97,7 @@
                                         <option value="${slave.id}">${slave.Nombre}</option>
                                     </c:forEach>
                                 </select>
-                                <select name="id_vemec" id="id_vemec" class="form-control mb-1">
+                                <select name="idVemec" id="id_vemec" class="form-control mb-1">
                                     <option selected value="null">Seleccione un VeMec</option>
                                     <c:forEach var="vemec" items="${vemecs_libres}">
                                         <c:if test="${vemec.id_slave} == id_slave">

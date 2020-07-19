@@ -43,6 +43,7 @@
                 id_slave: "${item.id_slave}"
             });
         </c:forEach>
+        console.log("${paciente}");
     </script>
     <body>
         <div id="wrapper">
@@ -56,7 +57,7 @@
                         <div class="card-body">
                             <form method="POST">
                                 <label for="CI">Cedula de identidad (Ej:1.111.111-1):</label>
-                                <input type="text" name="CI" class="form-control">
+                                <input type="text" name="ci" class="form-control" value="${paciente.ci}">
                                 <label for="nombre">Nombre:</label>
                                 <input type="text" name="nombre" class="form-control" value="${paciente.nombre}">
                                 <label for="sexo">Sexo:</label>
@@ -69,23 +70,21 @@
                                 <input type="number" name="edad" class="form-control" value="${paciente.edad}">
                                 <label for="nacionalidad">Nacionalidad:</label>
                                 <input type="text" name="nacionalidad" class="form-control" value="${paciente.nacionalidad}">
-                                <label for="lugar_residencia">Lugar de Residencia:</label>
-                                <input type="number" name="lugar_residencia" class="form-control" value="${paciente.lugarResidencia}">
+                                <label for="lugarResidencia">Lugar de Residencia:</label>
+                                <input type="text" name="lugarResidencia" class="form-control" value="${paciente.lugar_residencia}">
                                 <label for="direccion">Direccion:</label>
                                 <input type="text" name="direccion" class="form-control" value="${paciente.direccion}">
                                 <label for="coordenadas">Coordenadas:</label>
                                 <input type="text" name="coordenadas" class="form-control" value="${paciente.coordenadas}">
-                                <label for="antecedentes_clinicos">Antecedentes Clinicos:</label>
-                                <textarea type="text" name="antecedentes_clinicos" class="form-control">
-                                    ${paciente.antecedentesClinicos}
-                                </textarea>
-                                <label for="nivel_riesgo">Nivel de Riesgo:</label>
-                                <select name="nivel_riesgo" id="nivel_riesgo" class="form-control" value="${paciente.nivelRiesgo}">
-                                    <option value="Bajo">Bajo</option>
-                                    <option value="Medio">Medio</option>
-                                    <option value="Alto">Alto</option>
-                                    <option value="Grave">Grave</option>
-                                    <option value="Muy Grave">Muy Grave</option>
+                                <label for="antecedentesClinicos">Antecedentes Clinicos:</label>
+                                <textarea type="text" name="antecedentesClinicos" class="form-control">${paciente.antecedentes_clinicos}</textarea>
+                                <label for="nivelRiesgo">Nivel de Riesgo:</label>
+                                <select name="nivelRiesgo" id="nivel_riesgo" class="form-control">
+                                    <option value="Bajo" <c:if test="${paciente.nivel_riesgo == 'Bajo'}">selected</c:if>>Bajo</option>
+                                    <option value="Medio" <c:if test="${paciente.nivel_riesgo == 'Medio'}">selected</c:if>>Medio</option>
+                                    <option value="Alto" <c:if test="${paciente.nivel_riesgo == 'Alto'}">selected</c:if>>Alto</option>
+                                    <option value="Grave" <c:if test="${paciente.nivel_riesgo == 'Grave'}">selected</c:if>>Grave</option>
+                                    <option value="Muy Grave" <c:if test="${paciente.nivel_riesgo == 'Muy Grave'}">selected</c:if>>Muy Grave</option>
                                 </select>
                                 <label for="sexo">Conectar a VeMec?:</label>
                                 <select name="selectVemec" id="selectVemec" class="form-control" onchange="showDiv('select_slave', this)">
@@ -96,11 +95,11 @@
                                 <select name="select_slave" id="select_slave" class="form-control" onchange="showDiv('id_vemec', this)">
                                     <option selected value="null">Seleccione una seccion</option>
                                 </select>
-                                <select name="id_vemec" id="id_vemec" class="form-control">
-                                    <option selected value="${paciente.idVemec.id}">Seleccione un VeMec</option>
+                                <select name="idVemec" id="id_vemec" class="form-control">
+                                    <option selected value="${paciente.id_vemec}">Seleccione un VeMec</option>
                                 </select>
                                 <!-- -->
-                                <input type="submit" value="Agregar" class="btn btn-light">
+                                <input type="submit" value="Modificar" class="btn btn-light">
                                 <a href="pacientes" class="btn btn-secondary" style="color: #15bef1">
                                     <i class="fas fa-chevron-left"></i> 
                                     Regresar

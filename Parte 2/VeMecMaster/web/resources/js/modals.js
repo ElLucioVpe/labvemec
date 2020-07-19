@@ -82,7 +82,7 @@ function altaAccionMedica() {
     json["medicacion"] = document.getElementById("form_medicacion").value;
     json["descripcion"] = document.getElementById("form_descripcion").value;
     //json["id_slave"] = document.getElementById("select_slave").value;
-    json["idVemec"] = document.getElementById("id_vemec").value;
+    json["idVemec"] = document.getElementById("idVemec").value;
     json["medicoTratante"] = document.getElementById("form_medico_tratante").value;
     json["alta"] = document.getElementById("form_alta").value === "true";
     json["defuncion"] = document.getElementById("form_defuncion").value  === "true";

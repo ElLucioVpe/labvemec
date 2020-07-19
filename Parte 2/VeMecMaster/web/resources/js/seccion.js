@@ -27,8 +27,8 @@ function actualizarDatos(json) {
     else document.getElementById('p_out').innerHTML = json.Energia+'%<i class="fa fa-bolt" aria-hidden="true"></i>';
 
     console.log("agregando datos a la grafica...");
-    var chartPE = $("#div-PEchart"+json.Id_Vemec).CanvasJS();
-    var chartPS = $("#div-PSchart"+json.Id_Vemec).CanvasJS();
+    var chartPE = $("#div-PEchart"+json.Id_Vemec).CanvasJSChart();
+    var chartPS = $("#div-PSchart"+json.Id_Vemec).CanvasJSChart();
 
     chartPE.options.data[0].dataPoints.push({
         x: new Date(json.Timestamp_Data),
@@ -67,22 +67,23 @@ function cargarDatosGraficas(idVeMec, registros) {
         });
     }
     
-    var chartPE = new CanvasJS.Chart("div-PEchart"+idVeMec, {
+    //Evita se sature la grafica, solo 20 puntos visibles
+    if (datosPE.length > 20) datosPE.shift();
+    if (datosPS.length > 20) datosPS.shift();
+    
+    var chartPE = $("#div-PEchart"+idVeMec).CanvasJSChart({
         title :{text: "Presión de entrada"},
         axisY: {includeZero: false},      
         data: [{ type: "line", dataPoints: datosPE}]
     });
-    var chartPS = new CanvasJS.Chart("div-PSchart"+idVeMec, {
+    var chartPS = $("#div-PSchart"+idVeMec).CanvasJSChart({
         title :{text: "Presión de salida"},
         axisY: {includeZero: false},      
         data: [{ type: "line", dataPoints: datosPS, color: "red"}]
     });
 
-    //Evita se sature la grafica, solo 20 puntos visibles
-    if (datosPE.length > 20) datosPE.shift();
-    if (datosPS.length > 20) datosPS.shift();
-    chartPE.render();
-    chartPS.render();
+    //$("#div-PEchart"+idVeMec).CanvasJSChart(chartPE);
+    //$("#div-PEchart"+idVeMec).CanvasJSChart(chartPE);
 }
 
 function modoAlerta(activar, tipo, idVeMec) {

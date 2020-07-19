@@ -88,17 +88,12 @@
                       </div>
                       </a>
                     </div>
-                  </div>
                 </c:forEach>
+            </div>        
           </div>
-          
+          <!-- /.container-fluid -->
         </div>
-        <!-- /.container-fluid -->
-
-      </div>
-      
-      <jsp:include page="../components/footer.jsp"></jsp:include>
-
+        <jsp:include page="../components/footer.jsp"></jsp:include>
     </div>
   </div>
 </body>

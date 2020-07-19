@@ -10,6 +10,7 @@ package controller;
  */
 import conf.Connection;
 import dto.DatosAccionMedica;
+import dto.DatosPaciente;
 import dto.DatosVeMec;
 import entities.AccionMedica;
 import entities.Paciente;
@@ -177,19 +178,29 @@ public class SpringController {
         datos = this.template.queryForList(consulta);
         mav.addObject("vemecs_libres", datos);
         //
-        mav.addObject(new Paciente());
+        mav.addObject(new DatosPaciente());
         mav.setViewName("agregarPaciente");
         return mav;
     }
     
     @RequestMapping(value = "/agregarPaciente", method = RequestMethod.POST)
-    public ModelAndView AltaPaciente(Paciente pac) {
+    public ModelAndView AltaPaciente(DatosPaciente pac) {
         String consulta = "insert into pacientes(CI, Nombre, Sexo, Edad, Nacionalidad,"
                 + " Lugar_Residencia, Direccion, Coordenadas, Antecedentes_Clinicos, Nivel_Riesgo,"
                 + "Defuncion, id_vemec) values(?,?,?,?,?,?,?,?,?,?,?,?)";
         this.template.update(consulta, pac.getCi(), pac.getNombre(), pac.getSexo(), pac.getEdad(), 
                 pac.getNacionalidad(), pac.getLugarResidencia(), pac.getDireccion(), pac.getCoordenadas(),
                 pac.getAntecedentesClinicos(), pac.getNivelRiesgo(), false, pac.getIdVemec());
+        
+        if(pac.getIdVemec() != null) {
+            consulta = "select * from pacientes where id_vemec="+pac.getIdVemec();
+            List<Paciente> data = this.template.query(consulta, new BeanPropertyRowMapper<>(Paciente.class));
+            if(!data.isEmpty()) { 
+                consulta = "update vemecs set id_paciente=? where Id="+pac.getIdVemec();
+                this.template.update(consulta, data.get(0).getId());
+            }
+        }
+        
         return new ModelAndView("forward:/");
     }
     
@@ -215,13 +226,19 @@ public class SpringController {
     }
     
     @RequestMapping(value = "/modificarPaciente", method = RequestMethod.POST)
-    public ModelAndView ModificarPaciente(Paciente pac) {
+    public ModelAndView ModificarPaciente(DatosPaciente pac) {
         String consulta = "update pacientes set CI=?, Nombre=?, Sexo=?, Edad=?, Nacionalidad=?,"
                 + " Lugar_Residencia=?, Direccion=?, Coordenadas=?, Antecedentes_Clinicos=?, Nivel_Riesgo=?,"
                 + "Defuncion=?, id_vemec=? where id="+id;
         this.template.update(consulta, pac.getCi(), pac.getNombre(), pac.getSexo(), pac.getEdad(), 
                 pac.getNacionalidad(), pac.getLugarResidencia(), pac.getDireccion(), pac.getCoordenadas(),
                 pac.getAntecedentesClinicos(), pac.getNivelRiesgo(), pac.getDefuncion(), pac.getIdVemec());
+        
+        if(pac.getIdVemec()!= null){
+            consulta = "update vemecs set id_paciente=? where Id="+pac.getIdVemec();
+            this.template.update(consulta, pac.getId());
+        }
+        
         return new ModelAndView("forward:/");
     }
     
