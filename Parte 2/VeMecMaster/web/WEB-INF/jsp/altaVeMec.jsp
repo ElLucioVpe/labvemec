@@ -29,11 +29,21 @@
                         </div>
                         <div class="card-body">
                             <form method="POST">
+                                <label>Marca</label>
                                 <input type="text" name="marca" class="form-control" placeholder="Marca" required>
+                                <label>Modelo</label>
                                 <input type="text" name="modelo" class="form-control" placeholder="Modelo" required>
+                                <label>Ubicacion</label>
                                 <input type="text" name="ubicacion" class="form-control" placeholder="Ubicacion" required>
-                                <input type="submit" value="Agregar" class="btn btn-light">
-                                <a href="./" class="btn btn-secondary" style="color: #15bef1">
+                                <label>Seccion</label>
+                                <select name="idSlave" id="idSlave" class="form-control mb-1">
+                                    <option selected value="null">Seleccione una seccion</option>
+                                    <c:forEach var="slave" items="${slaves}">
+                                        <option value="${slave.id}">${slave.Nombre} </option>
+                                    </c:forEach>
+                                </select>
+                                <input type="submit" value="Agregar" class="btn btn-light mt-1">
+                                <a href="./" class="btn btn-secondary mt-1" style="color: #15bef1">
                                     <i class="fas fa-chevron-left"></i> 
                                     Regresar
                                 </a>

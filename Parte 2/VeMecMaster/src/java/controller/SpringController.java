@@ -9,9 +9,10 @@ package controller;
  * @author esteban
  */
 import conf.Connection;
-import dto.DatosAccionMedica;
-import dto.DatosContacto;
-import dto.DatosPaciente;
+import dto.DTOAccionMedica;
+import dto.DTOContacto;
+import dto.DTOPaciente;
+import dto.DTOVeMec;
 import dto.DatosVeMec;
 import entities.AccionMedica;
 import entities.Paciente;
@@ -96,9 +97,21 @@ public class SpringController {
         //String consulta = "update vemecs set id_slave=? where id_slave="+id;
         //this.template.update(consulta);
         //consulta = "delete from vemecs where Id="+id;
-        String consulta = "delete from slaves where Id="+id;
-        this.template.update(consulta);
+        String consulta = "select * from vemecs where id_slave="+id;
+        datos = this.template.queryForList(consulta);
+        if(datos.isEmpty()){
+            consulta = "delete from slaves where Id="+id;
+            this.template.update(consulta);
+        }
+        
         return new ModelAndView("forward:/secciones");
+    }
+    
+    @RequestMapping(value="/seccionVacia", method = RequestMethod.POST)
+    public @ResponseBody boolean seccionVacia(Integer id) {
+        String consulta = "select * from vemecs where id_slave="+id;
+        datos = this.template.queryForList(consulta);
+        return datos.isEmpty();
     }
     
     @RequestMapping("/seccion")
@@ -181,13 +194,13 @@ public class SpringController {
         datos = this.template.queryForList(consulta);
         mav.addObject("vemecs_libres", datos);
         //
-        mav.addObject(new DatosPaciente());
+        mav.addObject(new DTOPaciente());
         mav.setViewName("agregarPaciente");
         return mav;
     }
     
     @RequestMapping(value = "/agregarPaciente", method = RequestMethod.POST)
-    public ModelAndView AltaPaciente(@Valid DatosPaciente pac, BindingResult result) {
+    public ModelAndView AltaPaciente(@Valid DTOPaciente pac, BindingResult result) {
         String consulta = "insert into pacientes(CI, Nombre, Sexo, Edad, Nacionalidad,"
                 + " Lugar_Residencia, Direccion, Coordenadas, Antecedentes_Clinicos, Nivel_Riesgo,"
                 + "Defuncion, id_vemec) values(?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -239,7 +252,7 @@ public class SpringController {
     }
     
     @RequestMapping(value = "/modificarPaciente", method = RequestMethod.POST)
-    public ModelAndView ModificarPaciente(DatosPaciente pac) {
+    public ModelAndView ModificarPaciente(DTOPaciente pac) {
         String consulta = "update pacientes set CI=?, Nombre=?, Sexo=?, Edad=?, Nacionalidad=?,"
                 + " Lugar_Residencia=?, Direccion=?, Coordenadas=?, Antecedentes_Clinicos=?, Nivel_Riesgo=?,"
                 + "Defuncion=?, id_vemec=? where id="+id;
@@ -272,8 +285,8 @@ public class SpringController {
         this.template.update(consulta);
         consulta = "delete from vemecs_data where id_paciente="+id;
         this.template.update(consulta);
-        consulta = "update vemecs set id_paciente=? where id_paciente="+id;
-        this.template.update(consulta, "NULL");
+        consulta = "update vemecs set id_paciente=NULL where id_paciente="+id;
+        this.template.update(consulta);
         consulta = "delete from pacientes where id="+id;
         this.template.update(consulta);
         return new ModelAndView("forward:/");
@@ -303,8 +316,8 @@ public class SpringController {
     @RequestMapping(value="/existeCI", method = RequestMethod.POST)
     public @ResponseBody boolean existeCI(String ci) {
         String consulta = "select * from pacientes where CI='"+ci+"'";
-        List<DatosContacto> data = this.template.query(consulta, new BeanPropertyRowMapper<>(DatosContacto.class));
-        return !data.isEmpty();
+        datos = this.template.queryForList(consulta);
+        return !datos.isEmpty();
     }
     //
     
@@ -361,18 +374,18 @@ public class SpringController {
     
     
     @RequestMapping(value = "/altaAccionMedica", method = RequestMethod.POST)
-    public @ResponseBody DatosAccionMedica AltaAccionMedica(@RequestBody DatosAccionMedica amed) {
+    public @ResponseBody DTOAccionMedica AltaAccionMedica(@RequestBody DTOAccionMedica amed) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         
         if(amed.getAlta() || amed.getDefuncion()) {
-            String cons = "update vemecs set id_paciente=? where id_paciente="+amed.getIdPaciente();
-            this.template.update(cons, "NULL");
+            String cons = "update vemecs set id_paciente=NULL where id_paciente="+amed.getIdPaciente();
+            this.template.update(cons);
             if(amed.getDefuncion()){
                 cons = "update pacientes set Defuncion=1 where id="+amed.getIdPaciente();
-                this.template.update(cons, "NULL");
+                this.template.update(cons);
             }
-            cons = "update pacientes set id_vemec=? where id="+amed.getIdPaciente();
-            this.template.update(cons, "NULL");
+            cons = "update pacientes set id_vemec=NULL where id="+amed.getIdPaciente();
+            this.template.update(cons);
         }
         
         String consulta = "insert into acciones_medicas(id_paciente, fecha_hora, nivel_riesgo,"
@@ -403,15 +416,18 @@ public class SpringController {
     
     @RequestMapping(value = "/altaVeMec", method = RequestMethod.GET)
     public ModelAndView AltaVeMec() {
-        mav.addObject(new Vemec());
+        String consulta = "select * from slaves";
+        datos = this.template.queryForList(consulta);
+        mav.addObject("slaves", datos);
+        mav.addObject(new DatosVeMec());
         mav.setViewName("altaVeMec");
         return mav;
     }
     
     @RequestMapping(value = "/altaVeMec", method = RequestMethod.POST)
-    public ModelAndView AltaVeMec(Vemec vem) {
-        String consulta = "insert into vemecs(Marca, Modelo, Ubicacion) values(?,?,?)";
-        this.template.update(consulta, vem.getMarca(), vem.getModelo(), vem.getUbicacion());
+    public ModelAndView AltaVeMec(DTOVeMec vem) {
+        String consulta = "insert into vemecs(Marca, Modelo, Ubicacion, id_slave) values(?,?,?,?)";
+        this.template.update(consulta, vem.getMarca(), vem.getModelo(), vem.getUbicacion(), vem.getIdSlave());
         return new ModelAndView("forward:/vemecs");
     }
     
@@ -422,14 +438,18 @@ public class SpringController {
         datos = this.template.queryForList(consulta);
         if(datos.isEmpty()) return new ModelAndView("forward:/index");
         mav.addObject("lista", datos);
+        
+        consulta = "select * from slaves";
+        datos = this.template.queryForList(consulta);
+        mav.addObject("slaves", datos);
         mav.setViewName("modificarVeMec");
         return mav;
     }
     
     @RequestMapping(value = "/modificarVeMec", method = RequestMethod.POST)
-    public ModelAndView ModificarVeMec(Vemec vem) {
-        String consulta = "update vemecs set Marca=?,Modelo=?,Ubicacion=? where Id="+id;
-        this.template.update(consulta, vem.getMarca(), vem.getModelo(), vem.getUbicacion());
+    public ModelAndView ModificarVeMec(DTOVeMec vem) {
+        String consulta = "update vemecs set Marca=?,Modelo=?,Ubicacion=?,id_slave=? where Id="+id;
+        this.template.update(consulta, vem.getMarca(), vem.getModelo(), vem.getUbicacion(), vem.getIdSlave());
         return new ModelAndView("forward:/vemecs");
     }
     
@@ -438,8 +458,8 @@ public class SpringController {
         id = Integer.parseInt(request.getParameter("id"));
         String consulta = "delete from vemecs_data where Id_VeMec="+id;
         this.template.update(consulta);
-        consulta = "update pacientes set id_vemec=? where id_vemec="+id;
-        this.template.update(consulta, "NULL");
+        consulta = "update pacientes set id_vemec=NULL where id_vemec="+id;
+        this.template.update(consulta);
         consulta = "delete from vemecs where Id="+id;
         this.template.update(consulta);
         return new ModelAndView("forward:/vemecs");

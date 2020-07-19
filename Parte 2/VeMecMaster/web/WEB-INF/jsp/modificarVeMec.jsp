@@ -40,8 +40,14 @@
                                 <input type="text" name="modelo" class="form-control" value="${lista[0].Modelo}" required>
                                 <label>Ubicacion</label>
                                 <input type="text" name="ubicacion" class="form-control" value="${lista[0].Ubicacion}" required>
-                                <input type="submit" value="Modificar" class="btn btn-light">
-                                <a href="vemecs" class="btn btn-secondary" style="color: #15bef1">
+                                <label>Seccion</label>
+                                <select name="idSlave" id="idSlave" class="form-control mb-1">
+                                    <c:forEach var="slave" items="${slaves}">
+                                        <option value="${slave.id}" <c:if test="${slave.id == lista[0].id_slave}">selected</c:if>>${slave.Nombre}</option>
+                                    </c:forEach>
+                                </select>
+                                <input type="submit" value="Modificar" class="btn btn-light mt-1">
+                                <a href="vemecs" class="btn btn-secondary mt-1" style="color: #15bef1">
                                     <i class="fas fa-chevron-left"></i> 
                                     Regresar
                                 </a>

@@ -9,17 +9,17 @@ package dto;
  *
  * @author Esteban
  */
-public class DatosContacto {
+public class DTOContacto {
     private String nombre;
     private String infocontacto;
     private boolean esPaciente;
     private Integer id;
     private Integer idPaciente;
 
-    public DatosContacto() {
+    public DTOContacto() {
     }
 
-    public DatosContacto(Integer id, String nombre, String infocontacto, boolean esPaciente) {
+    public DTOContacto(Integer id, String nombre, String infocontacto, boolean esPaciente) {
         this.id = id;
         this.nombre = nombre;
         this.infocontacto = infocontacto;

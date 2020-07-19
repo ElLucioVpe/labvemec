@@ -15,6 +15,7 @@
         
         <!-- js internos -->
         <script type="text/javascript" src="<c:url value="/resources/js/confirm-modal.js" />"></script>
+        <script type="text/javascript" src="<c:url value="/resources/js/eliminarSeccion.js" />"></script>
         
         <!-- css -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -40,9 +41,9 @@
                                 <label>Nombre</label>
                                 <input type="text" name="nombre" class="form-control" value="${lista[0].Nombre}" required>
                                 <label>Intervalo de envio a servidor (min)</label>
-                                <input type="number" name="intervalo_envio" class="form-control" value="${lista[0].Intervalo_Envio}" required>
+                                <input type="number" name="intervaloEnvio" class="form-control" value="${lista[0].Intervalo_Envio}" required>
                                 <label>Intervalo de envio en emergencia (seg)</label>
-                                <input type="number" name="intervalo_emergencia" class="form-control" value="${lista[0].Intervalo_Emergencia}" required>
+                                <input type="number" name="intervaloEmergencia" class="form-control" value="${lista[0].Intervalo_Emergencia}" required>
                                 <input type="submit" value="Modificar" class="btn btn-light">
                                 <a href="seccion?id=${lista[0].id}" class="btn btn-secondary" style="color: #15bef1">
                                     <i class="fas fa-chevron-left"></i> 
@@ -50,7 +51,7 @@
                                 </a>
                             </form>
                             <hr/>
-                            <a href="bajaSeccion?id=${lista[0].id}" data-confirm="¿Eliminar esta seccion? (Solo se puede eliminar una seccion vacia)" class="btn btn-danger mt-1 text-center">
+                            <a href="#" onclick="eliminarSeccion(${lista[0].id})" data-confirm="¿Eliminar esta seccion? (Solo se puede eliminar una seccion vacia)" class="btn btn-danger mt-1 text-center">
                                 <i class="fas fa-trash"></i> 
                                 Eliminar
                             </a>
