@@ -58,7 +58,7 @@
 			    <td>`+entry.Intervalo_Envio+`</td>
 			    <td>`+entry.Intervalo_Emergencia+`</td>
 			    <td>
-				<a href="datosVeMec.htm?id=`+entry.Id+`&tiempo=`+entry.Timestamp_Data+`" class="btn btn-light" style="background-color: #15bef1">
+				<a href="datosVeMec.htm?id=`+entry.Id+`&intervaloEmergencia=`+entry.Intervalo_Emergencia+`&tiempo=`+entry.Timestamp_Data+`" class="btn btn-light" style="background-color: #15bef1">
 				    <i class="fas fa-database"></i>
 				    Datos
 				</a>
