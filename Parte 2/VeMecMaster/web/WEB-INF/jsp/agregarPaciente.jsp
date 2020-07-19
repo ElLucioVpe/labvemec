@@ -16,7 +16,9 @@
 
         <!-- js internos -->
         <script src="<c:url value="/resources/js/selectVemecs.js" />"></script>
-
+        <script src="<c:url value="/resources/js/ci.jquery.js" />"></script>
+        <script src="<c:url value="/resources/js/pacienteform.js" />"></script>
+        
         <!-- css -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
@@ -26,6 +28,7 @@
         <title>VeMecMaster - Agregar Paciente</title>
     </head>
     <script>
+        //Cargo datos
         var arrayVeMecs = [];
         var arraySlaves = [];
         <c:forEach var="item" items="${slaves}">
@@ -54,11 +57,17 @@
                             Agregar Paciente
                         </div>
                         <div class="card-body">
-                            <form method="POST">
-                                <label for="CI">Cedula de identidad (Ej:1.111.111-1):</label>
-                                <input type="text" name="ci" class="form-control">
+                            <form method="POST" class="needs-validation" novalidate>
+                                <label for="ci">Cedula de identidad (Ej:1.111.111-1):</label>
+                                <input type="text" name="ci" id="ci" class="form-control" required>
+                                <div id="ci-invalid" class="invalid-feedback">
+                                    Por favor ingrese una cedula valida
+                                </div>
+                                <div id="ci-invalid-existe" class="invalid-feedback d-none">
+                                    La cedula de identidad que ingreso ya esta registrada
+                                </div>
                                 <label for="nombre">Nombre:</label>
-                                <input type="text" name="nombre" class="form-control" placeholder="Nombre">
+                                <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
                                 <label for="sexo">Sexo:</label>
                                 <select name="sexo" id="sexo" class="form-control">
                                     <option value="Femenino">Femenino</option>
@@ -66,26 +75,26 @@
                                     <option value="Otro">Otro</option>
                                 </select>
                                 <label for="edad">Edad:</label>
-                                <input type="number" name="edad" class="form-control" placeholder="Edad">
+                                <input type="number" name="edad" class="form-control" placeholder="Edad" required>
                                 <label for="nacionalidad">Nacionalidad:</label>
-                                <input type="text" name="nacionalidad" class="form-control" placeholder="Nacionalidad">
+                                <input type="text" name="nacionalidad" class="form-control" placeholder="Nacionalidad" required>
                                 <label for="lugarResidencia">Lugar de Residencia:</label>
-                                <input type="text" name="lugarResidencia" class="form-control" placeholder="Lugar de Residencia">
+                                <input type="text" name="lugarResidencia" class="form-control" placeholder="Lugar de Residencia" required>
                                 <label for="direccion">Direccion:</label>
-                                <input type="text" name="direccion" class="form-control" placeholder="Direccion">
+                                <input type="text" name="direccion" class="form-control" placeholder="Direccion" required>
                                 <label for="coordenadas">Coordenadas:</label>
                                 <input type="text" name="coordenadas" class="form-control" placeholder="Coordenadas">
                                 <label for="antecedentesClinicos">Antecedentes Clinicos:</label>
                                 <textarea type="text" name="antecedentesClinicos" class="form-control" placeholder="Antecedentes Clinicos"></textarea>
                                 <label for="nivelRiesgo">Nivel de Riesgo:</label>
-                                <select name="nivelRiesgo" id="nivel_riesgo" class="form-control">
+                                <select name="nivelRiesgo" id="nivel_riesgo" class="form-control" required>
                                     <option value="Bajo">Bajo</option>
                                     <option value="Medio">Medio</option>
                                     <option value="Alto">Alto</option>
                                     <option value="Grave">Grave</option>
                                     <option value="Muy Grave">Muy Grave</option>
                                 </select>
-                                <label for="sexo">Conectar a VeMec?:</label>
+                                <label for="selectVemec">Conectar a VeMec?:</label>
                                 <select name="selectVemec" id="selectVemec" class="form-control mb-1" onchange="showDiv('select_slave', this)">
                                     <option selected value="null">No</option>
                                     <option value="1">Si</option>
@@ -98,13 +107,23 @@
                                     </c:forEach>
                                 </select>
                                 <select name="idVemec" id="id_vemec" class="form-control mb-1">
-                                    <option selected value="null">Seleccione un VeMec</option>
+                                    <option selected value=null>Seleccione un VeMec</option>
                                     <c:forEach var="vemec" items="${vemecs_libres}">
                                         <c:if test="${vemec.id_slave} == id_slave">
                                             <option value="${vemec.id}">${vemec.Modelo} - ${vemec.Ubicacion}</option>
                                         </c:if>
                                     </c:forEach>
                                 </select>
+                                <!-- -->
+                                <!-- Contactos -->
+                                <label for="listaContactos">Contactos:</label>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <button type="button" onclick="addContacto()" class="btn btn-success"><i class='fas fa-plus'></i></button>
+                                        <ul id="listaContactos">
+                                        </ul>
+                                    </div>
+                                </div>
                                 <!-- -->
                                 <input type="submit" value="Agregar" class="btn btn-light">
                                 <a href="./" class="btn btn-secondary" style="color: #15bef1">

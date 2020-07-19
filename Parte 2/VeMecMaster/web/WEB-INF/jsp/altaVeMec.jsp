@@ -29,9 +29,9 @@
                         </div>
                         <div class="card-body">
                             <form method="POST">
-                                <input type="text" name="marca" class="form-control" placeholder="Marca">
-                                <input type="text" name="modelo" class="form-control" placeholder="Modelo">
-                                <input type="text" name="ubicacion" class="form-control" placeholder="Ubicacion">
+                                <input type="text" name="marca" class="form-control" placeholder="Marca" required>
+                                <input type="text" name="modelo" class="form-control" placeholder="Modelo" required>
+                                <input type="text" name="ubicacion" class="form-control" placeholder="Ubicacion" required>
                                 <input type="submit" value="Agregar" class="btn btn-light">
                                 <a href="./" class="btn btn-secondary" style="color: #15bef1">
                                     <i class="fas fa-chevron-left"></i> 

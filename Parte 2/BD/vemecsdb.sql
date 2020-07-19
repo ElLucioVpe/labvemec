@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-07-2020 a las 21:36:40
+-- Tiempo de generación: 19-07-2020 a las 22:36:28
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.4.5
 
@@ -38,6 +38,22 @@ CREATE TABLE `acciones_medicas` (
   `medico_tratante` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Volcado de datos para la tabla `acciones_medicas`
+--
+
+INSERT INTO `acciones_medicas` (`id`, `id_paciente`, `fecha_hora`, `nivel_riesgo`, `medicacion`, `descripcion`, `id_vemec`, `medico_tratante`) VALUES
+(1, 1, '2020-07-01 01:21:36', 'Alto', '123', '123', NULL, '123'),
+(3, 1, '2020-07-11 02:36:23', 'Medio', 'tryrty', 'rtyrt', 1, 'tryrtyrt'),
+(4, 1, '2020-07-11 02:38:06', 'Medio', NULL, 'grtggg fgggggggg ggg gggggggggggggg gggggggg gggggg ggggggggggg ggggggggggggggg ggggggggggggggg gggggggg ggg', 1, 'tryrtyrt'),
+(6, 1, '2020-07-11 02:48:29', 'Medio', 'tryrty', 'rtyrt', 1, 'tryrtyrt'),
+(7, 1, '2020-07-11 03:06:54', 'Medio', 'tryrty', 'rtyrt', NULL, 'tryrtyrt'),
+(8, 1, '2020-07-11 03:12:38', 'Medio', 'tryrty', 'rtyrt', NULL, 'tryrtyrt'),
+(9, 1, '2020-07-11 04:39:33', 'Bajo', '123', '123', NULL, '123'),
+(10, 1, '2020-07-11 04:43:49', 'Bajo', '123', '123', NULL, '123'),
+(11, 1, '2020-07-11 04:44:15', 'Bajo', '123', '123', NULL, '123'),
+(12, 1, '2020-07-11 04:45:20', 'Bajo', '123', '123', NULL, '123');
+
 -- --------------------------------------------------------
 
 --
@@ -51,6 +67,13 @@ CREATE TABLE `contactos` (
   `Info_contacto` varchar(30) NOT NULL,
   `esPaciente` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `contactos`
+--
+
+INSERT INTO `contactos` (`id`, `id_paciente`, `Nombre`, `Info_contacto`, `esPaciente`) VALUES
+(7, 13, 'Personal', '09944243', 1);
 
 -- --------------------------------------------------------
 
@@ -79,7 +102,14 @@ CREATE TABLE `pacientes` (
 --
 
 INSERT INTO `pacientes` (`id`, `CI`, `Nombre`, `Sexo`, `Edad`, `Nacionalidad`, `Lugar_Residencia`, `Direccion`, `Coordenadas`, `Antecedentes_Clinicos`, `Nivel_Riesgo`, `Defuncion`, `id_vemec`) VALUES
-(1, '1.111.111-1', 'Andres Olivera', 'Masculino', 27, 'Paraguayo', 'Canelones, Uruguay', 'Direccion33', 'Coordenadas del pentagono', '5 tipos diferentes de cancer.', 'Muy Grave', 0, 1);
+(1, '1.111.111-1', 'Andres Olivera', 'Masculino', 27, 'Paraguayo', 'Canelones, Uruguay', 'Direccion33', 'Coordenadas del pentagono', '5 tipos diferentes de cancer.', 'Muy Grave', 0, 1),
+(3, '2222222', '2222222', '2222', 2222222, '2222222', '22222', '2222', '2222222', '222222222', 'Bajo', 0, 2),
+(5, '33333333', '333', 'Masculino', 333, '333', '333', '333', '333', '333', 'Bajo', 0, NULL),
+(7, '5.555.555-5', '555', 'Femenino', 52, '55', '444', '55', '55', '4442', 'Muy Grave', 0, 3),
+(8, '22222222', '12', 'Femenino', 12, '12', '12', '12', '12', '1234', 'Bajo', 0, NULL),
+(9, '3.333.333.3', '345', 'Femenino', 347, '345', '345', '45', '', '34534', 'Bajo', 0, NULL),
+(13, '4.444.444.4', '234', 'Femenino', 234, '234', '234', '234', '423', '234', 'Bajo', 0, NULL),
+(32, '6.666.666.6', '345', 'Femenino', 345, '345', '435', '345', '', '', 'Bajo', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -99,7 +129,8 @@ CREATE TABLE `slaves` (
 --
 
 INSERT INTO `slaves` (`id`, `Nombre`, `Intervalo_Envio`, `Intervalo_Emergencia`) VALUES
-(1, 'Pacientes en Domicilio', 10, 0);
+(1, 'Pacientes en Domicilio', 10, 0),
+(2, 'Seccion2', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -122,7 +153,8 @@ CREATE TABLE `vemecs` (
 
 INSERT INTO `vemecs` (`Id`, `Marca`, `Modelo`, `Ubicacion`, `id_slave`, `id_paciente`) VALUES
 (1, 'Marca', 'Modelo', 'Ubicacion', 1, 1),
-(2, 'Marca', 'Modelo', 'Ubicacion', 1, NULL);
+(2, 'Marca', 'Modelo', 'Ubicacion', 1, 3),
+(3, '323', '2323', '2323', 1, 7);
 
 -- --------------------------------------------------------
 
@@ -155,10 +187,8 @@ CREATE TABLE `vemecs_data` (
 --
 
 INSERT INTO `vemecs_data` (`Id_Data`, `Id_Vemec`, `Presion_Maxima`, `Presion_Minima`, `Gas`, `Frecuencia`, `Mezcla`, `Humedad`, `Temperatura_Entrada`, `Temperatura_Salida`, `Presion_Entrada`, `Presion_Salida`, `Pulsaciones`, `Conectado_Corriente`, `Energia`, `id_paciente`, `Timestamp_Data`) VALUES
-(1, 1, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 0, 1, 100, 1, '2020-07-06 01:08:27'),
-(15, 2, 16, 21, 18, 26, 23, 24, 35, 21, 27, 22, 0, 1, 100, 1, '2020-07-01 01:08:38'),
-(16, 2, 24, 21, 26, 26, 32, 34, 31, 20, 20, 30, 0, 1, 100, 1, '2020-07-01 01:08:42'),
-(17, 2, 15, 17, 25, 17, 18, 15, 18, 31, 27, 15, 0, 1, 100, 1, '2020-07-29 01:08:45');
+(23, 1, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 88, 1, 100, 1, '2020-07-30 03:20:26'),
+(24, 2, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 0, 88, 3, '2020-07-09 03:21:04');
 
 --
 -- Índices para tablas volcadas
@@ -184,6 +214,7 @@ ALTER TABLE `contactos`
 --
 ALTER TABLE `pacientes`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `CI` (`CI`),
   ADD KEY `id_vemec` (`id_vemec`);
 
 --
@@ -216,37 +247,37 @@ ALTER TABLE `vemecs_data`
 -- AUTO_INCREMENT de la tabla `acciones_medicas`
 --
 ALTER TABLE `acciones_medicas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `contactos`
 --
 ALTER TABLE `contactos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT de la tabla `slaves`
 --
 ALTER TABLE `slaves`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `vemecs`
 --
 ALTER TABLE `vemecs`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `vemecs_data`
 --
 ALTER TABLE `vemecs_data`
-  MODIFY `Id_Data` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `Id_Data` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- Restricciones para tablas volcadas

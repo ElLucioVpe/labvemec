@@ -27,7 +27,7 @@
               <label for="medicacion">Recetar Medicacion:</label>
               <textarea type="text" id="form_medicacion" name="medicacion" class="form-control"></textarea>
               <label for="descripcion">Descripcion:</label>
-              <textarea type="text" id="form_descripcion" name="descripcion" class="form-control"></textarea>
+              <textarea type="text" id="form_descripcion" name="descripcion" class="form-control" required></textarea>
               <label for="selectVemec">Cambiar Seccion o VeMec?:</label>
               <select name="selectVemec" id="selectVemec" class="form-control mb-1" onchange="showDiv('select_slave', this)">
                   <option selected value="null">No</option>
