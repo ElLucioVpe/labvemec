@@ -85,6 +85,7 @@ class VeMec {
         );
       });
     });
+    sleep(1000);
   }
 
   send(data) {
