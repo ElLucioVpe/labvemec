@@ -64,10 +64,22 @@
                     document.getElementById('p_in'+json.Id).innerHTML = json.Presion_Entrada + "mmHg";
                     document.getElementById('p_out'+json.Id).innerHTML = json.Presion_Salida + "mmHg";
                     
+                    // Chequeo de emergencia
+                      // La posicion 11 es el estado de emergencia
                     if(json.Energia < 20) {
-                    	clearInterval(arrayVemecsDatos2[json.Id][10]);
-                    	arrayVemecsDatos2[json.Id][10] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]) }, intervaloEmergencia);
+                        if(arrayVemecsDatos2[json.Id][11] === false) {
+                            clearInterval(arrayVemecsDatos2[json.Id][10]);
+                        	arrayVemecsDatos2[json.Id][10] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id], json.Id, "energia") }, intervaloEmergencia);
+                        }
+                    } else {
+                        if(arrayVemecsDatos2[json.Id][11] === true) {
+                            clearInterval(arrayVemecsDatos2[json.Id][10]);
+                        	arrayVemecsDatos2[json.Id][10] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id], json.Id, "energia") }, tiempo);
+                        }
                     }
+                   
+                    
+
 
                 //Nuevo Vemec
                 }else{
@@ -236,9 +248,8 @@
             });     
              
              
-            function enviarDatosADB(datos) {
-		        var url = 'http://localhost:8080/RESTapi/webresources/entities.vemecsdata';
-
+            function enviarDatosADB(datos, id, tipoAlerta) {
+		        /*var url = 'http://localhost:8080/RESTapi/webresources/entities.vemecsdata';
                 fetch(url, {
                   method: 'POST',
                   body: JSON.stringify(datos),
@@ -247,7 +258,22 @@
                   }
                 }).then(res => res.json())
                 .catch(error => console.error('Error:', error))
-                .then(response => console.log('Success:', response));
+                .then(response => console.log('Success:', response));*/
+                let newData = {
+                    Id: id,
+                    Presion_Maxima: datos[0],
+                    Presion_Minima: datos[1],
+                    Gas: datos[2],
+                    Frecuencia: datos[3],
+                    Mezcla: datos[4],
+                    Humedad: datos[5],
+                    Temperatura_Entrada: datos[6],
+                    Temperatura_Salida: datos[7],
+                    Presion_Entrada: datos[8],
+                    Presion_Salida: datos[9],
+                    Alerta: tipoAlerta
+                };
+                socket.emit("envio_datosVeMec", JSON.stringify(newData));
 		    } 
     </script>
     </head>
