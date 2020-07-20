@@ -76,7 +76,7 @@ class VeMec {
           RandomEnergia,
           RandomPulsaciones,
           RandomConectadoACorriente,
-          date + "T" + time + "Z[UTC]"
+          date + " " + time
         );
         
         socket.emit("envio_datosVeMec", JSON.stringify(data.getData()));

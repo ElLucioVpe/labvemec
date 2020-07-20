@@ -8,9 +8,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Ultimos datos del VeMec</title>
         
@@ -20,6 +21,9 @@
         <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
         <script language="javascript" type = "text/javascript">
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip();
+            });
             //Grafica de presión
             let arrayVemecsDatos2 = [];
             var chart2=[];
@@ -57,24 +61,28 @@
                     arrayVemecsDatos2[json.Id]["Timestamp_Data"] = new Date().toLocaleString();
                 
                     //Agregamos al body la section del nuevo array
-                    document.getElementById('p_mx'+json.Id).innerHTML = json.Presion_Maxima + "mmHg";
-                    document.getElementById('p_mn'+json.Id).innerHTML = json.Presion_Minima + "mmHg";
-                    document.getElementById('gas'+json.Id).innerHTML = json.Gas + "cc";
-                    document.getElementById('frec'+json.Id).innerHTML = json.Frecuencia + "/min";
-                    document.getElementById('mez'+json.Id).innerHTML = json.Mezcla + "%";
-                    document.getElementById('hum'+json.Id).innerHTML = json.Humedad + "%";
-                    document.getElementById('t_in'+json.Id).innerHTML = json.Temperatura_Entrada + "ºC";
-                    document.getElementById('t_out'+json.Id).innerHTML = json.Temperatura_Salida + "ºC";
-                    document.getElementById('p_in'+json.Id).innerHTML = json.Presion_Entrada + "mmHg";
-                    document.getElementById('p_out'+json.Id).innerHTML = json.Presion_Salida + "mmHg";
+                    document.getElementById('Pmax'+json.Id).innerHTML = json.Presion_Maxima;
+                    document.getElementById('Pmin'+json.Id).innerHTML = json.Presion_Minima;
+                    document.getElementById('Gas'+json.Id).innerHTML = json.Gas;
+                    document.getElementById('Fr'+json.Id).innerHTML = json.Frecuencia;
+                    document.getElementById('O2'+json.Id).innerHTML = json.Mezcla + "%";
+                    document.getElementById('Hum'+json.Id).innerHTML = json.Humedad + "%";
+                    document.getElementById('TE'+json.Id).innerHTML = json.Temperatura_Entrada;
+                    document.getElementById('TS'+json.Id).innerHTML = json.Temperatura_Salida;
+                    document.getElementById('PE'+json.Id).innerHTML = json.Presion_Entrada;
+                    document.getElementById('PS'+json.Id).innerHTML = json.Presion_Salida;
+                    document.getElementById('Pulso'+json.Id).innerHTML = json.Pulsaciones;
+                    if(json.Conectado_Corriente === 1)
+                        document.getElementById('energia'+json.Id).innerHTML = 'Conectado a corriente <i class="fas fa-plug" aria-hidden="true"></i>';
+                    else 
+                        document.getElementById('energia'+json.Id).innerHTML = json.Energia+'%<i class="fas fa-bolt" aria-hidden="true"></i>';
                     
                     //Alertas
-                    if(json.Energia < 20) arrayVemecsDatos2[json.Id]["alerta"] = "activarBajaBateria";
+                    if(json.Energia < 20 && json.Conectado_Corriente === 0) arrayVemecsDatos2[json.Id]["alerta"] = "activarBajaBateria";
                     else arrayVemecsDatos2[json.Id]["alerta"] = "desactivarBajaBateria";
                     if(json.Pulsaciones < 60 || json.Pulsaciones > 110 || json.Presion_Salida > 50)  arrayVemecsDatos2[json.Id]["alerta"] = "activarAlerta";
                     else arrayVemecsDatos2[json.Id]["alerta"] = "desactivarAlerta";
-                    
-                    arrayVemecsDatos2[json.Id]["alerta"] = "activarAlerta";
+
                     if(arrayVemecsDatos2[json.Id]["alerta"].startsWith("activar")) {
                         clearInterval(arrayVemecsDatos2[json.Id]["Intervalo"]);
                     	arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]); }, intervaloEmergencia);
@@ -141,98 +149,106 @@
             }
                 
         function inicializarDatos(json){
-            var contenidoRico='<div id = "vemec-container">' +
-            '<div class="row">' +
-                '<div id="div_datos1" class="col-sm">' +
-                    '<div class="card">' +
-                        '<form class="form-inline">' +
-                            '<label>Presión máxima &nbsp</label>' +
-                            '<h1 id="p_mx'+json.Id+'">'+json.Presion_Maxima+'mmHg</h1>' +
-                        '</form>' +
-                    '</div>' +
-                    
-                    '<div class="card">' +
-                        '<form class="form-inline">' +
-                            '<label>Presión mínima &nbsp</label>' +
-                            '<h1 id="p_mn'+json.Id+'">'+json.Presion_Minima+'mmHg</h1>' +
-                        '</form>' +
-                    '</div>' +
-                    
-                    '<div class="card">' +
-                        '<form class="form-inline">' +
-                            '<label>Volumen de Gás &nbsp</label>' +
-                            '<h1 id="gas'+json.Id+'">'+json.Gas+'cc</h1>' +
-                        '</form>' +
-                   '</div>' +
-                    
-                    '<div class="card">' +
-                        '<form class="form-inline">' +
-                            '<label>Frecuencia de aporte &nbsp</label>' +
-                            '<h1 id="frec'+json.Id+'">'+json.Frecuencia+'/min</h1>' +
-                        '</form>' +
-                    '</div>' +
-                        
-                    '<div class="card">' +
-                        '<form class="form-inline">' +
-                            '<label>%O2 en mezcla &nbsp</label>' +
-                            '<h1 id="mez'+json.Id+'">'+json.Mezcla+'%</h1>' +
-                        '</form>' +
-                    '</div>' +
-                '</div>' +
-                '<div id="div_datos2" class="col-sm">' +
-                    '<div class="card">' +
-                        '<form class="form-inline">' +
-                            '<label>Humedad de aire &nbsp</label>' +
-                            '<h1 id="hum'+json.Id+'">'+json.Humedad+'%</h1>' +
-                        '</form>' +
-                    '</div>' +
-                        
-                    '<div class="card">' +
-                        '<form class="form-inline">' +
-                            '<label>Temperatura de entrada &nbsp</label>' +
-                            '<h1 id="t_in'+json.Id+'">'+json.Temperatura_Entrada+'ºC</h1>' +
-                        '</form>' +
-                    '</div>' +
-                        
-                    '<div class="card">' +
-                        '<form class="form-inline">' +
-                            '<label>Temperatura de salida &nbsp</label>' +
-                            '<h1 id="t_out'+json.Id+'">'+json.Temperatura_Salida+'ºC</h1>' +
-                        '</form>' +
-                    '</div>' +
-                        
-                    '<div class="card">  ' + 
-                        '<form class="form-inline">' +
-                            '<label>Presión de entrada &nbsp</label>' +
-                            '<h1 id="p_in'+json.Id+'">'+json.Presion_Entrada+'mmHg</h1>' +
-                        '</form>' +
-                    '</div>' +
-                        
-                    '<div class="card">' +
-                        '<form class="form-inline">' +
-                            '<label>Presión de salida &nbsp</label>' +
-                            '<h1 id="p_out'+json.Id+'">'+json.Presion_Salida+'mmHg</h1>' +
-                        '</form>' +
-                    '</div>' +
-                   
-                '</div>' +
-            '</div>' +
-                        '<br>' +
-            '<div class="row">' +
-                '<div class="col-sm">' +
-                    '<div id="div-PSchart'+json.Id+'"></div>' +
-                '</div>' +
-            
-                '<div class="col-sm">' +
-                    '<div id="div-PEchart'+json.Id+'"></div>' +
-               '</div>' +
+            var contenidoRico = '<div class="col-xl-4 vemec-col">'+
+              '<div id="vemec-card'+json.Id+'" class="card shadow mb-4 vemec-card">'+
+                '<div class="card-header py-3 d-flex flex-row justify-content-between">'+
+                    '<h6 id="energia'+json.Id+'" class="m-0 font-weight-bold text-dark pull-right">';
+            if(json.Conectado_Corriente === 1) 
+                contenidoRico += 'Conectado a corriente <i class="fas fa-plug" aria-hidden="true"></i></h6>';
+            else contenidoRico += json.Energia+'%<i class="fa fa-bolt" aria-hidden="true"></i></h6>';
                
-            '</div>  ' +
-          '</div>'
-            ;
-        
+            contenidoRico+= '</div>'+
+                '<div class="card-body row">'+
+                    '<div class="col">'+
+                      '<div id="div-PEchart'+json.Id+'" class="vemec-chart">'+
+                      '</div>'+
+                      '<div id="div-PSchart'+json.Id+'" class="vemec-chart">'+
+                      '</div>'+
+                    '</div>'+
+                    '<div id="datos-vemec" class="col">'+
+                        '<div class="row">'+
+                            '<div class="form-inline mx-1" data-toggle="tooltip" title="Presión Maxima (mmHg)">'+
+                              '<small class="font-weight-bold">Pmax</small>'+
+                              '<h5 class="font-weight-bold">'+
+                                  '<strong id="Pmax'+json.Id+'">json.Presion_Maxima</strong>'+
+                              '</h5>'+
+                            '</div>'+
+                            '<div class="form-inline mx-1" data-toggle="tooltip" title="Presión Mínima (mmHg)">'+
+                              '<small class="font-weight-bold">Pmin</small>'+
+                              '<h5 class="font-weight-bold">'+
+                                  '<strong id="Pmin'+json.Id+'">json.Presion_Minima</strong>'+
+                              '</h5>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="row">'+
+                            '<div class="form-inline mx-1" data-toggle="tooltip" title="Composición de mezcla en porcentaje de O2">'+
+                              '<small class="font-weight-bold">O2</small>'+
+                              '<h5 class="font-weight-bold">'+
+                                  '<strong id="O2'+json.Id+'">json.Mezcla%</strong>'+
+                              '</h5>'+
+                            '</div>'+
+                            '<div class="form-inline mx-1" data-toggle="tooltip" title="Gas (cc)">'+
+                              '<small class="font-weight-bold">Gas</small>'+
+                              '<h5 class="font-weight-bold">'+
+                                  '<strong id="Gas'+json.Id+'">json.Gas</strong>'+
+                              '</h5>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="row">'+
+                            '<div class="form-inline mx-1" data-toggle="tooltip" title="Humedad del aire">'+
+                              '<small class="font-weight-bold">Hum</small>'+
+                              '<h5 class="font-weight-bold">'+
+                                  '<strong id="Hum'+json.Id+'">json.Humedad%</strong>'+
+                              '</h5>'+
+                            '</div>'+
+                            '<div class="form-inline mx-1" data-toggle="tooltip" title="Frecuencia de aporte (/min)">'+
+                              '<small class="font-weight-bold">Fr</small>'+
+                              '<h5 class="font-weight-bold">'+
+                                  '<strong id="Fr'+json.Id+'">json.Frecuencia</strong>'+
+                              '</h5>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="row">'+
+                            '<div class="form-inline mx-1" data-toggle="tooltip" title="Temperatura de entrada (ºC)">'+
+                              '<small class="font-weight-bold">TE</small>'+
+                              '<h5 class="font-weight-bold">'+
+                                  '<strong id="TE'+json.Id+'">json.Temperatura_Entrada</strong>'+
+                              '</h5>'+
+                            '</div>'+
+                            '<div class="form-inline mx-1" data-toggle="tooltip" title="Temperatura de salida (ºC)">'+
+                              '<small class="font-weight-bold">TS</small>'+
+                              '<h5 class="font-weight-bold">'+
+                                  '<strong id="TS'+json.Id+'">json.Temperatura_Salida</strong>'+
+                              '</h5>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="row">'+
+                            '<div class="form-inline mx-1" data-toggle="tooltip" title="Presion de entrada (mmHg)">'+
+                              '<small class="font-weight-bold">PE</small>'+
+                              '<h5 class="font-weight-bold">'+
+                                  '<strong id="PE'+json.Id+'">json.Presion_Entrada</strong>'+
+                              '</h5>'+
+                            '</div>'+
+                            '<div class="form-inline mx-1" data-toggle="tooltip" title="Presion de salida (mmHg)">'+
+                              '<small class="font-weight-bold">PS</small>'+
+                              '<h5 class="font-weight-bold">'+
+                                  '<strong id="PS'+json.Id+'">json.Presion_Salida</strong>'+
+                              '</h5>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="row">'+
+                            '<div class="form-inline mx-1 pull-left" data-toggle="tooltip" title="Pulsaciones">'+
+                              '<h4 class="font-weight-bold">'+
+                                  '<strong id="Pulso'+json.Id+'">'+json.Pulsaciones+'</strong>'+
+                              '</h4>'+
+                              '<h2>'+
+                                  '<i class="fa fa-heartbeat" aria-hidden="true" style="color: salmon"></i>'+
+                              '</h2>'+
+                            '</div>'+
+                        '</div>'+
+                    '</div>'+
+                '</div></div></div>';
             $('#container-datos').append(contenidoRico);
-                    
         }
         
         
@@ -240,15 +256,18 @@
                     var canvas = document.createElement('canvas');
                     canvas.id = 'LayerPEchart' + Id;
                     canvas.className = 'c';
-                   
+                    canvas.width = 190;
+                    canvas.heigth = 116;
+                    
                    
                     canvas.style.zIndex = Id;
                       
                     var canvas2 = document.createElement('canvas');
-                    canvas.id = 'LayerPSchart' + Id;
-                    canvas.className = 'c';
-                  
-                    canvas.style.zIndex = Id;
+                    canvas2.id = 'LayerPSchart' + Id;
+                    canvas2.className = 'c';
+                    canvas2.width = 190;
+                    canvas2.heigth = 116;
+                    canvas2.style.zIndex = Id;
                     
 
                     document.getElementById('div-PEchart'+Id).appendChild(canvas);
@@ -294,10 +313,8 @@
                         }]
                     },
                     options: {
-                        title: {
-                            display: true,
-                            text: 'Presion Entrada'
-                        },
+                        responsive: false,
+                        maintainAspectRatio: false,
                         legend:{display:false},
                         scales: {
                             yAxes: [{
@@ -343,10 +360,8 @@
                         }]
                     },
                     options: {
-                        title: {
-                            display: true,
-                            text: 'Presion Salida'
-                        },
+                        responsive: false,
+                        maintainAspectRatio: false,
                         legend:{display:false},
                         scales: {
                             yAxes: [{
@@ -391,30 +406,67 @@
             background-color: whitesmoke;
         }
         
-        h1 {
+        /*h1 {
             font-size: 50px;
             color: white;
-        }
+        }*/
         
         label {
             font-weight: 600;
-            
         }
         
         form {
             align-content: center;
         }
         
-        .card {
-            background-color: #15bef1;
+        .vemec-col {
+            width: 33%;
+        }
+
+        .vemec-card {
+            font-size: 15px;
+            width: 100%;
+            height: 330px;
+        }
+
+        .vemec-chart {
+            width: 100%;
+            height: 50%;
+        }
+        
+        .w-90 {
+            width: 90%;
+        }
+        
+        @media screen and (max-width: 1000px) { 
+            .vemec-col {
+                width: 100%;
+            }
+            .vemec-col {
+                height: 50%;
+            }
         }
     </style>
     <body>
-        <div id="container-datos" class="container mt-4">
-                
+        <div id="wrapper">
+            <div id="content-wrapper" class="d-flex flex-column">
+                <!-- Header -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <h3 class="text-center  mx-auto" id="page-top"><a href="index.htm" class="text-dark">VeMecSlave</a></h3>
+                </nav>
+                <!-- Header -->
+              <div id="content">
+                <div class="container-fluid">
+                  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 mx-auto text-gray-800">Seccion</h1>
+                  </div>
+                  <div id="container-datos" class="row">
+                      
+                  </div>
+                  <div id="G" class="Output row"></div> 
+                </div>
+              </div>  
+            </div>
         </div>
-            <div id="G" class="Output"></div> 
-      
-
     </body>
 </html>

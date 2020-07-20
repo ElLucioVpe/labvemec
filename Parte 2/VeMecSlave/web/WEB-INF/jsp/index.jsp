@@ -5,7 +5,7 @@
 
 <html>
     <head>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
@@ -13,32 +13,47 @@
         
     </head>
     <body>
-        <div class="container mt-4" style="background-color: #15bef1">
-            <div class="card">
-                
-                <div class="card-header text-center" style="background-color: #15bef1">
-                    Lista de VeMecs
+        <div id="wrapper">
+            <div id="content-wrapper" class="d-flex flex-column">
+                <!-- Header -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <h3 class="text-center  mx-auto" id="page-top"><a href="index.htm" class="text-dark">VeMecSlave</a></h3>
+                </nav>
+                <!-- Header -->
+              <div id="content">
+                <div class="container-fluid">
+                  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 mx-auto text-gray-800">Secciones</h1>
+                  </div>
+                    <div class="container mt-4" style="background-color: #15bef1">
+                        <div class="card">
+
+                            <div class="card-header text-center" style="background-color: #15bef1">
+                                Lista de Slaves
+                            </div>
+                            <div class="card-body bg-light">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <th>ID</th>
+                                        <th>NOMBRE</th>
+                                        <th>Intervalo Envio</th>
+                                        <th>Intervalo Emergencia</th>
+                                    </thead>
+                                    <tbody id="slaves_list">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body bg-light">
-                    <table class="table table-hover">
-                        <thead>
-                            <th>ID</th>
-                            <th>NOMBRE</th>
-                            <th>Intervalo Envio</th>
-                            <th>Intervalo Emergencia</th>
-                        </thead>
-                        <tbody id="vemecs_list">
-                            
-                        </tbody>
-                    </table>
-                </div>
+              </div>
             </div>
-            
         </div>
         <script>
            
         $(document ).ready(async function() {
-                let htmlVemecs_list = $("#vemecs_list");
+                let htmlVemecs_list = $("#slaves_list");
         	const url = "http://localhost:8080/RESTapi/webresources/entities.slaves";
               
                  let datosSlaves = await fetch(url, {
