@@ -8,8 +8,10 @@ $(document).ready(function(){
 });
 
 function actualizarDatos(json) {
+    //var json = JSON.stringify(datos);
     console.log("recibiendo datos de vemec...");
-
+    
+    console.log(json.Id_Vemec);
     document.getElementById('Pmax'+json.Id_Vemec).innerHTML = json.Presion_Maxima;
     document.getElementById('Pmin'+json.Id_Vemec).innerHTML = json.Presion_Minima;
     document.getElementById('Gas'+json.Id_Vemec).innerHTML = json.Gas;
@@ -22,9 +24,9 @@ function actualizarDatos(json) {
     document.getElementById('PS'+json.Id_Vemec).innerHTML = json.Presion_Salida;
     document.getElementById('Pulso'+json.Id_Vemec).innerHTML = json.Pulsaciones;
 
-    if(json.Conectado_Corriente === "true")
-        document.getElementById('p_out').innerHTML = 'Conectado a corriente <i class="fas fa-plug" aria-hidden="true"></i>';
-    else document.getElementById('p_out').innerHTML = json.Energia+'%<i class="fa fa-bolt" aria-hidden="true"></i>';
+    if(json.Conectado_Corriente === 1)
+        document.getElementById('energia'+json.Id_Vemec).innerHTML = 'Conectado a corriente <i class="fas fa-plug" aria-hidden="true"></i>';
+    else document.getElementById('energia'+json.Id_Vemec).innerHTML = json.Energia+'%<i class="fa fa-bolt" aria-hidden="true"></i>';
 
     console.log("agregando datos a la grafica...");
     var chartPE = $("#div-PEchart"+json.Id_Vemec).CanvasJSChart();
@@ -87,6 +89,7 @@ function cargarDatosGraficas(idVeMec, registros) {
 }
 
 function modoAlerta(activar, tipo, idVeMec) {
+    //console.log("alerta:"+tipo);
     var element = document.getElementById("vemec-card"+idVeMec);
     var audioPlayer = document.getElementById("audio-alerta");
     var clase ="";
@@ -105,12 +108,12 @@ function modoAlerta(activar, tipo, idVeMec) {
     }
 
     if(activar) {
+        if(!element.classList.includes(clase)) document.getElementById(count_div).innerHTML = parseInt(document.getElementById(count_div).innerHTML)+1;
         element.classList.add(clase);
-        audioPlayer.setAttribute('src', element.src + audio);
-        document.getElementById(count_div).innerHTML = parseInt(document.getElementById(count_div).innerHTML)+1;
+        audioPlayer.setAttribute('src', urlSound + audio);
     } else {
+        if(element.classList.includes(clase)) document.getElementById(count_div).innerHTML = parseInt(document.getElementById(count_div).innerHTML)-1;
         element.classList.remove(clase);
         audioPlayer.setAttribute('src', "");
-        document.getElementById(count_div).innerHTML = parseInt(document.getElementById(count_div).innerHTML)-1;
     }
 }

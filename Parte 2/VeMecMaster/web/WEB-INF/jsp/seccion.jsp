@@ -54,9 +54,12 @@
 
     //Escucha para actualizar datos y alertas
     const socket = io('http://localhost:4000');
-    socket.on('datos_masterSlave'+${slave.id}, (res) => {
+    socket.on('datos_masterSlave'+${slave.id}, function(res) {
+        //console.log("escuchando en websocket:"+JSON.stringify(res));
         actualizarDatos(res);
     });
+    
+    var urlSound = '<c:url value="/resources/sound/" />';
     
     var arrayVeMecs = [];
     var arraySlaves = [];
@@ -163,7 +166,7 @@
                         </c:otherwise>
                         </c:choose>
                     </h6>
-                    <h6 class="m-0 font-weight-bold text-dark pull-right">
+                    <h6 id="energia${dato.getVemec().getId()}" class="m-0 font-weight-bold text-dark pull-right">
                         <c:if test="${dato.getUltimoDato() != null && dato.getVemec().getIdPaciente() != null}">
                             <c:choose>
                             <c:when test="${dato.getUltimoDato().getConectadoCorriente()}">
@@ -208,82 +211,94 @@
                       </div>
                     </div>
                     <div id="datos-vemec" class="col">
+                        
                         <div class="row">
+                            
                             <div class="form-inline mx-1" data-toggle="tooltip" title="Presión Maxima (mmHg)">
                               <small class="font-weight-bold">Pmax</small>
-                              <h4 class="font-weight-bold">
+                              <h5 class="font-weight-bold">
                                   <strong id="Pmax${dato.getVemec().getId()}">${dato.getUltimoDato().getPresionMaxima()}</strong>
-                              </h4>
+                              </h5>
                             </div>
                             <div class="form-inline mx-1" data-toggle="tooltip" title="Presión Mínima (mmHg)">
                               <small class="font-weight-bold">Pmin</small>
-                              <h4 class="font-weight-bold">
+                              <h5 class="font-weight-bold">
                                   <strong id="Pmin${dato.getVemec().getId()}">${dato.getUltimoDato().getPresionMinima()}</strong>
-                              </h4>
+                              </h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-inline mx-1" data-toggle="tooltip" title="Composición de mezcla en porcentaje de O2">
+                              <small class="font-weight-bold">O2</small>
+                              <h5 class="font-weight-bold">
+                                  <strong id="O2${dato.getVemec().getId()}">${dato.getUltimoDato().getMezcla()}%</strong>
+                              </h5>
                             </div>
                             <div class="form-inline mx-1" data-toggle="tooltip" title="Gas (cc)">
                               <small class="font-weight-bold">Gas</small>
-                              <h4 class="font-weight-bold">
+                              <h5 class="font-weight-bold">
                                   <strong id="Gas${dato.getVemec().getId()}">${dato.getUltimoDato().getGas()}</strong>
-                              </h4>
+                              </h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-inline mx-1" data-toggle="tooltip" title="Humedad del aire">
+                              <small class="font-weight-bold">Hum</small>
+                              <h5 class="font-weight-bold">
+                                  <strong id="Hum${dato.getVemec().getId()}">${dato.getUltimoDato().getHumedad()}%</strong>
+                              </h5>
                             </div>
                             <div class="form-inline mx-1" data-toggle="tooltip" title="Frecuencia de aporte (/min)">
                               <small class="font-weight-bold">Fr</small>
-                              <h4 class="font-weight-bold">
+                              <h5 class="font-weight-bold">
                                   <strong id="Fr${dato.getVemec().getId()}">${dato.getUltimoDato().getFrecuencia()}</strong>
-                              </h4>
+                              </h5>
                             </div>
-                            <div class="form-inline mx-1" data-toggle="tooltip" title="Composición de mezcla en porcentaje de O2">
-                              <small class="font-weight-bold">O2</small>
-                              <h4 class="font-weight-bold">
-                                  <strong id="O2${dato.getVemec().getId()}">${dato.getUltimoDato().getMezcla()}%</strong>
-                              </h4>
-                            </div>
-                            <div class="form-inline mx-1" data-toggle="tooltip" title="Humedad del aire">
-                              <small class="font-weight-bold">Hum</small>
-                              <h4 class="font-weight-bold">
-                                  <strong id="Hum${dato.getVemec().getId()}">${dato.getUltimoDato().getHumedad()}%</strong>
-                              </h4>
-                            </div>
+                        </div>
+                        <div class="row">
                             <div class="form-inline mx-1" data-toggle="tooltip" title="Temperatura de entrada (ºC)">
                               <small class="font-weight-bold">TE</small>
-                              <h4 class="font-weight-bold">
+                              <h5 class="font-weight-bold">
                                   <strong id="TE${dato.getVemec().getId()}">${dato.getUltimoDato().getTemperaturaEntrada()}</strong>
-                              </h4>
+                              </h5>
                             </div>
                             <div class="form-inline mx-1" data-toggle="tooltip" title="Temperatura de salida (ºC)">
                               <small class="font-weight-bold">TS</small>
-                              <h4 class="font-weight-bold">
+                              <h5 class="font-weight-bold">
                                   <strong id="TS${dato.getVemec().getId()}">${dato.getUltimoDato().getTemperaturaSalida()}</strong>
-                              </h4>
+                              </h5>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="form-inline mx-1" data-toggle="tooltip" title="Presion de entrada (mmHg)">
                               <small class="font-weight-bold">PE</small>
-                              <h4 class="font-weight-bold">
+                              <h5 class="font-weight-bold">
                                   <strong id="PE${dato.getVemec().getId()}">${dato.getUltimoDato().getPresionEntrada()}</strong>
-                              </h4>
+                              </h5>
                             </div>
                             <div class="form-inline mx-1" data-toggle="tooltip" title="Presion de salida (mmHg)">
                               <small class="font-weight-bold">PS</small>
-                              <h4 class="font-weight-bold">
+                              <h5 class="font-weight-bold">
                                   <strong id="PS${dato.getVemec().getId()}">${dato.getUltimoDato().getPresionSalida()}</strong>
-                              </h4>
+                              </h5>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="form-inline mx-1 pull-left" data-toggle="tooltip" title="Pulsaciones">
-                              <h2 class="font-weight-bold">
+                              <h4 class="font-weight-bold">
                                   <strong id="Pulso${dato.getVemec().getId()}">${dato.getUltimoDato().getPulsaciones()}</strong>
-                              </h2>
-                              <h1>
+                              </h4>
+                              <h2>
                                   <i class="fa fa-heartbeat" aria-hidden="true" style="color: salmon"></i>
-                              </h1>
+                              </h2>
                             </div>
                         </div>
                     </div>
                     </c:otherwise>
                     </c:choose>
                 </div>
+                </div>
               </div>
-            </div>
             </c:forEach>
           </div>
         </div>

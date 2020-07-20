@@ -192,7 +192,7 @@ let vemecs = [];
 
 async function instanciarVemecs() {
   vemecsData.forEach(function (vemec) {
-    vemecs.push(new VeMec(vemec.id, vemec.marca, vemec.modelo, vemec.ubicacion, true, socket, vemec.idSlave));
+    vemecs.push(new VeMec(vemec.id, vemec.idSlave, vemec.marca, vemec.modelo, vemec.ubicacion, true, socket));
     console.log(vemec.id);
   })
 }
