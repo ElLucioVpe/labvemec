@@ -18,12 +18,12 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
         <script src="https://canvasjs.com/assets/script/canvasjs.min.js"> </script>
         <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
         <script language="javascript" type = "text/javascript">
             //Grafica de presión
             let arrayVemecsDatos2 = [];
-            var charsVemecs = [];
-            var charX;
-            var charY;
+            var chart2=[];
+            var chart=[];
             var canvasesPE = [];
             var canvasesPS = [];
        		const tiempo = location.search.split('tiempo=')[1].split("&")[0];; // Obtiene el intervalo de tiempo desde GET
@@ -36,11 +36,6 @@
             socket.on('datosVeMec'+id, (res) => {
                 console.log("recibiendo datos de vemec..."+id);
                 var json = res;
-                
-                
-                //Comparando si Es nuevo vemec o lo tenemos y sumandolo a su array promedidado
-                //
-                //Vemec Ya existe
             
                 if(arrayVemecsDatos2[json.Id] != null){
                     //Vamos promediando en array bidimensional
@@ -61,7 +56,6 @@
                     arrayVemecsDatos2[json.Id]["Timestamp_Data"] = new Date().toLocaleString();
                 
                     //Agregamos al body la section del nuevo array
-
                     document.getElementById('p_mx'+json.Id).innerHTML = json.Presion_Maxima + "mmHg";
                     document.getElementById('p_mn'+json.Id).innerHTML = json.Presion_Minima + "mmHg";
                     document.getElementById('gas'+json.Id).innerHTML = json.Gas + "cc";
@@ -83,6 +77,9 @@
                         clearInterval(arrayVemecsDatos2[json.Id][10]);
                     	arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]); }, intervaloEmergencia);
                     }
+                   
+               
+
 
                 //Nuevo Vemec
                 }else{
@@ -104,202 +101,284 @@
                     arrayVemecsDatos2[json.Id]["Energia"] =  json.Energia;
                     arrayVemecsDatos2[json.Id]["Timestamp_Data"] = new Date().toLocaleString();
                     
-		    arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]) }, tiempo); // Cada cierto tiempo envia los datos a la DB
+		            arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]) }, tiempo); // Cada cierto tiempo envia los datos a la DB
                   
                     //Creamos la nueva seccion para el nuevo vemec
-                      document.getElementById("container-datos").innerHTML+= `
-                        <div id = "vemec-container">
-                        <div class="row">
-                            <div id="div_datos1" class="col-sm">
-                                <div class="card">
-                                    <form class="form-inline">
-                                        <label>Presión máxima &nbsp</label>
-                                        <h1 id="p_mx`+json.Id+`">`+json.Presion_Maxima+`mmHg</h1>
-                                    </form>
-                                </div>
-
-                                <div class="card">
-                                    <form class="form-inline">
-                                        <label>Presión mínima &nbsp</label>
-                                        <h1 id="p_mn`+json.Id+`">`+json.Presion_Minima+`mmHg</h1>
-                                    </form>
-                                </div>
-
-                                <div class="card">
-                                    <form class="form-inline">
-                                        <label>Volumen de Gás &nbsp</label>
-                                        <h1 id="gas`+json.Id+`">`+json.Gas+`cc</h1>
-                                    </form>
-                                </div>
-
-                                <div class="card">
-                                    <form class="form-inline">
-                                        <label>Frecuencia de aporte &nbsp</label>
-                                        <h1 id="frec`+json.Id+`">`+json.Frecuencia+`/min</h1>
-                                    </form>
-                                </div>
-
-                                <div class="card">
-                                    <form class="form-inline">
-                                        <label>%O2 en mezcla &nbsp</label>
-                                        <h1 id="mez`+json.Id+`">`+json.Mezcla+`%</h1>
-                                    </form>
-                                </div>
-                            </div>
-                            <div id="div_datos2" class="col-sm">
-                                <div class="card">
-                                    <form class="form-inline">
-                                        <label>Humedad de aire &nbsp</label>
-                                        <h1 id="hum`+json.Id+`">`+json.Humedad+`%</h1>
-                                    </form>
-                                </div>
-
-                                <div class="card">
-                                    <form class="form-inline">
-                                        <label>Temperatura de entrada &nbsp</label>
-                                        <h1 id="t_in`+json.Id+`">`+json.Temperatura_Entrada+`ºC</h1>
-                                    </form>
-                                </div>
-
-                                <div class="card">
-                                    <form class="form-inline">
-                                        <label>Temperatura de salida &nbsp</label>
-                                        <h1 id="t_out`+json.Id+`">`+json.Temperatura_Salida+`ºC</h1>
-                                    </form>
-                                </div>
-
-                                <div class="card">   
-                                    <form class="form-inline">
-                                        <label>Presión de entrada &nbsp</label>
-                                        <h1 id="p_in`+json.Id+`">`+json.Presion_Entrada+`mmHg</h1>
-                                    </form>
-                                </div>
-
-                                <div class="card">
-                                    <form class="form-inline">
-                                        <label>Presión de salida &nbsp</label>
-                                        <h1 id="p_out`+json.Id+`">`+json.Presion_Salida+`mmHg</h1>
-                                    </form>
-                                </div>
-
-                            </div>
-                        </div>
-                                    <br>
-                        <div class="row">
-                            <div class="col-sm">
-                                <div class="card">
-                                    <div id="div-PSchart`+json.Id+`"></div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm">
-                             <div id="div-PEchart`+json.Id+`"></div>
-                           </div>
-                        </div>  
-                      </div>`;
-    
-                inicializarCanvas(json.Id);
-             
+                    CreatingWorld(json);     
                 }
-                console.log("CARAMELOSS");
-                
-                
-            });     
-             
-             
-            function enviarDatosADB(datos) {
-		var url = 'http://localhost:8080/RESTapi/webresources/entities.vemecsdata';
+              
+               //Chart P Entrada
+              if (chart[json.Id].data.datasets[0].data.length > 10)
+                {
+                    chart[json.Id].data.datasets[0].data.shift();
 
-                fetch(url, {
-                  method: 'POST',
-                  body: JSON.stringify(datos),
-                  headers:{
-                    'Content-Type': 'application/json'
-                  }
-                }).then(res => res.json())
-                .catch(error => console.error('Error:', error))
-                .then(response => console.log('Success:', response));
+                    chart[json.Id].data.datasets[0].borderColor.shift();
+
+              
+                    chart[json.Id].data.labels.shift();
+                }
+                chart[json.Id].data.datasets[0].data.push(json.Presion_Entrada);
+                chart[json.Id].data.labels.push('hi');
+                chart[json.Id].update();
+                
+                
+                //Chart P Salida
+                if (chart2[json.Id].data.datasets[0].data.length > 10)
+                {
+                    chart2[json.Id].data.datasets[0].data.shift();
+
+                    chart2[json.Id].data.datasets[0].borderColor.shift();
+
+              
+                    chart2[json.Id].data.labels.shift();
+                }
+                chart2[json.Id].data.datasets[0].data.push(json.Presion_Salida);
+                chart2[json.Id].data.labels.push('hi');
+                chart2[json.Id].update();
+                
+            }); 
+            
+            
+            
+             function CreatingWorld(json){
+                    inicializarDatos(json);
+                    inicializarCanvas(json.Id);
+                }
+                
+        function inicializarDatos(json){
+            var contenidoRico='<div id = "vemec-container">' +
+            '<div class="row">' +
+                '<div id="div_datos1" class="col-sm">' +
+                    '<div class="card">' +
+                        '<form class="form-inline">' +
+                            '<label>Presión máxima &nbsp</label>' +
+                            '<h1 id="p_mx'+json.Id+'">'+json.Presion_Maxima+'mmHg</h1>' +
+                        '</form>' +
+                    '</div>' +
+                    
+                    '<div class="card">' +
+                        '<form class="form-inline">' +
+                            '<label>Presión mínima &nbsp</label>' +
+                            '<h1 id="p_mn'+json.Id+'">'+json.Presion_Minima+'mmHg</h1>' +
+                        '</form>' +
+                    '</div>' +
+                    
+                    '<div class="card">' +
+                        '<form class="form-inline">' +
+                            '<label>Volumen de Gás &nbsp</label>' +
+                            '<h1 id="gas'+json.Id+'">'+json.Gas+'cc</h1>' +
+                        '</form>' +
+                   '</div>' +
+                    
+                    '<div class="card">' +
+                        '<form class="form-inline">' +
+                            '<label>Frecuencia de aporte &nbsp</label>' +
+                            '<h1 id="frec'+json.Id+'">'+json.Frecuencia+'/min</h1>' +
+                        '</form>' +
+                    '</div>' +
+                        
+                    '<div class="card">' +
+                        '<form class="form-inline">' +
+                            '<label>%O2 en mezcla &nbsp</label>' +
+                            '<h1 id="mez'+json.Id+'">'+json.Mezcla+'%</h1>' +
+                        '</form>' +
+                    '</div>' +
+                '</div>' +
+                '<div id="div_datos2" class="col-sm">' +
+                    '<div class="card">' +
+                        '<form class="form-inline">' +
+                            '<label>Humedad de aire &nbsp</label>' +
+                            '<h1 id="hum'+json.Id+'">'+json.Humedad+'%</h1>' +
+                        '</form>' +
+                    '</div>' +
+                        
+                    '<div class="card">' +
+                        '<form class="form-inline">' +
+                            '<label>Temperatura de entrada &nbsp</label>' +
+                            '<h1 id="t_in'+json.Id+'">'+json.Temperatura_Entrada+'ºC</h1>' +
+                        '</form>' +
+                    '</div>' +
+                        
+                    '<div class="card">' +
+                        '<form class="form-inline">' +
+                            '<label>Temperatura de salida &nbsp</label>' +
+                            '<h1 id="t_out'+json.Id+'">'+json.Temperatura_Salida+'ºC</h1>' +
+                        '</form>' +
+                    '</div>' +
+                        
+                    '<div class="card">  ' + 
+                        '<form class="form-inline">' +
+                            '<label>Presión de entrada &nbsp</label>' +
+                            '<h1 id="p_in'+json.Id+'">'+json.Presion_Entrada+'mmHg</h1>' +
+                        '</form>' +
+                    '</div>' +
+                        
+                    '<div class="card">' +
+                        '<form class="form-inline">' +
+                            '<label>Presión de salida &nbsp</label>' +
+                            '<h1 id="p_out'+json.Id+'">'+json.Presion_Salida+'mmHg</h1>' +
+                        '</form>' +
+                    '</div>' +
+                   
+                '</div>' +
+            '</div>' +
+                        '<br>' +
+            '<div class="row">' +
+                '<div class="col-sm">' +
+                    '<div id="div-PSchart'+json.Id+'"></div>' +
+                '</div>' +
+            
+                '<div class="col-sm">' +
+                    '<div id="div-PEchart'+json.Id+'"></div>' +
+               '</div>' +
+               
+            '</div>  ' +
+          '</div>'
+            ;
         
-                socket.emit('datos_masterSlave'+id, JSON.stringify(data.getData()));
-            } 
+            $('#container-datos').append(contenidoRico);
                     
-                    
-                    function inicializarCanvas(Id){                   
+        }
+        
+        
+        function inicializarCanvas(Id){                   
                     var canvas = document.createElement('canvas');
                     canvas.id = 'LayerPEchart' + Id;
                     canvas.className = 'c';
-                    canvas.width = 400;
-                    canvas.height = 400;
+                   
+                   
                     canvas.style.zIndex = Id;
-                    
+                      
                     var canvas2 = document.createElement('canvas');
                     canvas.id = 'LayerPSchart' + Id;
                     canvas.className = 'c';
-                    canvas.width = 400;
-                    canvas.height = 400;
+                  
                     canvas.style.zIndex = Id;
+                    
 
-                    document.getElementById('G').appendChild(canvas);
-                    document.getElementById('G').appendChild(canvas2);
+                    document.getElementById('div-PEchart'+Id).appendChild(canvas);
+                    document.getElementById('div-PSchart'+Id).appendChild(canvas2);
                     
-                     canvasesPE[Id] = canvas;
-                     canvasesPS[Id] = canvas2;
-                     
-                     canvasesPE[Id].ctx = canvas.getContext("2d");
-                     canvasesPS[Id].ctx = canvas2.getContext("2d");
-                     
-                     
-                     log.console(canvasesPE[Id].ctx);
-                     log.console(canvasesPS[Id].ctx);
-                     
+                    
+                    canvasesPE[Id] = canvas;
+                    canvasesPS[Id] = canvas2; 
+                    
+                    canvasesPE[Id].ctx = canvas.getContext("2d");
+                    canvasesPS[Id].ctx = canvas2.getContext("2d");
+                    
         
-                    matarme(Id);
-                    }
-                    
-                 function matarme(Id){
-                   
-                  let chart = new Chart(canvasesPE[Id].ctx, {
+                    pintarCanvas(Id);
+        }
+        
+        
+        function pintarCanvas(Id){     
+                   chart[Id] = new Chart(canvasesPE[Id].ctx, {
                     type: 'line',
                     data: {
+                        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
                         datasets: [{
-                            label: 'First dataset',
-                            data: [0, 20, 40, 50]
-                        }],
-                        labels: ['January', 'February', 'March', 'April']
+                            label: 'Presión de Entrada',
+                            data: [12, 19, 3, 5, 2, 3],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
                     },
                     options: {
+                        legend:{display:false},
                         scales: {
                             yAxes: [{
                                 ticks: {
-                                    suggestedMin: 50,
-                                    suggestedMax: 100
+                                    beginAtZero: true
+                                }
+                            }],
+                          xAxes: [{
+                                ticks: {
+                                    display: false   
                                 }
                             }]
+                        
                         }
                     }
                 });
+
                 
-                  let chart = new Chart(canvasesPS[Id].ctx, {
+               chart2[Id] = new Chart(canvasesPS[Id].ctx, {
                     type: 'line',
                     data: {
+                        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
                         datasets: [{
-                            label: 'First dataset',
-                            data: [0, 20, 40, 50]
-                        }],
-                        labels: ['January', 'February', 'March', 'April']
+                            label: 'Presión de Entrada',
+                            data: [12, 19, 3, 5, 2, 3],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
                     },
                     options: {
+                        legend:{display:false},
                         scales: {
                             yAxes: [{
                                 ticks: {
-                                    suggestedMin: 50,
-                                    suggestedMax: 100
+                                    beginAtZero: true
+                                }
+                            }],
+                          xAxes: [{
+                                ticks: {
+                                    display: false   
                                 }
                             }]
+                        
                         }
                     }
                 });
-            }
+               
+                
+        }
+             
+        function enviarDatosADB(datos) {
+            var url = 'http://localhost:8080/RESTapi/webresources/entities.vemecsdata';
+            var json = JSON.stringify(datos);
+            fetch(url, {
+                method: 'POST',
+                body: json,
+                headers:{
+                'Content-Type': 'application/json'
+                }
+            }).then(res => res.json())
+            .catch(error => console.error('Error:', error))
+            .then(response => console.log('Success:', response));
+    
+            socket.emit('datos_masterSlave'+id, json);
+        }
     </script>
     </head>
     

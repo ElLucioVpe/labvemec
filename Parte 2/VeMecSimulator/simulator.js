@@ -85,6 +85,7 @@ class VeMec {
         );
       }, 1000);
     });
+    //sleep(1000);
   }
 
   send(data) {
@@ -129,7 +130,24 @@ class VeMecData {
     this.presion_out = _presion_out;
     this.energia = _energia;
     this.pulsaciones = _pulsaciones;
-    this.conectado = _conectado; 
+    this.conectado = _conectado;
+    this.time_Stamp = _time_Stamp;
+  }
+
+  getData() {
+    let data = {};
+    data["Id"] = this.id_Vemec;
+    data["Presion_Maxima"] = this.presion_max;
+    data["Presion_Minima"] = this.presion_min;
+    data["Gas"] = this.gas;
+    data["Frecuencia"] = this.frecuencia;
+    data["Mezcla"] = this.mezcla;
+    data["Humedad"] = this.humedad;
+    data["Temperatura_Entrada"] = this.temperatura_in;
+    data["Temperatura_Salida"] = this.temperatura_out;
+    data["Presion_Entrada"] = this.presion_in;
+    data["Presion_Salida"] = this.presion_out;
+    data["Timestamp_Data"] = this.time_Stamp;
     
     return data;
   }
