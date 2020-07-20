@@ -26,10 +26,10 @@
             var chart=[];
             var canvasesPE = [];
             var canvasesPS = [];
-       		const tiempo = location.search.split('tiempo=')[1].split("&")[0];; // Obtiene el intervalo de tiempo desde GET
-                const id = location.search.split('id=')[1].split("&")[0];
-       		const intervaloEmergencia = location.search.split('intervaloEmergencia=')[1].split("&")[0];;
-       
+            const tiempo = parseFloat(location.search.split('tiempo=')[1].split("&")[0]) * 60; // Obtiene el intervalo de tiempo desde GET
+            const id = location.search.split('id=')[1].split("&")[0];
+            const intervaloEmergencia = parseFloat(location.search.split('intervaloEmergencia=')[1].split("&")[0]);
+
         //var segundosAUX = segundos;
           console.log("recibiendo datos de vemec..." +id);
             const socket = io('http://localhost:4000');
@@ -73,8 +73,8 @@
                     if(json.Pulsaciones < 60 || json.Pulsaciones > 110 || json.Presion_Salida > 50)  arrayVemecsDatos2[json.Id]["alerta"] = "activarAlerta";
                     else arrayVemecsDatos2[json.Id]["alerta"] = "desactivarAlerta";
                     
-                    if(arrayVemecsDatos2[json.Id][11].includes("activar")) {
-                        clearInterval(arrayVemecsDatos2[json.Id][10]);
+                    if(arrayVemecsDatos2[json.Id]["alerta"].includes("activar")) {
+                        clearInterval(arrayVemecsDatos2[json.Id]["Intervalo"]);
                     	arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]); }, intervaloEmergencia);
                     }
                    
@@ -101,7 +101,7 @@
                     arrayVemecsDatos2[json.Id]["Energia"] =  json.Energia;
                     arrayVemecsDatos2[json.Id]["Timestamp_Data"] = new Date().toLocaleString();
                     
-		            arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]) }, tiempo); // Cada cierto tiempo envia los datos a la DB
+		    arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]) }, tiempo); // Cada cierto tiempo envia los datos a la DB
                   
                     //Creamos la nueva seccion para el nuevo vemec
                     CreatingWorld(json);     
@@ -140,10 +140,10 @@
             
             
             
-             function CreatingWorld(json){
-                    inicializarDatos(json);
-                    inicializarCanvas(json.Id);
-                }
+            function CreatingWorld(json){
+                inicializarDatos(json);
+                inicializarCanvas(json.Id);
+            }
                 
         function inicializarDatos(json){
             var contenidoRico='<div id = "vemec-container">' +
@@ -367,6 +367,7 @@
         function enviarDatosADB(datos) {
             var url = 'http://localhost:8080/RESTapi/webresources/entities.vemecsdata';
             var json = JSON.stringify(datos);
+            console.log(json);
             fetch(url, {
                 method: 'POST',
                 body: json,

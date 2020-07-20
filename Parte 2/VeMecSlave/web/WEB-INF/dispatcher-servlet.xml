@@ -20,11 +20,7 @@
         <property name="mappings">
             <props>
                 <prop key="index.htm">springController</prop>
-                <prop key="altaVeMec.htm">springController</prop>
-                <prop key="modificarVeMec.htm">springController</prop>
-                <prop key="bajaVeMec.htm">springController</prop>
                 <prop key="datosVeMec.htm">springController</prop>
-                <prop key="registrosVeMec.htm">springController</prop>
             </props>
         </property>
     </bean>
