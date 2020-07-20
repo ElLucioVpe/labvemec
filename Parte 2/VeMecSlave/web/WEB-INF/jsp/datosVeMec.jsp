@@ -294,6 +294,10 @@
                         }]
                     },
                     options: {
+                        title: {
+                            display: true,
+                            text: 'Presion Entrada'
+                        },
                         legend:{display:false},
                         scales: {
                             yAxes: [{
@@ -339,6 +343,10 @@
                         }]
                     },
                     options: {
+                        title: {
+                            display: true,
+                            text: 'Presion Salida'
+                        },
                         legend:{display:false},
                         scales: {
                             yAxes: [{
