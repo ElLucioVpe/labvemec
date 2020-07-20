@@ -40,6 +40,7 @@
                 if(arrayVemecsDatos2[json.Id] != null){
                     //Vamos promediando en array bidimensional
                     arrayVemecsDatos2[json.Id]["Id_Vemec"] = json.Id;
+                    arrayVemecsDatos2[json.Id]["idSlave"] = id;
                     arrayVemecsDatos2[json.Id]["Presion_Maxima"] = Math.round(((arrayVemecsDatos2[json.Id]["Presion_Maxima"] + json.Presion_Maxima) / 2) * 1e2 )/1e2;
                     arrayVemecsDatos2[json.Id]["Presion_Minima"] =  Math.round(((arrayVemecsDatos2[json.Id]["Presion_Minima"] + json.Presion_Minima) / 2)* 1e2 )/1e2;
                     arrayVemecsDatos2[json.Id]["Gas"] =  Math.round(((arrayVemecsDatos2[json.Id]["Gas"] + json.Gas) / 2)* 1e2 )/1e2;
@@ -50,7 +51,7 @@
                     arrayVemecsDatos2[json.Id]["Temperatura_Salida"] =  Math.round(((arrayVemecsDatos2[json.Id]["Temperatura_Salida"] + json.Temperatura_Salida) / 2)* 1e2 )/1e2;
                     arrayVemecsDatos2[json.Id]["Presion_Entrada"] =  Math.round(((arrayVemecsDatos2[json.Id]["Presion_Entrada"] + json.Presion_Entrada) / 2)* 1e2 )/1e2;
                     arrayVemecsDatos2[json.Id]["Presion_Salida"] =  Math.round(((arrayVemecsDatos2[json.Id]["Presion_Salida"] + json.Presion_Salida) / 2)* 1e2 )/1e2;
-                    arrayVemecsDatos2[json.Id]["Pulsaciones"] =  Math.round(((arrayVemecsDatos2[json.Id]["Pulsaciones"] + json.Presion_Entrada) / 2)* 1e2 )/1e2;
+                    arrayVemecsDatos2[json.Id]["Pulsaciones"] =  Math.round(((arrayVemecsDatos2[json.Id]["Pulsaciones"] + json.Pulsaciones) / 2)* 1e2 )/1e2;
                     arrayVemecsDatos2[json.Id]["Conectado_Corriente"] =  json.Conectado_Corriente;
                     arrayVemecsDatos2[json.Id]["Energia"] =  json.Energia;
                     arrayVemecsDatos2[json.Id]["Timestamp_Data"] = new Date().toLocaleString();
@@ -73,19 +74,18 @@
                     if(json.Pulsaciones < 60 || json.Pulsaciones > 110 || json.Presion_Salida > 50)  arrayVemecsDatos2[json.Id]["alerta"] = "activarAlerta";
                     else arrayVemecsDatos2[json.Id]["alerta"] = "desactivarAlerta";
                     
-                    if(arrayVemecsDatos2[json.Id]["alerta"].includes("activar")) {
+                    arrayVemecsDatos2[json.Id]["alerta"] = "activarAlerta";
+                    if(arrayVemecsDatos2[json.Id]["alerta"].startsWith("activar")) {
                         clearInterval(arrayVemecsDatos2[json.Id]["Intervalo"]);
                     	arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]); }, intervaloEmergencia);
                     }
                    
-               
-
-
                 //Nuevo Vemec
                 }else{
                     //agregamos datos nuevos a su array bidimensional promediado
-                    arrayVemecsDatos2[json.Id]=[];
+                    arrayVemecsDatos2[json.Id]={};
                     arrayVemecsDatos2[json.Id]["Id_Vemec"] = json.Id;
+                    arrayVemecsDatos2[json.Id]["idSlave"] = id;
                     arrayVemecsDatos2[json.Id]["Presion_Maxima"] = json.Presion_Maxima;
                     arrayVemecsDatos2[json.Id]["Presion_Minima"] =  json.Presion_Minima;
                     arrayVemecsDatos2[json.Id]["Gas"] = json.Gas;
@@ -101,6 +101,7 @@
                     arrayVemecsDatos2[json.Id]["Energia"] =  json.Energia;
                     arrayVemecsDatos2[json.Id]["Timestamp_Data"] = new Date().toLocaleString();
                     
+                    
 		    arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]) }, tiempo); // Cada cierto tiempo envia los datos a la DB
                   
                     //Creamos la nueva seccion para el nuevo vemec
@@ -111,10 +112,7 @@
               if (chart[json.Id].data.datasets[0].data.length > 10)
                 {
                     chart[json.Id].data.datasets[0].data.shift();
-
                     chart[json.Id].data.datasets[0].borderColor.shift();
-
-              
                     chart[json.Id].data.labels.shift();
                 }
                 chart[json.Id].data.datasets[0].data.push(json.Presion_Entrada);
@@ -126,10 +124,7 @@
                 if (chart2[json.Id].data.datasets[0].data.length > 10)
                 {
                     chart2[json.Id].data.datasets[0].data.shift();
-
                     chart2[json.Id].data.datasets[0].borderColor.shift();
-
-              
                     chart2[json.Id].data.labels.shift();
                 }
                 chart2[json.Id].data.datasets[0].data.push(json.Presion_Salida);
@@ -367,7 +362,7 @@
         function enviarDatosADB(datos) {
             var url = 'http://localhost:8080/RESTapi/webresources/entities.vemecsdata';
             var json = JSON.stringify(datos);
-            console.log(json);
+            //console.log("json:"+json);
             fetch(url, {
                 method: 'POST',
                 body: json,
@@ -377,8 +372,8 @@
             }).then(res => res.json())
             .catch(error => console.error('Error:', error))
             .then(response => console.log('Success:', response));
-    
-            socket.emit('datos_masterSlave'+id, json);
+            socket.emit('datos_masterSlave', json);
+            //console.log("json2");
         }
     </script>
     </head>
