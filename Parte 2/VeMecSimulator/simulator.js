@@ -147,6 +147,9 @@ class VeMecData {
     data["Temperatura_Salida"] = this.temperatura_out;
     data["Presion_Entrada"] = this.presion_in;
     data["Presion_Salida"] = this.presion_out;
+    data["Pulsaciones"] = this.pulsaciones;
+    data["Conectado_Corriente"] = this.conectado;
+    data["Energia"] = this.energia;
     data["Timestamp_Data"] = this.time_Stamp;
     
     return data;
