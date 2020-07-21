@@ -41,12 +41,12 @@ $(document).ready(function(){
                             datos2.push({x: new Date(dato.timestampData), y: parseFloat(dato.pulsaciones)});
                         });
 
-                        var chart1 = $("historial-RespiracionChart").CanvasJSChart({
+                        var chart1 = new CanvasJS.Chart("historial-RespiracionChart", {
                             title :{text: "Respiracion"},
                             axisY: {includeZero: false},      
                             data: [{ type: "line", dataPoints: datos1}]
                         });
-                        var chart2 = $("historial-PulsacionesChart").CanvasJSChart({
+                        var chart2 = new CanvasJS.Chart("historial-PulsacionesChart", {
                             title :{text: "Pulsaciones"},
                             axisY: {includeZero: false},      
                             data: [{ type: "line", dataPoints: datos2, color: "green"}]
@@ -82,7 +82,7 @@ function altaAccionMedica() {
     json["medicacion"] = document.getElementById("form_medicacion").value;
     json["descripcion"] = document.getElementById("form_descripcion").value;
     //json["id_slave"] = document.getElementById("select_slave").value;
-    json["idVemec"] = document.getElementById("idVemec").value;
+    json["idVemec"] = document.getElementById("id_vemec").value;
     json["medicoTratante"] = document.getElementById("form_medico_tratante").value;
     json["alta"] = document.getElementById("form_alta").value === "true";
     json["defuncion"] = document.getElementById("form_defuncion").value  === "true";
