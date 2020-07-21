@@ -19,17 +19,16 @@ io.sockets.on("connection", (socket) => {
   //sendData(socket);
 
   socket.on("envio_datosVeMec", function (msg) {
-    console.log("Sending: " + msg);
+    console.log("data: " + msg);
     var json = JSON.parse(msg);
-    io.sockets.emit("datosVeMec" +  json.idSlave, json);
+    io.sockets.emit("datosVeMec" + json.IdSlave, json);
   });
-});
 
-
-socket.on("datos_masterSlave", function (msg) {
-  console.log("alertaMaster: " + msg);
-  var json = JSON.parse(msg);
-  io.sockets.emit("datos_masterSlave" + json.idSlave, json);
+  socket.on("datos_masterSlave", function (msg) {
+    console.log("alertaMaster: " + msg);
+    var json = JSON.parse(msg);
+    io.sockets.emit("datos_masterSlave" + json.idSlave, json);
+  });
 });
 
 function sendData(socket) {

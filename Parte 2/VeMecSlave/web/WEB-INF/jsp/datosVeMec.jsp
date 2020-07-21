@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Ultimos datos del VeMec</title>
@@ -30,21 +31,21 @@
             var chart=[];
             var canvasesPE = [];
             var canvasesPS = [];
-            const tiempo = parseFloat(location.search.split('tiempo=')[1].split("&")[0]) * 60; // Obtiene el intervalo de tiempo desde GET
+            const tiempo = parseFloat(location.search.split('tiempo=')[1].split("&")[0]) * 60 * 1000; // Obtiene el intervalo de tiempo desde GET
             const id = location.search.split('id=')[1].split("&")[0];
-            const intervaloEmergencia = parseFloat(location.search.split('intervaloEmergencia=')[1].split("&")[0]);
+            const intervaloEmergencia = parseFloat(location.search.split('intervaloEmergencia=')[1].split("&")[0]) * 1000;
 
         //var segundosAUX = segundos;
-          console.log("recibiendo datos de vemec..." +id);
+            //console.log("recibiendo datos de vemec..." +id);
             const socket = io('http://localhost:4000');
             socket.on('datosVeMec'+id, (res) => {
-                console.log("recibiendo datos de vemec..."+id);
                 var json = res;
-            
+                console.log("recibiendo datos de vemec"+json.Id+"...");
                 if(arrayVemecsDatos2[json.Id] != null){
                     //Vamos promediando en array bidimensional
                     arrayVemecsDatos2[json.Id]["Id_Vemec"] = json.Id;
                     arrayVemecsDatos2[json.Id]["idSlave"] = id;
+                    arrayVemecsDatos2[json.Id]["id_Paciente"] = json.idPaciente;
                     arrayVemecsDatos2[json.Id]["Presion_Maxima"] = Math.round(((arrayVemecsDatos2[json.Id]["Presion_Maxima"] + json.Presion_Maxima) / 2) * 1e2 )/1e2;
                     arrayVemecsDatos2[json.Id]["Presion_Minima"] =  Math.round(((arrayVemecsDatos2[json.Id]["Presion_Minima"] + json.Presion_Minima) / 2)* 1e2 )/1e2;
                     arrayVemecsDatos2[json.Id]["Gas"] =  Math.round(((arrayVemecsDatos2[json.Id]["Gas"] + json.Gas) / 2)* 1e2 )/1e2;
@@ -58,7 +59,7 @@
                     arrayVemecsDatos2[json.Id]["Pulsaciones"] =  Math.round(((arrayVemecsDatos2[json.Id]["Pulsaciones"] + json.Pulsaciones) / 2)* 1e2 )/1e2;
                     arrayVemecsDatos2[json.Id]["Conectado_Corriente"] =  json.Conectado_Corriente;
                     arrayVemecsDatos2[json.Id]["Energia"] =  json.Energia;
-                    arrayVemecsDatos2[json.Id]["Timestamp_Data"] = new Date().toLocaleString();
+                    arrayVemecsDatos2[json.Id]["Timestamp_Data"] = json.Timestamp_Data;
                 
                     //Agregamos al body la section del nuevo array
                     document.getElementById('Pmax'+json.Id).innerHTML = json.Presion_Maxima;
@@ -86,6 +87,9 @@
                     if(arrayVemecsDatos2[json.Id]["alerta"].startsWith("activar")) {
                         clearInterval(arrayVemecsDatos2[json.Id]["Intervalo"]);
                     	arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]); }, intervaloEmergencia);
+                    } else {
+                        clearInterval(arrayVemecsDatos2[json.Id]["Intervalo"]);
+                    	arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]); }, intervaloEmergencia);
                     }
                    
                 //Nuevo Vemec
@@ -94,23 +98,24 @@
                     arrayVemecsDatos2[json.Id]={};
                     arrayVemecsDatos2[json.Id]["Id_Vemec"] = json.Id;
                     arrayVemecsDatos2[json.Id]["idSlave"] = id;
+                    arrayVemecsDatos2[json.Id]["id_Paciente"] = json.idPaciente;
                     arrayVemecsDatos2[json.Id]["Presion_Maxima"] = json.Presion_Maxima;
-                    arrayVemecsDatos2[json.Id]["Presion_Minima"] =  json.Presion_Minima;
+                    arrayVemecsDatos2[json.Id]["Presion_Minima"] = json.Presion_Minima;
                     arrayVemecsDatos2[json.Id]["Gas"] = json.Gas;
-                    arrayVemecsDatos2[json.Id]["Frecuencia"] =  json.Frecuencia;
+                    arrayVemecsDatos2[json.Id]["Frecuencia"] = json.Frecuencia;
                     arrayVemecsDatos2[json.Id]["Mezcla"] = json.Mezcla;
                     arrayVemecsDatos2[json.Id]["Humedad"] = json.Humedad;
                     arrayVemecsDatos2[json.Id]["Temperatura_Entrada"] =  json.Temperatura_Entrada;
                     arrayVemecsDatos2[json.Id]["Temperatura_Salida"] = json.Temperatura_Salida;
                     arrayVemecsDatos2[json.Id]["Presion_Entrada"] =  json.Presion_Entrada;
                     arrayVemecsDatos2[json.Id]["Presion_Salida"] = json.Presion_Salida;
-                    arrayVemecsDatos2[json.Id]["Pulsaciones"] = json.Presion_Entrada;
+                    arrayVemecsDatos2[json.Id]["Pulsaciones"] = json.Pulsaciones;
                     arrayVemecsDatos2[json.Id]["Conectado_Corriente"] =  json.Conectado_Corriente;
                     arrayVemecsDatos2[json.Id]["Energia"] =  json.Energia;
-                    arrayVemecsDatos2[json.Id]["Timestamp_Data"] = new Date().toLocaleString();
+                    arrayVemecsDatos2[json.Id]["Timestamp_Data"] = json.Timestamp_Data;
                     
                     
-		    arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]) }, tiempo); // Cada cierto tiempo envia los datos a la DB
+		    arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]); }, tiempo); // Cada cierto tiempo envia los datos a la DB
                   
                     //Creamos la nueva seccion para el nuevo vemec
                     CreatingWorld(json);     
@@ -383,20 +388,41 @@
         }
              
         function enviarDatosADB(datos) {
-            var url = 'http://localhost:8080/RESTapi/webresources/entities.vemecsdata';
             var json = JSON.stringify(datos);
-            //console.log("json:"+json);
+            console.log("informando al master alerta:"+datos.alerta+" "+new Date().toLocaleString()+"...");
+            socket.emit('datos_masterSlave', json);
+            
+            console.log("guardando en bd "+new Date().toLocaleString()+"...");
+            var jsonbd = {};
+            jsonbd["conectadoCorriente"] = (datos.Conectado_Corriente === 1);
+            jsonbd["energia"] = Math.round(datos.Energia);
+            jsonbd["frecuencia"] = Math.round(datos.Frecuencia);
+            jsonbd["gas"] = Math.round(datos.Gas);
+            jsonbd["humedad"] = Math.round(datos.Humedad);
+            jsonbd["idPaciente"] = datos.id_Paciente;
+            jsonbd["mezcla"] = Math.round(datos.Mezcla);
+            jsonbd["presionEntrada"] = Math.round(datos.Presion_Entrada);
+            jsonbd["presionMaxima"] = Math.round(datos.Presion_Maxima);
+            jsonbd["presionMinima"] = Math.round(datos.Presion_Minima);
+            jsonbd["presionSalida"] = Math.round(datos.Presion_Salida);
+            jsonbd["pulsaciones"] = Math.round(datos.Pulsaciones);
+            jsonbd["temperaturaEntrada"] = Math.round(datos.Temperatura_Entrada);
+            jsonbd["temperaturaSalida"] = Math.round(datos.Temperatura_Salida);
+            jsonbd["timestampData"] = datos.Timestamp_Data;
+            jsonbd["vemecsDataPK"] = {};
+            jsonbd["vemecsDataPK"]["idData"] = 0;
+            jsonbd["vemecsDataPK"]["idVemec"] = datos.Id_Vemec;
+            //console.log(JSON.stringify(jsonbd));
+            var url = 'http://localhost:8080/RESTapi/webresources/entities.vemecsdata';
             fetch(url, {
                 method: 'POST',
-                body: json,
+                body: JSON.stringify(jsonbd),
                 headers:{
                 'Content-Type': 'application/json'
                 }
             }).then(res => res.json())
             .catch(error => console.error('Error:', error))
             .then(response => console.log('Success:', response));
-            socket.emit('datos_masterSlave', json);
-            //console.log("json2");
         }
     </script>
     </head>
@@ -405,11 +431,6 @@
         body {
             background-color: whitesmoke;
         }
-        
-        /*h1 {
-            font-size: 50px;
-            color: white;
-        }*/
         
         label {
             font-weight: 600;

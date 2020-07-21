@@ -3,10 +3,9 @@ const axios = require("axios").default;
 const socket = io("http://localhost:4000");
 
 class VeMec {
-  constructor(_id, _marca, _modelo, _ubicacion, _running, _socket, _idSlave, _idPaciente) {
+  constructor(_id, _marca, _modelo, _ubicacion, _running, _socket, _idSlave) {
     this.id = _id;
     this.idSlave = _idSlave;
-    this.idPaciente = _idPaciente;
     this.marca = _marca;
     this.modelo = _modelo;
     this.ubicacion = _ubicacion;
@@ -64,7 +63,6 @@ class VeMec {
         let data = new VeMecData(
           _this.id,
           _this.idSlave,
-          _this.idPaciente,
           RandomPresMax,
           RandomPresMin,
           RandomGas,
@@ -103,7 +101,6 @@ class VeMecData {
   constructor(
     _id_Vemec,
     _id_Slave,
-    _id_Paciente,
     _presion_max,
     _presion_min,
     _gas,
@@ -121,7 +118,6 @@ class VeMecData {
   ) {
     this.id_Vemec = _id_Vemec;
     this.id_Slave = _id_Slave;
-    this._id_Paciente = _id_Paciente;
     this.presion_max = _presion_max;
     this.presion_min = _presion_min;
     this.gas = _gas;
@@ -141,8 +137,7 @@ class VeMecData {
   getData() {
     let data = {};
     data["Id"] = this.id_Vemec;
-    data["idSlave"] = this.id_Slave.id;
-    data["idPaciente"] = this._id_Paciente.id;
+    data["IdSlave"] = this.id_Slave.id;
     data["Presion_Maxima"] = this.presion_max;
     data["Presion_Minima"] = this.presion_min;
     data["Gas"] = this.gas;
@@ -198,7 +193,7 @@ let vemecs = [];
 
 async function instanciarVemecs() {
   vemecsData.forEach(function (vemec) {
-    vemecs.push(new VeMec(vemec.id, vemec.marca,vemec.modelo, vemec.ubicacion, true, socket, vemec.idSlave, vemec.idPaciente));
+    vemecs.push(new VeMec(vemec.id, vemec.marca, vemec.modelo, vemec.ubicacion, true, socket, vemec.idSlave));
     console.log(vemec.id);
   })
 }
