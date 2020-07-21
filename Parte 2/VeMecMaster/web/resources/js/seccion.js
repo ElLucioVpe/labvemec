@@ -108,11 +108,11 @@ function modoAlerta(activar, tipo, idVeMec) {
     }
 
     if(activar) {
-        if(!element.classList.includes(clase)) document.getElementById(count_div).innerHTML = parseInt(document.getElementById(count_div).innerHTML)+1;
+        if(!element.classList.contains(clase)) document.getElementById(count_div).innerHTML = parseInt(document.getElementById(count_div).innerHTML)+1;
         element.classList.add(clase);
         audioPlayer.setAttribute('src', urlSound + audio);
     } else {
-        if(element.classList.includes(clase)) document.getElementById(count_div).innerHTML = parseInt(document.getElementById(count_div).innerHTML)-1;
+        if(element.classList.contains(clase)) document.getElementById(count_div).innerHTML = parseInt(document.getElementById(count_div).innerHTML)-1;
         element.classList.remove(clase);
         audioPlayer.setAttribute('src', "");
     }

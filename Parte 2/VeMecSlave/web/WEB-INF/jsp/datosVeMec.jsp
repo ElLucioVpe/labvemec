@@ -31,11 +31,11 @@
             var chart=[];
             var canvasesPE = [];
             var canvasesPS = [];
-            const tiempo = parseFloat(location.search.split('tiempo=')[1].split("&")[0]) * 60 * 1000; // Obtiene el intervalo de tiempo desde GET
+            const tiempo = 10000//parseFloat(location.search.split('tiempo=')[1].split("&")[0]) * 60 * 1000; // Obtiene el intervalo de tiempo desde GET
             const id = location.search.split('id=')[1].split("&")[0];
-            const intervaloEmergencia = parseFloat(location.search.split('intervaloEmergencia=')[1].split("&")[0]) * 1000;
+            const intervaloEmergencia = 2000;//parseFloat(location.search.split('intervaloEmergencia=')[1].split("&")[0]) * 1000;
 
-        //var segundosAUX = segundos;
+        //var segundosAUX = segundos;c
             //console.log("recibiendo datos de vemec..." +id);
             const socket = io('http://localhost:4000');
             socket.on('datosVeMec'+id, (res) => {
@@ -83,15 +83,21 @@
                     else arrayVemecsDatos2[json.Id]["alerta"] = "desactivarBajaBateria";
                     if(json.Pulsaciones < 60 || json.Pulsaciones > 110 || json.Presion_Salida > 50)  arrayVemecsDatos2[json.Id]["alerta"] = "activarAlerta";
                     else arrayVemecsDatos2[json.Id]["alerta"] = "desactivarAlerta";
-
+                    
                     if(arrayVemecsDatos2[json.Id]["alerta"].startsWith("activar")) {
+                        console.log("ALERT: "+arrayVemecsDatos2[json.Id]["alerta"]);
+                        enviarDatosADB(arrayVemecsDatos2[json.Id]);
+                        arrayVemecsDatos2[json.Id]["estadoAlerta"] = true;
                         clearInterval(arrayVemecsDatos2[json.Id]["Intervalo"]);
                     	arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]); }, intervaloEmergencia);
                     } else {
-                        clearInterval(arrayVemecsDatos2[json.Id]["Intervalo"]);
-                    	arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]); }, intervaloEmergencia);
+                        if(arrayVemecsDatos2[json.Id]["estadoAlerta"] === true) {
+                            console.log("Saliendo de alerta VeMec"+json.Id);
+                            arrayVemecsDatos2[json.Id]["estadoAlerta"] = false;
+                            clearInterval(arrayVemecsDatos2[json.Id]["Intervalo"]);
+                            arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]); }, tiempo);
+                        }
                     }
-                   
                 //Nuevo Vemec
                 }else{
                     //agregamos datos nuevos a su array bidimensional promediado
@@ -113,7 +119,7 @@
                     arrayVemecsDatos2[json.Id]["Conectado_Corriente"] =  json.Conectado_Corriente;
                     arrayVemecsDatos2[json.Id]["Energia"] =  json.Energia;
                     arrayVemecsDatos2[json.Id]["Timestamp_Data"] = json.Timestamp_Data;
-                    
+                    arrayVemecsDatos2[json.Id]["estadoAlerta"] = false;
                     
 		    arrayVemecsDatos2[json.Id]["Intervalo"] = setInterval(function () { enviarDatosADB(arrayVemecsDatos2[json.Id]); }, tiempo); // Cada cierto tiempo envia los datos a la DB
                   
